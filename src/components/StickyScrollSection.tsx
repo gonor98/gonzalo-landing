@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Play } from "lucide-react";
+import { useVideo } from "./VideoContext";
 import forbes from "@/assets/gonzalo-acuna-real.webp";
 import propmatch from "@/assets/propmatch-app-mockup.webp";
 import keynote from "@/assets/gonzalo-talentland-stage.jpg";
@@ -11,6 +13,7 @@ const states = [
     body: "Nominado a Forbes 30 Under 30 por construir el primer marketplace que tokeniza propiedades reales sobre Ethereum, con $195M en LOIs firmados antes del lanzamiento público.",
     img: forbes,
     alt: "Gonzalo en sesión profesional",
+    videoId: "cmGTwjjw-kw",
   },
   {
     label: "02 · Liderazgo",
@@ -18,6 +21,7 @@ const states = [
     body: "Cuatro propiedades tokenizadas, una tesis: convertir el real estate latinoamericano en un activo programable, líquido y accesible desde cualquier wallet.",
     img: propmatch,
     alt: "PropMatch app mockup",
+    videoId: "IxpNirVNaeA",
   },
   {
     label: "03 · Escenario",
@@ -25,6 +29,7 @@ const states = [
     body: "200+ keynotes en 15+ países, 2.8M personas alcanzadas. Web Summit Lisboa, TNW Amsterdam, Talent Land — el método Cine-Empresa llevado a cada escenario relevante.",
     img: keynote,
     alt: "Gonzalo dando keynote",
+    videoId: "dRUZS2rTe8Q",
   },
 ];
 
@@ -32,6 +37,7 @@ export const StickyScrollSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
+  const { open } = useVideo();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -71,6 +77,15 @@ export const StickyScrollSection = () => {
                   {current.title}
                 </h3>
                 <p className="mt-6 text-white/55 text-lg leading-relaxed">{current.body}</p>
+                <button
+                  onClick={() => open(current.videoId, current.title)}
+                  className="group mt-8 inline-flex items-center gap-3 text-sm uppercase tracking-[0.22em] text-gold transition-colors hover:text-white"
+                >
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 transition-all group-hover:bg-gold group-hover:text-background">
+                    <Play size={14} className="ml-0.5" fill="currentColor" />
+                  </span>
+                  Ver video
+                </button>
               </motion.div>
             </AnimatePresence>
 
@@ -94,7 +109,10 @@ export const StickyScrollSection = () => {
               key={s.title}
               ref={(el) => (blockRefs.current[i] = el)}
               data-index={i}
-              className="relative h-screen w-full overflow-hidden"
+              className="group relative h-screen w-full cursor-pointer overflow-hidden"
+              onClick={() => open(s.videoId, s.title)}
+              role="button"
+              aria-label={`Reproducir: ${s.title}`}
             >
               <img
                 src={s.img}
@@ -103,6 +121,11 @@ export const StickyScrollSection = () => {
                 className="absolute inset-0 h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-background/40" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-background/40 text-gold opacity-0 backdrop-blur transition-all duration-500 group-hover:scale-110 group-hover:opacity-100">
+                  <Play size={22} className="ml-1" fill="currentColor" />
+                </span>
+              </div>
               <div className="absolute inset-0 ring-1 ring-inset ring-gold/10" />
             </div>
           ))}
