@@ -10,7 +10,7 @@ const stats = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
-  show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] } }),
+  show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.15, ease: "easeOut" as const } }),
 };
 
 export const HeroSection = () => {
