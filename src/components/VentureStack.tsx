@@ -12,6 +12,8 @@ const ventures = [
     metric: "$195M",
     metricLabel: "en LOIs firmados",
     color: "#C9A84C",
+    borderRgba: "rgba(201,168,76,0.33)",
+    innerBorderRgba: "rgba(201,168,76,0.2)",
     glow: "rgba(201,168,76,0.45)",
     icon: "🏗️",
     safe: "SAFE $1.5M / Cap $10M",
@@ -25,6 +27,8 @@ const ventures = [
     metric: "47s",
     metricLabel: "ETH → SPEI verificado",
     color: "#00E5CC",
+    borderRgba: "rgba(0,229,204,0.33)",
+    innerBorderRgba: "rgba(0,229,204,0.2)",
     glow: "rgba(0,229,204,0.4)",
     icon: "⚡",
     safe: "SAFE $500K / Cap $4.5M",
@@ -38,6 +42,8 @@ const ventures = [
     metric: "D14: 45%",
     metricLabel: "retención objetivo",
     color: "#7C3AED",
+    borderRgba: "rgba(124,58,237,0.33)",
+    innerBorderRgba: "rgba(124,58,237,0.2)",
     glow: "rgba(124,58,237,0.45)",
     icon: "🎮",
     safe: "SAFE $500K / Cap $5M",
@@ -65,7 +71,7 @@ const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
 
   return (
     <motion.article
-      style={{ opacity, y, scale, borderColor: `${v.color}55` }}
+      style={{ opacity, y, scale, borderColor: v.borderRgba }}
       className="absolute inset-0 grid grid-cols-1 gap-8 rounded-[20px] border bg-card/30 p-8 backdrop-blur md:grid-cols-[1.4fr_1fr] md:p-12"
     >
       <div>
@@ -95,7 +101,7 @@ const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
       <div
         className="relative flex flex-col items-center justify-center rounded-[16px] border bg-background/60 p-8 text-center"
         style={{
-          borderColor: `${v.color}33`,
+          borderColor: v.innerBorderRgba,
           boxShadow: `0 0 80px -20px ${v.glow}`,
         }}
       >
