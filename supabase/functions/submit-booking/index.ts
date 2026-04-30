@@ -23,8 +23,20 @@ interface BookingPayload {
   message?: string;
 }
 
+// Booking inbox (admin notification destination)
 const NOTIFY_TO = "gonzalo@propmatchapp.com";
+// Lovable Emails sandbox sender (no domain verification needed in dev).
 const FROM_EMAIL = "Gonzalo Acuña Nava <onboarding@resend.dev>";
+const RESEND_GATEWAY = "https://connector-gateway.lovable.dev/resend/emails";
+
+// PII-safe logger: never log full names, emails, or message bodies.
+const logEvent = (event: string, meta: Record<string, unknown> = {}) => {
+  try {
+    console.log(`[submit-booking] ${event}`, JSON.stringify(meta));
+  } catch {
+    console.log(`[submit-booking] ${event}`);
+  }
+};
 
 const escape = (s: string) =>
   s.replace(/[&<>"']/g, (c) =>
@@ -73,15 +85,34 @@ const buildUserHtml = (b: BookingPayload) => `
     </div>
   </div>`;
 
-async function sendEmail(opts: { to: string | string[]; subject: string; html: string; reply_to?: string }) {
-  const apiKey = Deno.env.get("RESEND_API_KEY");
-  if (!apiKey) {
-    console.warn("RESEND_API_KEY not set — email skipped:", opts.subject);
+async function sendEmail(opts: {
+  to: string | string[];
+  subject: string;
+  html: string;
+  reply_to?: string;
+}) {
+  const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+  const resendKey = Deno.env.get("RESEND_API_KEY"); // optional override
+
+  if (!lovableKey && !resendKey) {
+    logEvent("email.skipped.no_key");
     return { skipped: true };
   }
-  const res = await fetch("https://api.resend.com/emails", {
+
+  // Prefer Lovable Emails gateway (no domain config in dev).
+  const useGateway = !!lovableKey;
+  const url = useGateway ? RESEND_GATEWAY : "https://api.resend.com/emails";
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (useGateway) {
+    headers["Authorization"] = `Bearer ${lovableKey}`;
+    if (resendKey) headers["X-Connection-Api-Key"] = resendKey;
+  } else {
+    headers["Authorization"] = `Bearer ${resendKey}`;
+  }
+
+  const res = await fetch(url, {
     method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       from: FROM_EMAIL,
       to: Array.isArray(opts.to) ? opts.to : [opts.to],
@@ -92,34 +123,52 @@ async function sendEmail(opts: { to: string | string[]; subject: string; html: s
   });
   const text = await res.text();
   if (!res.ok) {
-    console.error("Resend error", res.status, text);
+    logEvent("email.error", { status: res.status, via: useGateway ? "gateway" : "resend", body: text.slice(0, 200) });
     return { error: text };
   }
+  logEvent("email.sent", { via: useGateway ? "gateway" : "resend" });
   return { ok: true };
 }
 
+const reject = (status: number, error: string, field?: string) =>
+  new Response(JSON.stringify(field ? { error, field } : { error }), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  try {
-    const body = (await req.json()) as BookingPayload;
 
-    // Basic validation
+  try {
+    let body: BookingPayload;
+    try {
+      body = (await req.json()) as BookingPayload;
+    } catch {
+      logEvent("validation.failed", { field: "body", reason: "invalid_json" });
+      return reject(400, "Cuerpo de petición inválido.", "body");
+    }
+
     const allowed = ["bureau", "organizer", "enterprise"];
     if (!body || !allowed.includes(body.booking_type)) {
-      return new Response(JSON.stringify({ error: "Invalid booking_type" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      logEvent("validation.failed", { field: "booking_type" });
+      return reject(400, "Tipo de booking inválido.", "booking_type");
     }
+
     const name = (body.full_name ?? "").trim();
     if (!name || name.length < 2 || name.length > 120) {
-      return new Response(JSON.stringify({ error: "Escribe tu nombre completo (mínimo 2 caracteres)." }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      logEvent("validation.failed", { field: "full_name", length: name.length });
+      return reject(400, "Escribe tu nombre completo (entre 2 y 120 caracteres).", "full_name");
     }
-    if (!body.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email) || body.email.length > 200) {
-      return new Response(JSON.stringify({ error: "Email inválido. Revisa el formato (ej. nombre@empresa.com)." }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+    const email = (body.email ?? "").trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 200) {
+      logEvent("validation.failed", { field: "email", length: email.length });
+      return reject(400, "Email inválido. Revisa el formato (ej. nombre@empresa.com).", "email");
+    }
+
+    if (body.message && body.message.length > 5000) {
+      logEvent("validation.failed", { field: "message", length: body.message.length });
+      return reject(400, "El mensaje supera el máximo permitido (5000 caracteres).", "message");
     }
 
     const supabase = createClient(
@@ -131,8 +180,8 @@ Deno.serve(async (req) => {
       .from("keynote_bookings")
       .insert({
         booking_type: body.booking_type,
-        full_name: body.full_name.trim(),
-        email: body.email.trim().toLowerCase(),
+        full_name: name,
+        email: email.toLowerCase(),
         organization: body.organization?.trim() || null,
         role: body.role?.trim() || null,
         phone: body.phone?.trim() || null,
@@ -147,30 +196,38 @@ Deno.serve(async (req) => {
       .select("id")
       .single();
 
-    if (error) throw error;
+    if (error) {
+      logEvent("db.insert.error", { code: (error as any).code, message: error.message });
+      return reject(500, "No pudimos guardar tu solicitud. Intenta de nuevo en unos segundos.");
+    }
+    logEvent("db.insert.ok", { id: data.id, type: body.booking_type });
 
-    // Fire-and-forget emails (don't fail the request if email errors)
-    await Promise.allSettled([
+    // Fire-and-forget emails (never fail the request if email errors)
+    const normalized: BookingPayload = { ...body, full_name: name, email: email.toLowerCase() };
+    const emailResults = await Promise.allSettled([
       sendEmail({
         to: NOTIFY_TO,
-        subject: `[Booking · ${labelFor(body.booking_type)}] ${body.full_name}`,
-        html: buildAdminHtml(body),
-        reply_to: body.email,
+        subject: `[Booking · ${labelFor(body.booking_type)}] ${name}`,
+        html: buildAdminHtml(normalized),
+        reply_to: email,
       }),
       sendEmail({
-        to: body.email,
+        to: email,
         subject: "Recibimos tu solicitud — Gonzalo Acuña Nava",
-        html: buildUserHtml(body),
+        html: buildUserHtml(normalized),
       }),
     ]);
+    const emailOk = emailResults.every(
+      (r) => r.status === "fulfilled" && !(r.value as any)?.error && !(r.value as any)?.skipped,
+    );
+    logEvent("email.batch", { ok: emailOk });
 
-    return new Response(JSON.stringify({ id: data.id, ok: true }), {
-      status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    return new Response(JSON.stringify({ id: data.id, ok: true, emailOk }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    console.error("submit-booking error", e);
-    return new Response(JSON.stringify({ error: String(e?.message || e) }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    logEvent("unhandled.error", { message: (e as any)?.message });
+    return reject(500, "Error inesperado del servidor. Intenta de nuevo.");
   }
 });
