@@ -1,15 +1,51 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { bookingTypes, type BookingType } from "@/lib/booking";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NAME_MIN = 2;
+const NAME_MAX = 120;
+const EMAIL_MAX = 200;
+
+type FieldError = { field: string; message: string };
+
+function validateClient(
+  values: Record<string, string>,
+  fields: { name: string; label: string; required?: boolean; type: string }[],
+): FieldError | null {
+  for (const f of fields) {
+    const v = values[f.name]?.trim() ?? "";
+    if (f.required && !v) {
+      return { field: f.name, message: `Falta: ${f.label}` };
+    }
+  }
+  const name = values.full_name?.trim() ?? "";
+  if (name.length < NAME_MIN || name.length > NAME_MAX) {
+    return {
+      field: "full_name",
+      message: `El nombre debe tener entre ${NAME_MIN} y ${NAME_MAX} caracteres.`,
+    };
+  }
+  const email = values.email?.trim() ?? "";
+  if (!email || email.length > EMAIL_MAX || !EMAIL_RE.test(email)) {
+    return {
+      field: "email",
+      message: "Email inválido. Revisa el formato (ej. nombre@empresa.com).",
+    };
+  }
+  return null;
+}
 
 export const BookingSelector = () => {
   const [type, setType] = useState<BookingType>("organizer");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({});
+  const [fieldError, setFieldError] = useState<FieldError | null>(null);
+  const submittingRef = useRef(false); // hard guard against double-submit
   const { toast } = useToast();
 
   const config = useMemo(() => bookingTypes.find((b) => b.id === type)!, [type]);
@@ -18,54 +54,66 @@ export const BookingSelector = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
 
-    // Quick client-side checks for required
-    for (const f of config.fields) {
-      const v = values[f.name]?.trim() ?? "";
-      if (f.required && !v) {
-        toast({ title: "Campo requerido", description: `Falta: ${f.label}`, variant: "destructive" });
-        setSubmitting(false);
-        return;
-      }
-      if (f.name === "full_name" && v && v.length < 2) {
-        toast({
-          title: "Nombre muy corto",
-          description: "Escribe tu nombre completo (al menos 2 caracteres).",
-          variant: "destructive",
-        });
-        setSubmitting(false);
-        return;
-      }
+    // Anti-double-submit: hard ref guard + state flag
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setSubmitting(true);
+    setFieldError(null);
+
+    // Full client-side validation
+    const invalid = validateClient(values, config.fields);
+    if (invalid) {
+      setFieldError(invalid);
+      // Safe log: which field failed, never the value itself
+      console.warn("[booking] client validation failed", { field: invalid.field });
+      toast({ title: "Revisa el formulario", description: invalid.message, variant: "destructive" });
+      submittingRef.current = false;
+      setSubmitting(false);
+      return;
     }
 
     try {
       const { data, error } = await supabase.functions.invoke("submit-booking", {
         body: { booking_type: type, ...values },
       });
-      // Edge function 4xx responses come back as `error` with the JSON body in `error.context`
+
+      // Surface 4xx/5xx body messages from the edge function
       if (error) {
-        let serverMsg = error.message;
+        let serverMsg = error.message ?? "Error desconocido del servidor.";
+        let serverField: string | undefined;
         try {
           const ctx = (error as any).context;
           if (ctx && typeof ctx.json === "function") {
             const j = await ctx.json();
             if (j?.error) serverMsg = j.error;
+            if (j?.field) serverField = j.field;
           }
         } catch {}
+        if (serverField) setFieldError({ field: serverField, message: serverMsg });
+        // Safe log: status + offending field, never the values
+        console.warn("[booking] server rejected submission", {
+          field: serverField ?? "unknown",
+          status: (error as any)?.context?.status,
+        });
         throw new Error(serverMsg);
       }
       if ((data as any)?.error) throw new Error((data as any).error);
       setDone(true);
-      toast({ title: "Solicitud enviada", description: "Recibirás un correo de confirmación en minutos." });
+      toast({
+        title: "Solicitud enviada",
+        description: "Recibirás un correo de confirmación en minutos.",
+      });
     } catch (err: any) {
-      console.error(err);
+      // Safe log: only message, no PII
+      console.error("[booking] submission failed:", err?.message);
       toast({
         title: "No pudimos enviar tu solicitud",
         description: err?.message || "Intenta de nuevo en unos segundos.",
         variant: "destructive",
       });
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   };
@@ -83,6 +131,7 @@ export const BookingSelector = () => {
           onClick={() => {
             setDone(false);
             setValues({});
+            setFieldError(null);
           }}
           className="mt-8 text-[11px] uppercase tracking-[0.22em] text-gold/70 hover:text-gold"
         >
@@ -136,8 +185,12 @@ export const BookingSelector = () => {
             {config.fields.map((f) => {
               const id = `f-${f.name}`;
               const isWide = f.type === "textarea";
-              const common =
-                "w-full rounded-[10px] border border-white/10 bg-background/60 px-4 py-3 text-sm text-white placeholder:text-white/35 focus:outline-none focus:border-gold/60 transition-colors";
+              const hasError = fieldError?.field === f.name;
+              const common = `w-full rounded-[10px] border bg-background/60 px-4 py-3 text-sm text-white placeholder:text-white/35 focus:outline-none transition-colors ${
+                hasError
+                  ? "border-red-500/60 focus:border-red-500"
+                  : "border-white/10 focus:border-gold/60"
+              }`;
               return (
                 <div key={f.name} className={isWide ? "md:col-span-2" : ""}>
                   <label htmlFor={id} className="mb-2 block text-[10px] uppercase tracking-[0.22em] text-white/55">
@@ -150,14 +203,20 @@ export const BookingSelector = () => {
                       maxLength={2000}
                       placeholder={f.placeholder}
                       value={values[f.name] ?? ""}
-                      onChange={(e) => setField(f.name, e.target.value)}
+                      onChange={(e) => {
+                        setField(f.name, e.target.value);
+                        if (fieldError?.field === f.name) setFieldError(null);
+                      }}
                       className={common}
                     />
                   ) : f.type === "select" ? (
                     <select
                       id={id}
                       value={values[f.name] ?? ""}
-                      onChange={(e) => setField(f.name, e.target.value)}
+                      onChange={(e) => {
+                        setField(f.name, e.target.value);
+                        if (fieldError?.field === f.name) setFieldError(null);
+                      }}
                       className={common}
                     >
                       <option value="">Selecciona...</option>
@@ -172,12 +231,21 @@ export const BookingSelector = () => {
                       id={id}
                       type={f.type}
                       required={f.required}
-                      maxLength={200}
+                      minLength={f.name === "full_name" ? NAME_MIN : undefined}
+                      maxLength={
+                        f.name === "full_name" ? NAME_MAX : f.name === "email" ? EMAIL_MAX : 200
+                      }
                       placeholder={f.placeholder}
                       value={values[f.name] ?? ""}
-                      onChange={(e) => setField(f.name, e.target.value)}
+                      onChange={(e) => {
+                        setField(f.name, e.target.value);
+                        if (fieldError?.field === f.name) setFieldError(null);
+                      }}
                       className={common}
                     />
+                  )}
+                  {hasError && (
+                    <p className="mt-1.5 text-[11px] text-red-400">{fieldError.message}</p>
                   )}
                 </div>
               );
@@ -191,6 +259,7 @@ export const BookingSelector = () => {
             <button
               type="submit"
               disabled={submitting}
+              aria-busy={submitting}
               className="inline-flex items-center gap-3 rounded-full bg-gold px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_40px_rgba(201,168,76,0.5)] disabled:opacity-60"
             >
               {submitting ? <Loader2 size={14} className="animate-spin" /> : <ArrowRight size={14} />}
