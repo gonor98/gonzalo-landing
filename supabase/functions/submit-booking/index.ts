@@ -23,6 +23,7 @@ interface BookingPayload {
   message?: string;
 }
 
+// Booking inbox (admin notification destination)
 const NOTIFY_TO = "gonzalo@propmatchapp.com";
 // Lovable Emails sandbox sender (no domain verification needed in dev).
 const FROM_EMAIL = "Gonzalo Acuña Nava <onboarding@resend.dev>";
