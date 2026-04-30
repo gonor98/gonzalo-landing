@@ -22,18 +22,40 @@ export const BookingSelector = () => {
 
     // Quick client-side checks for required
     for (const f of config.fields) {
-      if (f.required && !values[f.name]?.trim()) {
+      const v = values[f.name]?.trim() ?? "";
+      if (f.required && !v) {
         toast({ title: "Campo requerido", description: `Falta: ${f.label}`, variant: "destructive" });
+        setSubmitting(false);
+        return;
+      }
+      if (f.name === "full_name" && v && v.length < 2) {
+        toast({
+          title: "Nombre muy corto",
+          description: "Escribe tu nombre completo (al menos 2 caracteres).",
+          variant: "destructive",
+        });
         setSubmitting(false);
         return;
       }
     }
 
     try {
-      const { error } = await supabase.functions.invoke("submit-booking", {
+      const { data, error } = await supabase.functions.invoke("submit-booking", {
         body: { booking_type: type, ...values },
       });
-      if (error) throw error;
+      // Edge function 4xx responses come back as `error` with the JSON body in `error.context`
+      if (error) {
+        let serverMsg = error.message;
+        try {
+          const ctx = (error as any).context;
+          if (ctx && typeof ctx.json === "function") {
+            const j = await ctx.json();
+            if (j?.error) serverMsg = j.error;
+          }
+        } catch {}
+        throw new Error(serverMsg);
+      }
+      if ((data as any)?.error) throw new Error((data as any).error);
       setDone(true);
       toast({ title: "Solicitud enviada", description: "Recibirás un correo de confirmación en minutos." });
     } catch (err: any) {
