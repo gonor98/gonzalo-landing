@@ -61,9 +61,15 @@ interface VentureCardProps {
 const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
   const start = i / total;
   const end = (i + 1) / total;
+  const opacityRange = [
+    Math.max(0, start - 0.05),
+    Math.min(1, start + 0.02),
+    Math.min(1, end - 0.05),
+    Math.min(1, end + 0.05),
+  ];
   const opacity = useTransform(
     scrollYProgress,
-    [Math.max(0, start - 0.05), start + 0.02, end - 0.05, end + 0.05],
+    opacityRange,
     [0, 1, 1, i === total - 1 ? 1 : 0],
   );
   const y = useTransform(scrollYProgress, [start, end], [40, -40]);
