@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const links = [
-  { label: "Journey", href: "#journey" },
-  { label: "Logros", href: "#logros" },
-  { label: "Keynotes", href: "#keynotes" },
-  { label: "Empresas", href: "#empresas" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Inicio", to: "/" },
+  { label: "Speaking", to: "/speaking" },
+  { label: "Audit OS", to: "/audit-os" },
+  { label: "Investors", to: "/investors" },
 ];
 
 export const Nav = () => {
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const [lastY, setLastY] = useState(0);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,20 +34,33 @@ export const Nav = () => {
       className="fixed inset-x-0 top-0 z-[80] backdrop-blur-xl bg-background/60 border-b border-white/5"
     >
       <nav className="mx-auto flex max-w-content items-center justify-between px-6 py-5 md:px-20">
-        <a href="#" className="font-display text-base md:text-lg tracking-[0.18em] text-gold">
+        <Link to="/" className="font-display text-base md:text-lg tracking-[0.18em] text-gold">
           GONZALO ACUÑA NAVA
-        </a>
+        </Link>
         <ul className="hidden items-center gap-10 md:flex">
-          {links.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                className="text-[13px] uppercase tracking-[0.18em] text-white/70 transition-colors hover:text-gold"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
+          {links.map((l) => {
+            const active = pathname === l.to;
+            return (
+              <li key={l.to}>
+                <Link
+                  to={l.to}
+                  className={`text-[13px] uppercase tracking-[0.18em] transition-colors ${
+                    active ? "text-gold" : "text-white/70 hover:text-gold"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            );
+          })}
+          <li>
+            <Link
+              to="/booking"
+              className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_30px_rgba(201,168,76,0.5)]"
+            >
+              <Sparkles size={12} /> Reservar Keynote
+            </Link>
+          </li>
         </ul>
         <button
           aria-label="Menú"
@@ -64,18 +78,27 @@ export const Nav = () => {
             exit={{ height: 0, opacity: 0 }}
             className="md:hidden overflow-hidden border-t border-white/5 bg-background/95"
           >
-            <ul className="flex flex-col gap-2 px-6 py-6">
+            <ul className="flex flex-col gap-1 px-6 py-6">
               {links.map((l) => (
-                <li key={l.href}>
-                  <a
+                <li key={l.to}>
+                  <Link
                     onClick={() => setOpen(false)}
-                    href={l.href}
+                    to={l.to}
                     className="block py-3 text-sm uppercase tracking-[0.2em] text-white/80 hover:text-gold"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
+              <li className="mt-4">
+                <Link
+                  to="/booking"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-3 text-[11px] uppercase tracking-[0.22em] text-background"
+                >
+                  <Sparkles size={12} /> Reservar Keynote
+                </Link>
+              </li>
             </ul>
           </motion.div>
         )}
