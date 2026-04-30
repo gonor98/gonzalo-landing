@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const CTASection = () => {
   return (
@@ -14,33 +15,33 @@ export const CTASection = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative mx-auto max-w-content text-center"
       >
-        <p className="mb-6 text-[11px] uppercase tracking-[0.32em] text-gold">Disponible 2026</p>
+        <p className="mb-6 text-[11px] uppercase tracking-[0.32em] text-gold">Disponible Q2–Q4 2026</p>
         <h2 className="font-display text-5xl md:text-7xl leading-[1.04] text-white max-w-4xl mx-auto">
           Invita a Gonzalo a tu <br className="hidden md:block" />
           <span className="italic text-gold">Próximo Evento</span>
         </h2>
         <p className="mt-6 text-white/60 text-lg max-w-2xl mx-auto">
-          Keynotes en PropTech, Web3, IA, y Emprendimiento desde LATAM.
+          Keynotes en PropTech, Web3, IA Operativa y Liderazgo desde LATAM.
         </p>
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="mailto:gonavacuu@gmail.com?subject=Keynote%20Booking"
+          <Link
+            to="/booking"
             className="group inline-flex items-center gap-3 rounded-full bg-gold px-8 py-4 text-sm uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_40px_rgba(201,168,76,0.45)]"
           >
             Reservar Keynote
             <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-          <a
-            href="#empresas"
+          </Link>
+          <Link
+            to="/audit-os"
             className="inline-flex items-center gap-3 rounded-full border border-gold px-8 py-4 text-sm uppercase tracking-[0.22em] text-gold transition-all hover:bg-gold/10"
           >
-            Ver Empresas
-          </a>
+            Ver Audit OS
+          </Link>
         </div>
 
         <p className="mt-20 text-xs uppercase tracking-[0.28em] text-white/35">
-          © 2026 Gonzalo Acuña Nava · Guadalajara, México
+          © 2026 Gonzalo Acuña Nava · Guadalajara, México · gonzalo@propmatchapp.com
         </p>
       </motion.div>
     </section>

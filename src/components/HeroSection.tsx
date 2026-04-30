@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
-import { ArrowDown, Play } from "lucide-react";
+import { ArrowDown, Play, Sparkles } from "lucide-react";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import gonzaloHero from "@/assets/gonzalo-hero-portrait.png";
 import stageImg from "@/assets/gonzalo-talentland-stage.jpg";
 import speakingImg from "@/assets/gonzalo-talentland-speaking.jpg";
@@ -13,9 +14,10 @@ import { useVideo } from "./VideoContext";
 import { heroVideo } from "@/lib/videos";
 
 const stats = [
-  { value: "$200M+", label: "en LOIs" },
-  { value: "2.8M+", label: "Audiencia Global" },
-  { value: "95 / 3", label: "Rechazos · Empresas" },
+  { value: 2.8, suffix: "M+", label: "Audiencia global", sub: "Keynotes en vivo" },
+  { value: 200, suffix: "+", label: "Conferencias", sub: "15+ países" },
+  { value: 195, suffix: "M", prefix: "$", label: "LOIs firmados", sub: "PropMatch" },
+  { value: 47, suffix: "s", label: "ETH → SPEI", sub: "Demo CALLII" },
 ];
 
 const reel = [
@@ -28,14 +30,33 @@ const reel = [
   { img: bbvaImg, label: "BBVA Spark · Founders LATAM", videoId: "ogxPivoX_78" },
 ];
 
+const useParallax = (mv: MotionValue<number>, distance: number) =>
+  useSpring(useTransform(mv, [0, 1], [0, distance]), { stiffness: 80, damping: 22, mass: 0.6 });
+
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 36 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.9, delay, ease: "easeOut" as const },
 });
 
-const useParallax = (mv: MotionValue<number>, distance: number) =>
-  useSpring(useTransform(mv, [0, 1], [0, distance]), { stiffness: 80, damping: 20, mass: 0.6 });
+// Animated number that pops in once
+const Stat = ({ s, i }: { s: typeof stats[number]; i: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-80px" }}
+    transition={{ duration: 0.8, delay: 0.1 * i, ease: "easeOut" }}
+    className="border-l border-gold/40 pl-5"
+  >
+    <div className="font-display text-4xl text-gold md:text-5xl">
+      {s.prefix ?? ""}
+      {s.value}
+      {s.suffix}
+    </div>
+    <div className="mt-2 text-[11px] uppercase tracking-[0.22em] text-white/55">{s.label}</div>
+    <div className="mt-0.5 text-[10px] text-white/35">{s.sub}</div>
+  </motion.div>
+);
 
 export const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,15 +74,20 @@ export const HeroSection = () => {
     <section
       ref={ref}
       className="relative grain grain-overlay min-h-[120vh] overflow-hidden bg-background"
+      aria-label="Hero principal"
     >
-      {/* LAYER 1 — Gonzalo portrait, anchored right, slowest */}
+      {/* Aurora gradient — animated luminous backdrop */}
+      <div className="aurora pointer-events-none absolute inset-0" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_120%,rgba(201,168,76,0.22),transparent_70%)]" />
+
+      {/* Portrait — desktop */}
       <motion.div
         style={{ y: yBack, scale }}
         className="pointer-events-none absolute inset-y-0 right-[-8%] hidden md:block w-[55vw] max-w-[760px] will-transform"
       >
         <img
           src={gonzaloHero}
-          alt="Retrato de Gonzalo Acuña Nava"
+          alt="Retrato de Gonzalo Acuña Nava, CEO de PropMatch"
           className="h-full w-full object-cover object-top opacity-90"
           style={{
             maskImage:
@@ -74,14 +100,15 @@ export const HeroSection = () => {
         />
       </motion.div>
 
-      {/* Mobile portrait */}
+      {/* Portrait — mobile */}
       <motion.div
         style={{ y: yBack, scale }}
         className="pointer-events-none absolute inset-x-0 top-[8vh] md:hidden flex justify-center will-transform"
       >
         <img
           src={gonzaloHero}
-          alt="Retrato de Gonzalo Acuña Nava"
+          alt=""
+          aria-hidden
           className="h-[58vh] w-auto object-cover opacity-50"
           style={{
             maskImage: "radial-gradient(ellipse 70% 70% at 50% 40%, black 40%, transparent 80%)",
@@ -91,12 +118,10 @@ export const HeroSection = () => {
         />
       </motion.div>
 
-      {/* Background gradients */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_120%,rgba(201,168,76,0.18),transparent_70%)]" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/0 via-background/30 to-background" />
 
-      {/* LAYER 2 — gold orbital ring */}
+      {/* Orbital ring */}
       <motion.div
         style={{ y: yMid }}
         className="pointer-events-none absolute right-[8vw] top-[12vh] hidden lg:block will-transform"
@@ -105,7 +130,7 @@ export const HeroSection = () => {
         <div className="absolute inset-12 rounded-full border border-gold/10" />
       </motion.div>
 
-      {/* LAYER 3 — floating polaroid (left bottom) */}
+      {/* Floating polaroid */}
       <motion.div
         style={{ y: yFront, opacity }}
         className="pointer-events-none absolute bottom-[28vh] left-[5%] hidden lg:block will-transform"
@@ -118,7 +143,7 @@ export const HeroSection = () => {
         </div>
       </motion.div>
 
-      {/* CENTER CONTENT */}
+      {/* CONTENT */}
       <motion.div
         style={{ y: yText, opacity }}
         className="relative z-10 mx-auto flex min-h-screen w-full max-w-content flex-col justify-center px-6 pt-32 md:px-20"
@@ -126,7 +151,7 @@ export const HeroSection = () => {
         <motion.div {...fadeUp(0)} className="mb-7 flex items-center gap-3">
           <div className="h-px w-10 bg-gold" />
           <p className="text-[11px] uppercase tracking-[0.4em] text-gold">
-            Guadalajara · México
+            Guadalajara · México · 2026
           </p>
         </motion.div>
 
@@ -134,44 +159,50 @@ export const HeroSection = () => {
           {...fadeUp(0.15)}
           className="font-display text-[15vw] leading-[0.95] tracking-tight text-white sm:text-7xl md:text-[112px]"
         >
-          Visionario
+          Gonzalo
           <br />
-          <span className="italic text-gold">del</span> PropTech
+          <span className="italic text-gold">Acuña</span> Nava
         </motion.h1>
 
         <motion.p
-          {...fadeUp(0.3)}
-          className="mt-8 max-w-xl text-base leading-relaxed text-white/65 md:text-xl"
+          {...fadeUp(0.28)}
+          className="mt-6 max-w-2xl text-base leading-relaxed text-white/75 md:text-xl"
         >
-          CEO & co-fundador de <span className="text-white">PropMatch</span>,{" "}
-          <span className="text-white">CALLII</span> y{" "}
-          <span className="text-white">Finple</span> — tokenizando el real estate y las
-          finanzas de Latinoamérica desde el escenario.
+          <span className="text-white">Business Transformation Voice</span> para la era de la IA · CEO de un
+          ecosistema de <span className="text-gold">$200M</span> que une emprendimiento, PropTech y
+          finanzas tokenizadas en LATAM.
         </motion.p>
 
-        {/* Stats */}
-        <motion.div
-          {...fadeUp(0.45)}
-          className="mt-14 grid max-w-3xl grid-cols-1 gap-8 sm:grid-cols-3"
+        <motion.p
+          {...fadeUp(0.4)}
+          className="mt-3 max-w-2xl text-sm text-white/45 md:text-base"
         >
-          {stats.map((s) => (
-            <div key={s.label} className="border-l border-gold/40 pl-5">
-              <div className="font-display text-3xl text-gold md:text-4xl">{s.value}</div>
-              <div className="mt-2 text-[11px] uppercase tracking-[0.22em] text-white/55">
-                {s.label}
-              </div>
-            </div>
+          Forbes 30U30 Nominee · Talent Land 2026 Winner · Web Summit & TNW Finalist
+        </motion.p>
+
+        {/* Stats Bento */}
+        <div className="mt-14 grid max-w-4xl grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+          {stats.map((s, i) => (
+            <Stat key={s.label} s={s} i={i} />
           ))}
-        </motion.div>
+        </div>
 
         {/* CTAs */}
         <motion.div {...fadeUp(0.6)} className="mt-14 flex flex-wrap items-center gap-4">
+          <Link
+            to="/booking"
+            className="group inline-flex items-center gap-3 rounded-full bg-gold px-7 py-3.5 text-sm uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_40px_rgba(201,168,76,0.45)]"
+          >
+            <Sparkles size={14} />
+            Reservar Keynote
+          </Link>
+
           <a
             href="#journey"
-            className="group inline-flex items-center gap-3 rounded-full border border-gold px-7 py-3.5 text-sm uppercase tracking-[0.22em] text-gold transition-all hover:bg-gold hover:text-background"
+            className="group inline-flex items-center gap-3 rounded-full border border-gold/60 px-7 py-3.5 text-sm uppercase tracking-[0.22em] text-gold transition-all hover:bg-gold hover:text-background"
           >
             Conoce el Journey
-            <ArrowDown size={16} className="transition-transform group-hover:translate-y-0.5" />
+            <ArrowDown size={14} className="transition-transform group-hover:translate-y-0.5" />
           </a>
 
           <button
@@ -187,7 +218,7 @@ export const HeroSection = () => {
           </button>
         </motion.div>
 
-        {/* SCROLL-SNAP REEL STRIP */}
+        {/* REEL STRIP */}
         <motion.div {...fadeUp(0.8)} className="mt-16 md:mt-20">
           <div className="mb-4 flex items-end justify-between">
             <p className="text-[10px] uppercase tracking-[0.32em] text-gold/80">
@@ -232,7 +263,6 @@ export const HeroSection = () => {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -245,18 +275,19 @@ export const HeroSection = () => {
         </div>
       </motion.div>
 
-      {/* Bottom marquee strip */}
       <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-gold/15 bg-background/60 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-content flex-wrap items-center justify-center gap-x-10 gap-y-2 px-6 text-[10px] uppercase tracking-[0.32em] text-white/50 md:px-20">
           <span>Forbes 30U30</span>
+          <span className="text-gold/40">·</span>
+          <span>Talent Land 2026</span>
           <span className="text-gold/40">·</span>
           <span>Web Summit Lisboa</span>
           <span className="text-gold/40">·</span>
           <span>TNW Amsterdam</span>
           <span className="text-gold/40">·</span>
-          <span>Talent Land Winner</span>
-          <span className="text-gold/40">·</span>
           <span>BBVA Spark</span>
+          <span className="text-gold/40">·</span>
+          <span>El Economista</span>
         </div>
       </div>
     </section>
