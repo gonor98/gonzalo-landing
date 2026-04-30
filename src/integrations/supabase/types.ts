@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      keynote_bookings: {
+        Row: {
+          audience_size: string | null
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          budget_range: string | null
+          created_at: string
+          email: string
+          event_city: string | null
+          event_date: string | null
+          event_name: string | null
+          full_name: string
+          id: string
+          message: string | null
+          organization: string | null
+          phone: string | null
+          role: string | null
+          status: string
+          topic_interest: string | null
+        }
+        Insert: {
+          audience_size?: string | null
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          budget_range?: string | null
+          created_at?: string
+          email: string
+          event_city?: string | null
+          event_date?: string | null
+          event_name?: string | null
+          full_name: string
+          id?: string
+          message?: string | null
+          organization?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string
+          topic_interest?: string | null
+        }
+        Update: {
+          audience_size?: string | null
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          budget_range?: string | null
+          created_at?: string
+          email?: string
+          event_city?: string | null
+          event_date?: string | null
+          event_name?: string | null
+          full_name?: string
+          id?: string
+          message?: string | null
+          organization?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string
+          topic_interest?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +79,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      booking_type: "bureau" | "organizer" | "enterprise"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +206,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      booking_type: ["bureau", "organizer", "enterprise"],
+    },
   },
 } as const
