@@ -2,6 +2,8 @@ import { motion, type MotionValue } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
+import { clampRange } from "@/lib/clamp";
+import { usePerfMode } from "@/hooks/usePerfMode";
 
 const ventures = [
   {
@@ -61,19 +63,20 @@ interface VentureCardProps {
 const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
   const start = i / total;
   const end = (i + 1) / total;
-  const opacityRange = [
+  const opacityRange = clampRange([
     Math.max(0, start - 0.05),
-    Math.min(1, start + 0.02),
-    Math.min(1, end - 0.05),
-    Math.min(1, end + 0.05),
-  ];
+    start + 0.02,
+    end - 0.05,
+    end + 0.05,
+  ]);
   const opacity = useTransform(
     scrollYProgress,
     opacityRange,
     [0, 1, 1, i === total - 1 ? 1 : 0],
   );
-  const y = useTransform(scrollYProgress, [start, end], [40, -40]);
-  const scale = useTransform(scrollYProgress, [start, end], [1, 0.96]);
+  const yzRange = clampRange([start, end]);
+  const y = useTransform(scrollYProgress, yzRange, [40, -40]);
+  const scale = useTransform(scrollYProgress, yzRange, [1, 0.96]);
 
   return (
     <motion.article
@@ -128,6 +131,7 @@ const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
 
 export const VentureStack = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   return (
@@ -135,10 +139,16 @@ export const VentureStack = () => {
       id="ventures"
       ref={ref}
       className="relative bg-background"
-      style={{ height: `${ventures.length * 100}vh` }}
+      style={{ height: reduced ? "auto" : `${ventures.length * 100}vh` }}
       aria-label="Venture Stack"
     >
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+      <div
+        className={
+          reduced
+            ? "py-20"
+            : "sticky top-0 flex h-screen items-center overflow-hidden"
+        }
+      >
         <div className="mx-auto w-full max-w-content px-6 md:px-20">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -152,17 +162,69 @@ export const VentureStack = () => {
             Tres empresas. <span className="italic text-gold">Un ecosistema.</span>
           </h2>
 
-          <div className="relative mt-12 h-[420px] md:h-[460px]">
-            {ventures.map((v, i) => (
-              <VentureCard
-                key={v.name}
-                v={v}
-                i={i}
-                total={ventures.length}
-                scrollYProgress={scrollYProgress}
-              />
-            ))}
-          </div>
+          {reduced ? (
+            <div className="mt-10 grid gap-6">
+              {ventures.map((v, i) => (
+                <article
+                  key={v.name}
+                  style={{ borderColor: v.borderRgba }}
+                  className="grid grid-cols-1 gap-6 rounded-[20px] border bg-card/30 p-6 backdrop-blur md:grid-cols-[1.4fr_1fr] md:p-10"
+                >
+                  <div>
+                    <p
+                      className="text-[11px] uppercase tracking-[0.32em]"
+                      style={{ color: v.color }}
+                    >
+                      Venture {String(i + 1).padStart(2, "0")} · {v.stage}
+                    </p>
+                    <h3 className="mt-3 font-display text-4xl text-white">{v.name}</h3>
+                    <p className="mt-3 text-base text-white/80">{v.tagline}</p>
+                    <p className="mt-5 text-sm leading-relaxed text-white/55">
+                      {v.description}
+                    </p>
+                    <div className="mt-6 flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.22em] text-white/50">
+                      <span>{v.safe}</span>
+                      <span style={{ color: v.color }}>·</span>
+                      <a
+                        href="/investors"
+                        className="inline-flex items-center gap-2"
+                        style={{ color: v.color }}
+                      >
+                        Data Room <ArrowUpRight size={12} />
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    className="relative flex flex-col items-center justify-center rounded-[16px] border bg-background/60 p-6 text-center"
+                    style={{ borderColor: v.innerBorderRgba }}
+                  >
+                    <div className="text-5xl">{v.icon}</div>
+                    <div
+                      className="mt-4 font-display text-4xl"
+                      style={{ color: v.color }}
+                    >
+                      {v.metric}
+                    </div>
+                    <div className="mt-1 text-[11px] uppercase tracking-[0.22em] text-white/55">
+                      {v.metricLabel}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="relative mt-12 h-[420px] md:h-[460px]">
+              {ventures.map((v, i) => (
+                <VentureCard
+                  key={v.name}
+                  v={v}
+                  i={i}
+                  total={ventures.length}
+                  scrollYProgress={scrollYProgress}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

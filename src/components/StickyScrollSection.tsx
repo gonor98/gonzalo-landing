@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Play } from "lucide-react";
 import { useVideo } from "./VideoContext";
+import { usePerfMode } from "@/hooks/usePerfMode";
 import forbes from "@/assets/gonzalo-acuna-real.webp";
 import propmatch from "@/assets/propmatch-app-mockup.webp";
 import keynote from "@/assets/gonzalo-talentland-stage.jpg";
@@ -38,8 +39,25 @@ export const StickyScrollSection = () => {
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
   const { open } = useVideo();
+  const { reduced } = usePerfMode();
 
+  // Drive `active` from scroll progress on desktop (sticky behavior).
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    // Three exact thresholds, regardless of card height.
+    const next = p < 1 / 3 ? 0 : p < 2 / 3 ? 1 : 2;
+    setActive((prev) => (prev === next ? prev : next));
+  });
+
+  // Mobile fallback (no sticky): IntersectionObserver per block.
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    if (isDesktop) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -64,13 +82,13 @@ export const StickyScrollSection = () => {
         <div className="relative md:sticky md:top-0 md:h-screen flex items-center md:px-20 px-6 py-16 md:py-0 order-2 md:order-1">
           <div className="w-full max-w-md">
             <p className="mb-6 text-[11px] uppercase tracking-[0.32em] text-gold">Capítulo</p>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={current.label}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: reduced ? 0 : 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -24 }}
-                transition={{ duration: 0.55, ease: "easeOut" as const }}
+                exit={{ opacity: 0, y: reduced ? 0 : -24 }}
+                transition={{ duration: reduced ? 0.25 : 0.55, ease: "easeOut" as const }}
               >
                 <p className="mb-4 font-display italic text-gold/80">{current.label}</p>
                 <h3 className="font-display text-4xl md:text-5xl leading-[1.05] text-white">
@@ -109,7 +127,7 @@ export const StickyScrollSection = () => {
               key={s.title}
               ref={(el) => (blockRefs.current[i] = el)}
               data-index={i}
-              className="group relative h-screen w-full cursor-pointer overflow-hidden"
+              className="group relative h-[70vh] md:h-screen w-full cursor-pointer overflow-hidden"
               onClick={() => open(s.videoId, s.title)}
               role="button"
               aria-label={`Reproducir: ${s.title}`}
@@ -117,7 +135,8 @@ export const StickyScrollSection = () => {
               <img
                 src={s.img}
                 alt={s.alt}
-                loading="lazy"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-background/40" />

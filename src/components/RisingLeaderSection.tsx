@@ -1,11 +1,13 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import portrait from "@/assets/gonzalo-portrait.webp";
+import { usePerfMode } from "@/hooks/usePerfMode";
 
 export const RisingLeaderSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const y = useTransform(scrollYProgress, [0, 1], reduced ? ["0%", "0%"] : ["-8%", "8%"]);
 
   return (
     <section id="journey" ref={ref} className="relative overflow-hidden bg-background py-[120px] md:px-20 px-6">
@@ -45,6 +47,7 @@ export const RisingLeaderSection = () => {
               src={portrait}
               alt="Gonzalo Acuña Nava — retrato"
               loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover"
             />
           </motion.div>
