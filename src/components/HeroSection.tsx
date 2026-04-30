@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-
 import { ArrowDown, Play, Sparkles } from "lucide-react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { usePerfMode } from "@/hooks/usePerfMode";
 import gonzaloHero from "@/assets/gonzalo-hero-portrait.png";
 import stageImg from "@/assets/gonzalo-talentland-stage.jpg";
 import speakingImg from "@/assets/gonzalo-talentland-speaking.jpg";
@@ -61,14 +62,17 @@ const Stat = ({ s, i }: { s: typeof stats[number]; i: number }) => (
 export const HeroSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { open } = useVideo();
+  const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
-  const yBack = useParallax(scrollYProgress, 220);
-  const yMid = useParallax(scrollYProgress, 120);
-  const yFront = useParallax(scrollYProgress, -60);
-  const yText = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  // Lighter parallax distances on reduced devices, then we also "freeze" the
+  // motion values via inline style overrides below.
+  const yBack = useParallax(scrollYProgress, reduced ? 0 : 220);
+  const yMid = useParallax(scrollYProgress, reduced ? 0 : 120);
+  const yFront = useParallax(scrollYProgress, reduced ? 0 : -60);
+  const yText = useTransform(scrollYProgress, [0, 1], ["0%", reduced ? "0%" : "30%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, reduced ? 0.4 : 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, reduced ? 1 : 1.08]);
 
   return (
     <section
@@ -88,6 +92,8 @@ export const HeroSection = () => {
         <img
           src={gonzaloHero}
           alt="Retrato de Gonzalo Acuña Nava, CEO de PropMatch"
+          decoding="async"
+          fetchPriority="high"
           className="h-full w-full object-cover object-top opacity-90"
           style={{
             maskImage:
@@ -109,6 +115,8 @@ export const HeroSection = () => {
           src={gonzaloHero}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="h-[58vh] w-auto object-cover opacity-50"
           style={{
             maskImage: "radial-gradient(ellipse 70% 70% at 50% 40%, black 40%, transparent 80%)",
@@ -136,7 +144,7 @@ export const HeroSection = () => {
         className="pointer-events-none absolute bottom-[28vh] left-[5%] hidden lg:block will-transform"
       >
         <div className="-rotate-[8deg] rounded-[12px] border border-gold/20 bg-card/40 p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur">
-          <img src={speakingImg} alt="" className="h-36 w-56 rounded-md object-cover" />
+          <img src={speakingImg} alt="" loading="lazy" decoding="async" className="h-36 w-56 rounded-md object-cover" />
           <p className="mt-2 px-2 pb-1 text-[10px] uppercase tracking-[0.22em] text-gold/80">
             Talent Land · 2026
           </p>
