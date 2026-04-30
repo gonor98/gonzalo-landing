@@ -110,13 +110,14 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (!body.full_name || body.full_name.trim().length < 2 || body.full_name.length > 120) {
-      return new Response(JSON.stringify({ error: "Invalid name" }), {
+    const name = (body.full_name ?? "").trim();
+    if (!name || name.length < 2 || name.length > 120) {
+      return new Response(JSON.stringify({ error: "Escribe tu nombre completo (mínimo 2 caracteres)." }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     if (!body.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email) || body.email.length > 200) {
-      return new Response(JSON.stringify({ error: "Invalid email" }), {
+      return new Response(JSON.stringify({ error: "Email inválido. Revisa el formato (ej. nombre@empresa.com)." }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
