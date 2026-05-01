@@ -31,9 +31,13 @@ export const SEO = ({ title, description, path = "/", jsonLd, ogImage }: SEOProp
     upsert(`meta[property="og:description"]`, { property: "og:description", content: description });
     upsert(`meta[property="og:url"]`, { property: "og:url", content: url });
     upsert(`meta[property="og:type"]`, { property: "og:type", content: "website" });
+    upsert(`meta[property="og:site_name"]`, { property: "og:site_name", content: "Gonzalo Acuña Nava" });
+    upsert(`meta[property="og:locale"]`, { property: "og:locale", content: "es_MX" });
     if (ogImage) upsert(`meta[property="og:image"]`, { property: "og:image", content: ogImage });
 
     upsert(`meta[name="twitter:card"]`, { name: "twitter:card", content: "summary_large_image" });
+    upsert(`meta[name="twitter:site"]`, { name: "twitter:site", content: "@gonzaloacuna" });
+    upsert(`meta[name="twitter:creator"]`, { name: "twitter:creator", content: "@gonzaloacuna" });
     upsert(`meta[name="twitter:title"]`, { name: "twitter:title", content: title });
     upsert(`meta[name="twitter:description"]`, { name: "twitter:description", content: description });
     if (ogImage) upsert(`meta[name="twitter:image"]`, { name: "twitter:image", content: ogImage });
