@@ -12,6 +12,8 @@ import { CTASection } from "@/components/CTASection";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { CustomCursor } from "@/components/CustomCursor";
 import { SEO, personJsonLd } from "@/components/SEO";
+import { SocialRail } from "@/components/SocialRail";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const Index = () => {
   return (
@@ -26,6 +28,7 @@ const Index = () => {
       <ScrollProgressBar />
       <CustomCursor />
       <Nav />
+      <SocialRail />
       <HeroSection />
       <RisingLeaderSection />
       <AchievementsOverview />
@@ -36,6 +39,7 @@ const Index = () => {
       <MilestonesSection />
       <MasonryGrid />
       <CTASection />
+      <SiteFooter />
     </main>
   );
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Sparkles } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { SOCIALS } from "@/lib/socials";
 
 const links = [
   { label: "Inicio", to: "/" },
@@ -98,6 +99,24 @@ export const Nav = () => {
                 >
                   <Sparkles size={12} /> Reservar Keynote
                 </Link>
+              </li>
+              <li className="mt-6 border-t border-white/5 pt-5">
+                <p className="mb-3 text-[10px] uppercase tracking-[0.28em] text-white/40">Conecta directo</p>
+                <div className="flex flex-wrap gap-2">
+                  {SOCIALS.map(({ name, href, icon: Icon, external }) => (
+                    <a
+                      key={name}
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      onClick={() => setOpen(false)}
+                      aria-label={name}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] text-white/70 transition-colors hover:border-gold/40 hover:text-gold"
+                    >
+                      <Icon size={15} />
+                    </a>
+                  ))}
+                </div>
               </li>
             </ul>
           </motion.div>

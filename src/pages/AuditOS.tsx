@@ -1,6 +1,8 @@
 import { Nav } from "@/components/Nav";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { SEO, personJsonLd } from "@/components/SEO";
+import { SocialRail } from "@/components/SocialRail";
+import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -76,6 +78,7 @@ const AuditOS = () => {
       />
       <ScrollProgressBar />
       <Nav />
+      <SocialRail />
 
       <section className="relative overflow-hidden pt-40 pb-16 md:pt-52 md:pb-24">
         <div className="absolute inset-0 radial-gold opacity-60" />
@@ -140,6 +143,7 @@ const AuditOS = () => {
           ))}
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 };

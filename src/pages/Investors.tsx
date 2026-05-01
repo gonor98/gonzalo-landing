@@ -1,6 +1,8 @@
 import { Nav } from "@/components/Nav";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { SEO, personJsonLd } from "@/components/SEO";
+import { SocialRail } from "@/components/SocialRail";
+import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
 import { Lock, ArrowUpRight, TrendingUp } from "lucide-react";
 
@@ -45,6 +47,7 @@ const Investors = () => {
       />
       <ScrollProgressBar />
       <Nav />
+      <SocialRail />
 
       <section className="relative overflow-hidden pt-40 pb-12 md:pt-52 md:pb-20">
         <div className="absolute inset-0 radial-gold opacity-60" />
@@ -139,6 +142,7 @@ const Investors = () => {
           </div>
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 };
