@@ -1,6 +1,8 @@
 import { Nav } from "@/components/Nav";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { SEO, personJsonLd } from "@/components/SEO";
+import { SocialRail } from "@/components/SocialRail";
+import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -140,6 +142,7 @@ const AuditOS = () => {
           ))}
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 };

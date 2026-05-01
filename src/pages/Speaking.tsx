@@ -3,6 +3,8 @@ import { ThemesGrid } from "@/components/ThemesGrid";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { CTASection } from "@/components/CTASection";
 import { SEO, personJsonLd } from "@/components/SEO";
+import { SocialRail } from "@/components/SocialRail";
+import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -18,6 +20,7 @@ const Speaking = () => {
       />
       <ScrollProgressBar />
       <Nav />
+      <SocialRail />
 
       <section className="relative overflow-hidden pt-40 pb-16 md:pt-52 md:pb-24">
         <div className="absolute inset-0 radial-gold opacity-70" />
@@ -65,6 +68,7 @@ const Speaking = () => {
 
       <ThemesGrid />
       <CTASection />
+      <SiteFooter />
     </main>
   );
 };

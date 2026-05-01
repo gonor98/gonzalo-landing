@@ -2,6 +2,7 @@ import { Nav } from "@/components/Nav";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { SEO, personJsonLd } from "@/components/SEO";
 import { BookingSelector } from "@/components/BookingSelector";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const Booking = () => {
   return (
@@ -34,6 +35,7 @@ const Booking = () => {
           <BookingSelector />
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 };

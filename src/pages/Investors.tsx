@@ -1,6 +1,8 @@
 import { Nav } from "@/components/Nav";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { SEO, personJsonLd } from "@/components/SEO";
+import { SocialRail } from "@/components/SocialRail";
+import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
 import { Lock, ArrowUpRight, TrendingUp } from "lucide-react";
 
@@ -139,6 +141,7 @@ const Investors = () => {
           </div>
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 };
