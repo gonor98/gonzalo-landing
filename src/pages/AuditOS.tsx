@@ -78,6 +78,7 @@ const AuditOS = () => {
       />
       <ScrollProgressBar />
       <Nav />
+      <SocialRail />
 
       <section className="relative overflow-hidden pt-40 pb-16 md:pt-52 md:pb-24">
         <div className="absolute inset-0 radial-gold opacity-60" />

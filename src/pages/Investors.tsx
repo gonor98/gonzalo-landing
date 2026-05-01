@@ -47,6 +47,7 @@ const Investors = () => {
       />
       <ScrollProgressBar />
       <Nav />
+      <SocialRail />
 
       <section className="relative overflow-hidden pt-40 pb-12 md:pt-52 md:pb-20">
         <div className="absolute inset-0 radial-gold opacity-60" />
