@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { SOCIALS } from "@/lib/socials";
+import { trackSocialClick } from "@/lib/track";
 
 export const SiteFooter = () => {
   return (
@@ -26,6 +27,7 @@ export const SiteFooter = () => {
                   href={href}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
+                  onClick={() => trackSocialClick(name, "footer")}
                   className="group inline-flex items-center gap-3 text-sm text-white/75 transition-colors hover:text-gold"
                 >
                   <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] transition-all group-hover:border-gold/40 group-hover:bg-gold/10">
