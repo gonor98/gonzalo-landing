@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Sparkles } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { SOCIALS } from "@/lib/socials";
+import { trackCTAClick, trackSocialClick } from "@/lib/track";
 
 const links = [
   { label: "Inicio", to: "/" },
@@ -57,6 +58,7 @@ export const Nav = () => {
           <li>
             <Link
               to="/booking"
+              onClick={() => trackCTAClick("reservar_keynote", "nav_desktop")}
               className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_30px_rgba(201,168,76,0.5)]"
             >
               <Sparkles size={12} /> Reservar Keynote
@@ -94,7 +96,10 @@ export const Nav = () => {
               <li className="mt-4">
                 <Link
                   to="/booking"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    trackCTAClick("reservar_keynote", "nav_mobile");
+                    setOpen(false);
+                  }}
                   className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-3 text-[11px] uppercase tracking-[0.22em] text-background"
                 >
                   <Sparkles size={12} /> Reservar Keynote
@@ -109,7 +114,10 @@ export const Nav = () => {
                       href={href}
                       target={external ? "_blank" : undefined}
                       rel={external ? "noopener noreferrer" : undefined}
-                      onClick={() => setOpen(false)}
+                      onClick={() => {
+                        trackSocialClick(name, "nav_mobile");
+                        setOpen(false);
+                      }}
                       aria-label={name}
                       className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] text-white/70 transition-colors hover:border-gold/40 hover:text-gold"
                     >

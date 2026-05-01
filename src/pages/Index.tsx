@@ -14,6 +14,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { SEO, personJsonLd } from "@/components/SEO";
 import { SocialRail } from "@/components/SocialRail";
 import { SiteFooter } from "@/components/SiteFooter";
+import { PodcastsSection } from "@/components/PodcastsSection";
 
 const Index = () => {
   return (
@@ -38,6 +39,7 @@ const Index = () => {
       <ThemesGrid compact />
       <MilestonesSection />
       <MasonryGrid />
+      <PodcastsSection />
       <CTASection />
       <SiteFooter />
     </main>

@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import { Mail, Globe, Building2 } from "lucide-react";
+import { Mail, Globe, Building2, MessageCircle } from "lucide-react";
 
 type IconCmp = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>;
 
@@ -22,6 +22,13 @@ export type Social = {
   icon: IconCmp;
   external?: boolean;
 };
+
+// E.164-style number for wa.me links (no +, no spaces)
+export const WHATSAPP_NUMBER = "523324339881";
+export const WHATSAPP_DISPLAY = "+52 33 2433 9881";
+export const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  "Hola Gonzalo, vengo de gonzaloacuna.com",
+)}`;
 
 export const SOCIALS: Social[] = [
   {
@@ -50,6 +57,13 @@ export const SOCIALS: Social[] = [
     handle: "gonzalo@propmatchapp.com",
     href: "mailto:gonzalo@propmatchapp.com",
     icon: Mail,
+  },
+  {
+    name: "WhatsApp",
+    handle: WHATSAPP_DISPLAY,
+    href: WHATSAPP_HREF,
+    icon: MessageCircle,
+    external: true,
   },
   {
     name: "Web",
