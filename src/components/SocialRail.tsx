@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { SOCIALS } from "@/lib/socials";
+import { trackSocialClick } from "@/lib/track";
 
 export const SocialRail = () => {
   return (
@@ -19,6 +20,7 @@ export const SocialRail = () => {
               rel={external ? "noopener noreferrer" : undefined}
               aria-label={name}
               title={name}
+              onClick={() => trackSocialClick(name, "social_rail")}
               className="group relative flex h-10 w-10 items-center justify-center rounded-full text-white/60 transition-all hover:text-gold hover:bg-gold/10 hover:shadow-[0_0_20px_rgba(201,168,76,0.35)]"
             >
               <Icon size={16} />
