@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Download, Map, Presentation, Sparkles, ArrowRight, GraduationCap } from "lucide-react";
+import { Download, Map, Presentation, Sparkles, ArrowRight, GraduationCap, Eye, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SEO } from "@/components/SEO";
-import { trackCTAClick } from "@/lib/track";
+import { trackCTAClick, trackDownload } from "@/lib/track";
+import { PDFPreviewModal } from "@/components/PDFPreviewModal";
 
 const PDF_GUIDE = "/bonus-guia-estudiante-ceti.pdf";
 const PDF_TALK = "/conferencia-ceti-gonzalo.pdf";
@@ -21,39 +23,99 @@ type CardProps = {
   trackId: string;
 };
 
-const DownloadCard = ({ icon: Icon, tag, title, description, cta, href, filename, trackId }: CardProps) => (
+const DownloadCard = ({
+  icon: Icon,
+  tag,
+  title,
+  description,
+  cta,
+  href,
+  filename,
+  trackId,
+  onPreview,
+}: CardProps & { onPreview: () => void }) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-80px" }}
     transition={{ duration: 0.6, ease: "easeOut" }}
-    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-7 backdrop-blur-xl transition-all hover:border-gold/40 hover:shadow-[0_20px_60px_-20px_rgba(201,168,76,0.35)] sm:p-9"
+    className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-5 backdrop-blur-xl transition-all hover:border-gold/40 hover:shadow-[0_20px_60px_-20px_rgba(201,168,76,0.35)] sm:p-7"
   >
-    <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-3xl transition-opacity group-hover:opacity-100 opacity-50" />
-    <div className="relative">
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-gold/30 bg-gold/10 text-gold">
-          <Icon size={22} />
-        </div>
-        <span className="text-[10px] uppercase tracking-[0.28em] text-gold/80">{tag}</span>
-      </div>
-      <h3 className="font-display text-2xl leading-tight text-white sm:text-3xl">{title}</h3>
-      <p className="mt-3 text-sm leading-relaxed text-white/65 sm:text-base">{description}</p>
-      <a
-        href={href}
-        download={filename}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => trackCTAClick(trackId, "bonus_ceti")}
-        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3.5 text-[12px] uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_30px_rgba(201,168,76,0.55)] sm:w-auto"
+    <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-3xl opacity-50 transition-opacity group-hover:opacity-100" />
+    <div className="relative flex flex-col gap-5">
+      {/* Thumbnail preview */}
+      <button
+        type="button"
+        onClick={onPreview}
+        aria-label={`Vista previa de ${title}`}
+        className="group/thumb relative block aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-black/40"
       >
-        <Download size={14} /> {cta}
-      </a>
+        <object
+          data={`${href}#page=1&view=Fit&toolbar=0&navpanes=0`}
+          type="application/pdf"
+          className="pointer-events-none h-full w-full"
+          aria-hidden="true"
+        >
+          <div className="flex h-full items-center justify-center text-gold/60">
+            <FileText size={48} strokeWidth={1.2} />
+          </div>
+        </object>
+        <div className="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 opacity-90 transition-opacity group-hover/thumb:opacity-100">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-background/60 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/80 backdrop-blur">
+            <Eye size={11} /> Vista previa
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.22em] text-white/50">PDF</span>
+        </div>
+      </button>
+
+      <div>
+        <div className="mb-4 flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-gold/30 bg-gold/10 text-gold">
+            <Icon size={20} />
+          </div>
+          <span className="text-[10px] uppercase tracking-[0.28em] text-gold/80">{tag}</span>
+        </div>
+        <h3 className="font-display text-2xl leading-tight text-white sm:text-3xl">{title}</h3>
+        <p className="mt-3 text-sm leading-relaxed text-white/65 sm:text-base">{description}</p>
+
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <a
+            href={href}
+            download={filename}
+            onClick={() => {
+              trackCTAClick(trackId, "bonus_ceti");
+              trackDownload(filename, "bonus_ceti", "download");
+            }}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-[12px] uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_30px_rgba(201,168,76,0.55)]"
+          >
+            <Download size={14} /> {cta}
+          </a>
+          <button
+            type="button"
+            onClick={onPreview}
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-5 py-3 text-[12px] uppercase tracking-[0.22em] text-white/80 transition-colors hover:border-gold/40 hover:text-gold"
+          >
+            <Eye size={13} /> Previsualizar
+          </button>
+        </div>
+      </div>
     </div>
   </motion.div>
 );
 
 const BonusCeti = () => {
+  const [preview, setPreview] = useState<null | {
+    src: string;
+    filename: string;
+    title: string;
+    trackId: string;
+  }>(null);
+
+  const openPreview = (p: NonNullable<typeof preview>) => {
+    trackDownload(p.filename, "bonus_ceti", "preview");
+    setPreview(p);
+  };
+
   return (
     <main className="relative min-h-screen bg-background text-foreground">
       <SEO
