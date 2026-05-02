@@ -9,6 +9,7 @@ import Speaking from "./pages/Speaking.tsx";
 import AuditOS from "./pages/AuditOS.tsx";
 import Investors from "./pages/Investors.tsx";
 import Booking from "./pages/Booking.tsx";
+import BonusCeti from "./pages/BonusCeti.tsx";
 import { VideoProvider } from "@/components/VideoContext";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/audit-os" element={<AuditOS />} />
             <Route path="/investors" element={<Investors />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/bonus-ceti" element={<BonusCeti />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
