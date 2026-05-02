@@ -35,3 +35,6 @@ export const trackCTAClick = (cta: string, location: string) =>
 
 export const trackWhatsAppClick = (location: string) =>
   track("whatsapp_click", { location });
+
+export const trackDownload = (file: string, location: string, action: "preview" | "download" = "download") =>
+  track("file_download", { file, location, action });
