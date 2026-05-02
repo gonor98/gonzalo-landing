@@ -169,6 +169,14 @@ const BonusCeti = () => {
               href={PDF_GUIDE}
               filename="bonus-guia-estudiante-ceti.pdf"
               trackId="descarga_guia_ceti"
+              onPreview={() =>
+                openPreview({
+                  src: PDF_GUIDE,
+                  filename: "bonus-guia-estudiante-ceti.pdf",
+                  title: "Tu Mapa de Inicio (Bonus Guía)",
+                  trackId: "descarga_guia_ceti",
+                })
+              }
             />
             <DownloadCard
               icon={Presentation}
@@ -179,6 +187,14 @@ const BonusCeti = () => {
               href={PDF_TALK}
               filename="conferencia-ceti-gonzalo.pdf"
               trackId="descarga_slides_ceti"
+              onPreview={() =>
+                openPreview({
+                  src: PDF_TALK,
+                  filename: "conferencia-ceti-gonzalo.pdf",
+                  title: "95 Rechazos (Slides de Conferencia)",
+                  trackId: "descarga_slides_ceti",
+                })
+              }
             />
           </div>
         </div>
@@ -229,6 +245,16 @@ const BonusCeti = () => {
       </section>
 
       <SiteFooter />
+
+      <PDFPreviewModal
+        open={!!preview}
+        onClose={() => setPreview(null)}
+        src={preview?.src ?? ""}
+        filename={preview?.filename ?? ""}
+        title={preview?.title ?? ""}
+        trackId={preview?.trackId ?? ""}
+        location="bonus_ceti"
+      />
     </main>
   );
 };
