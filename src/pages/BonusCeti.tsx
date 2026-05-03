@@ -1,39 +1,22 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Download, Map, Presentation, Sparkles, ArrowRight, GraduationCap, Eye, FileText } from "lucide-react";
+import { Download, Sparkles, ArrowRight, GraduationCap, Eye, FileText, PlayCircle, Share2, Link as LinkIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SEO } from "@/components/SEO";
-import { trackCTAClick, trackDownload } from "@/lib/track";
+import { trackCTAClick, trackDownload, trackPreviewOpen } from "@/lib/track";
 import { PDFPreviewModal } from "@/components/PDFPreviewModal";
-
-const PDF_GUIDE = "/bonus-guia-estudiante-ceti.pdf";
-const PDF_TALK = "/conferencia-ceti-gonzalo.pdf";
-const FINPLE_URL = "https://gonzaloacuna.com/ceti";
+import { BONUS_MATERIALS, CONFERENCE_VIDEO, FINPLE_URL, type BonusMaterial } from "@/lib/bonusMaterials";
 
 type CardProps = {
-  icon: React.ElementType;
-  tag: string;
-  title: string;
-  description: string;
-  cta: string;
-  href: string;
-  filename: string;
-  trackId: string;
+  material: BonusMaterial;
+  onPreview: () => void;
 };
 
-const DownloadCard = ({
-  icon: Icon,
-  tag,
-  title,
-  description,
-  cta,
-  href,
-  filename,
-  trackId,
-  onPreview,
-}: CardProps & { onPreview: () => void }) => (
+const DownloadCard = ({ material, onPreview }: CardProps) => {
+  const { icon: Icon, tag, title, description, cta, href, filename, trackId } = material;
+  return (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -50,16 +33,9 @@ const DownloadCard = ({
         aria-label={`Vista previa de ${title}`}
         className="group/thumb relative block aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-black/40"
       >
-        <object
-          data={`${href}#page=1&view=Fit&toolbar=0&navpanes=0`}
-          type="application/pdf"
-          className="pointer-events-none h-full w-full"
-          aria-hidden="true"
-        >
-          <div className="flex h-full items-center justify-center text-gold/60">
-            <FileText size={48} strokeWidth={1.2} />
-          </div>
-        </object>
+        <div className="flex h-full items-center justify-center text-gold/60">
+          <Icon size={56} strokeWidth={1.1} />
+        </div>
         <div className="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 opacity-90 transition-opacity group-hover/thumb:opacity-100">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-background/60 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-white/80 backdrop-blur">
             <Eye size={11} /> Vista previa
@@ -101,7 +77,46 @@ const DownloadCard = ({
       </div>
     </div>
   </motion.div>
-);
+  );
+};
+
+const ConferenceVideoBlock = () => {
+  if (!CONFERENCE_VIDEO.url) {
+    return (
+      <div className="relative overflow-hidden rounded-3xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center sm:p-14">
+        <PlayCircle size={48} className="mx-auto text-gold/70" strokeWidth={1.2} />
+        <h3 className="mt-5 font-display text-2xl text-white sm:text-3xl">
+          Video de la conferencia · próximamente
+        </h3>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-white/60 sm:text-base">
+          Estamos editando la grabación completa de “95 Rechazos” en CETI.
+          Aquí podrás revivirla en cuanto esté lista.
+        </p>
+      </div>
+    );
+  }
+  const { url, provider, title } = CONFERENCE_VIDEO;
+  return (
+    <div className="overflow-hidden rounded-3xl border border-white/10 bg-black">
+      <div className="aspect-video w-full">
+        {provider === "file" ? (
+          <video controls preload="metadata" className="h-full w-full" poster={CONFERENCE_VIDEO.poster}>
+            <source src={url} />
+          </video>
+        ) : (
+          <iframe
+            src={url}
+            title={title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+            className="h-full w-full"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
 const BonusCeti = () => {
   const [preview, setPreview] = useState<null | {
@@ -112,6 +127,7 @@ const BonusCeti = () => {
   }>(null);
 
   const openPreview = (p: NonNullable<typeof preview>) => {
+    trackPreviewOpen(p.filename, "bonus_ceti");
     trackDownload(p.filename, "bonus_ceti", "preview");
     setPreview(p);
   };
@@ -153,50 +169,46 @@ const BonusCeti = () => {
       {/* Downloads */}
       <section className="relative pb-20 sm:pb-28">
         <div className="mx-auto max-w-content px-6 md:px-20">
-          <div className="mb-10 flex items-end justify-between gap-6">
+          <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-[10px] uppercase tracking-[0.28em] text-white/40">Tus descargas</p>
               <h2 className="mt-2 font-display text-2xl text-white sm:text-3xl">Llévate todo el material</h2>
             </div>
+            <Link
+              to="/bonus-ceti-descargas"
+              onClick={() => trackCTAClick("ver_catalogo_descargas", "bonus_ceti")}
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-white/75 transition-colors hover:border-gold/40 hover:text-gold"
+            >
+              <Share2 size={13} /> Catálogo compartible
+            </Link>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <DownloadCard
-              icon={Map}
-              tag="Bonus Guía"
-              title="Tu Mapa de Inicio (Bonus Guía)"
-              description="Finanzas personales, IA práctica, mentalidad founder y red de contactos. Sin teoría vacía, solo herramientas reales para estudiantes de 17 a 29 años."
-              cta="Descargar Guía (PDF)"
-              href={PDF_GUIDE}
-              filename="bonus-guia-estudiante-ceti.pdf"
-              trackId="descarga_guia_ceti"
-              onPreview={() =>
-                openPreview({
-                  src: PDF_GUIDE,
-                  filename: "bonus-guia-estudiante-ceti.pdf",
-                  title: "Tu Mapa de Inicio (Bonus Guía)",
-                  trackId: "descarga_guia_ceti",
-                })
-              }
-            />
-            <DownloadCard
-              icon={Presentation}
-              tag="Slides Conferencia"
-              title="95 Rechazos (Slides de Conferencia)"
-              description="Cómo pasar de lavar autos a liderar PropMatch, CALLII y Finple. El mapa de acción y las notas completas de la conferencia."
-              cta="Descargar Presentación (PDF)"
-              href={PDF_TALK}
-              filename="conferencia-ceti-gonzalo.pdf"
-              trackId="descarga_slides_ceti"
-              onPreview={() =>
-                openPreview({
-                  src: PDF_TALK,
-                  filename: "conferencia-ceti-gonzalo.pdf",
-                  title: "95 Rechazos (Slides de Conferencia)",
-                  trackId: "descarga_slides_ceti",
-                })
-              }
-            />
+            {BONUS_MATERIALS.map((m) => (
+              <DownloadCard
+                key={m.id}
+                material={m}
+                onPreview={() =>
+                  openPreview({
+                    src: m.href,
+                    filename: m.filename,
+                    title: m.title,
+                    trackId: m.trackId,
+                  })
+                }
+              />
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* Conference video */}
+      <section className="relative pb-20 sm:pb-28">
+        <div className="mx-auto max-w-content px-6 md:px-20">
+          <div className="mb-8">
+            <p className="text-[10px] uppercase tracking-[0.28em] text-white/40">Conferencia completa</p>
+            <h2 className="mt-2 font-display text-2xl text-white sm:text-3xl">Revive la charla</h2>
+          </div>
+          <ConferenceVideoBlock />
         </div>
       </section>
 
