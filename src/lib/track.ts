@@ -38,3 +38,6 @@ export const trackWhatsAppClick = (location: string) =>
 
 export const trackDownload = (file: string, location: string, action: "preview" | "download" = "download") =>
   track("file_download", { file, location, action });
+
+export const trackPreviewOpen = (file: string, location: string) =>
+  track("file_preview_open", { file, location });
