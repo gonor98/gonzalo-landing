@@ -10,6 +10,7 @@ const links = [
   { label: "Speaking", to: "/speaking" },
   { label: "Audit OS", to: "/audit-os" },
   { label: "Investors", to: "/investors" },
+  { label: "Bonus CETI", to: "/bonus-ceti" },
 ];
 
 export const Nav = () => {
