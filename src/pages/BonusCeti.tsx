@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Download, Sparkles, ArrowRight, GraduationCap, Eye, FileText, PlayCircle, Share2, Link as LinkIcon } from "lucide-react";
+import { Download, Sparkles, ArrowRight, GraduationCap, Eye, PlayCircle, Share2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
