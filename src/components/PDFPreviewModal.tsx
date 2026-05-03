@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download, ExternalLink } from "lucide-react";
 import { trackDownload } from "@/lib/track";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PDFPreviewModalProps {
   open: boolean;
@@ -22,15 +23,56 @@ export const PDFPreviewModal = ({
   trackId,
   location = "bonus_ceti",
 }: PDFPreviewModalProps) => {
+  const isMobile = useIsMobile();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
+  const [embedFailed, setEmbedFailed] = useState(false);
+
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    setEmbedFailed(false);
+    // Detect failure to load embed (object onError is unreliable — use timeout heuristic on mobile only)
+    if (isMobile) {
+      const t = setTimeout(() => setEmbedFailed(true), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [open, src, isMobile]);
+
+  useEffect(() => {
+    if (!open) return;
+    lastFocused.current = document.activeElement as HTMLElement | null;
+    // Move focus into dialog
+    requestAnimationFrame(() => closeBtnRef.current?.focus());
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      lastFocused.current?.focus?.();
     };
   }, [open, onClose]);
 
@@ -49,6 +91,7 @@ export const PDFPreviewModal = ({
           aria-label={`Vista previa: ${title}`}
         >
           <motion.div
+            ref={dialogRef}
             initial={{ y: 24, scale: 0.98, opacity: 0 }}
             animate={{ y: 0, scale: 1, opacity: 1 }}
             exit={{ y: 12, scale: 0.98, opacity: 0 }}
@@ -81,6 +124,7 @@ export const PDFPreviewModal = ({
                   <ExternalLink size={14} />
                 </a>
                 <button
+                  ref={closeBtnRef}
                   onClick={onClose}
                   aria-label="Cerrar vista previa"
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/70 transition-colors hover:border-gold/40 hover:text-gold"
@@ -90,26 +134,64 @@ export const PDFPreviewModal = ({
               </div>
             </header>
             <div className="relative flex-1 bg-black/40">
-              <object data={`${src}#view=FitH`} type="application/pdf" className="h-full w-full">
-                <iframe
-                  src={`${src}#view=FitH`}
-                  title={title}
-                  className="h-full w-full"
-                />
-                <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
+              {isMobile && embedFailed ? (
+                <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
                   <p className="text-sm text-white/70">
-                    Tu navegador no puede mostrar el PDF embebido.
+                    Para una mejor experiencia en móvil, abre el PDF en una nueva pestaña o descárgalo.
                   </p>
-                  <a
-                    href={src}
-                    download={filename}
-                    onClick={() => trackDownload(filename, location, "download")}
-                    className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-background"
-                  >
-                    <Download size={13} /> Descargar PDF
-                  </a>
+                  <div className="flex flex-wrap items-center justify-center gap-3">
+                    <a
+                      href={src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => trackDownload(filename, location, "preview")}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/85"
+                    >
+                      <ExternalLink size={13} /> Abrir PDF
+                    </a>
+                    <a
+                      href={src}
+                      download={filename}
+                      onClick={() => trackDownload(filename, location, "download")}
+                      className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-background"
+                    >
+                      <Download size={13} /> Descargar PDF
+                    </a>
+                  </div>
                 </div>
-              </object>
+              ) : (
+                <object
+                  data={`${src}#view=FitH&toolbar=1`}
+                  type="application/pdf"
+                  className="h-full w-full"
+                  onError={() => setEmbedFailed(true)}
+                >
+                  <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
+                    <p className="text-sm text-white/70">
+                      Tu navegador no puede mostrar el PDF embebido.
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                      <a
+                        href={src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackDownload(filename, location, "preview")}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/85"
+                      >
+                        <ExternalLink size={13} /> Abrir en nueva pestaña
+                      </a>
+                      <a
+                        href={src}
+                        download={filename}
+                        onClick={() => trackDownload(filename, location, "download")}
+                        className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-background"
+                      >
+                        <Download size={13} /> Descargar PDF
+                      </a>
+                    </div>
+                  </div>
+                </object>
+              )}
             </div>
           </motion.div>
         </motion.div>
