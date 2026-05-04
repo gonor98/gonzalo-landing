@@ -5,9 +5,15 @@ import { Link } from "react-router-dom";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SEO } from "@/components/SEO";
-import { trackCTAClick, trackDownload, trackPreviewOpen } from "@/lib/track";
+import { trackCTAClick, trackDownload, trackPreviewOpen, trackVideo } from "@/lib/track";
 import { PDFPreviewModal } from "@/components/PDFPreviewModal";
-import { BONUS_MATERIALS, CONFERENCE_VIDEO, FINPLE_URL, type BonusMaterial } from "@/lib/bonusMaterials";
+import {
+  FINPLE_URL,
+  useBonusMaterials,
+  useConferenceVideo,
+  type BonusMaterial,
+} from "@/lib/bonusMaterials";
+import { useRef } from "react";
 
 type CardProps = {
   material: BonusMaterial;
@@ -81,7 +87,11 @@ const DownloadCard = ({ material, onPreview }: CardProps) => {
 };
 
 const ConferenceVideoBlock = () => {
-  if (!CONFERENCE_VIDEO.url) {
+  const video = useConferenceVideo();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const milestonesSent = useRef<Set<number>>(new Set());
+
+  if (!video.url) {
     return (
       <div className="relative overflow-hidden rounded-3xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center sm:p-14">
         <PlayCircle size={48} className="mx-auto text-gold/70" strokeWidth={1.2} />
@@ -95,12 +105,35 @@ const ConferenceVideoBlock = () => {
       </div>
     );
   }
-  const { url, provider, title } = CONFERENCE_VIDEO;
+  const { url, provider, title, poster } = video;
+
+  const handleTimeUpdate = () => {
+    const el = videoRef.current;
+    if (!el || !el.duration) return;
+    const pct = Math.floor((el.currentTime / el.duration) * 100);
+    [25, 50, 75, 90].forEach((m) => {
+      if (pct >= m && !milestonesSent.current.has(m)) {
+        milestonesSent.current.add(m);
+        trackVideo("progress", title, "bonus_ceti", { percent: m });
+      }
+    });
+  };
+
   return (
     <div className="overflow-hidden rounded-3xl border border-white/10 bg-black">
       <div className="aspect-video w-full">
         {provider === "file" ? (
-          <video controls preload="metadata" className="h-full w-full" poster={CONFERENCE_VIDEO.poster}>
+          <video
+            ref={videoRef}
+            controls
+            preload="metadata"
+            className="h-full w-full"
+            poster={poster}
+            onPlay={() => trackVideo("play", title, "bonus_ceti")}
+            onPause={() => trackVideo("pause", title, "bonus_ceti")}
+            onEnded={() => trackVideo("ended", title, "bonus_ceti")}
+            onTimeUpdate={handleTimeUpdate}
+          >
             <source src={url} />
           </video>
         ) : (
@@ -111,6 +144,7 @@ const ConferenceVideoBlock = () => {
             allowFullScreen
             loading="lazy"
             className="h-full w-full"
+            onLoad={() => trackVideo("play", title, "bonus_ceti", { embed: true })}
           />
         )}
       </div>
@@ -119,6 +153,7 @@ const ConferenceVideoBlock = () => {
 };
 
 const BonusCeti = () => {
+  const materials = useBonusMaterials();
   const [preview, setPreview] = useState<null | {
     src: string;
     filename: string;
@@ -183,7 +218,7 @@ const BonusCeti = () => {
             </Link>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {BONUS_MATERIALS.map((m) => (
+            {materials.map((m) => (
               <DownloadCard
                 key={m.id}
                 material={m}
