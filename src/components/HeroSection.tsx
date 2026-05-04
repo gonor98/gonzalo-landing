@@ -13,6 +13,7 @@ import bbvaImg from "@/assets/gonzalo-bbva-spark.webp";
 import americaDigital from "@/assets/gonzalo-america-digital.webp";
 import { useVideo } from "./VideoContext";
 import { heroVideo } from "@/lib/videos";
+import { HeroLoopVideo } from "./HeroLoopVideo";
 
 const stats = [
   { value: 2.8, suffix: "M+", label: "Audiencia global", sub: "Keynotes en vivo" },
@@ -128,6 +129,9 @@ export const HeroSection = () => {
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/0 via-background/30 to-background" />
+
+      {/* Floating looping conference clip — visible web + mobile, never covers portrait */}
+      <HeroLoopVideo />
 
       {/* Orbital ring */}
       <motion.div
