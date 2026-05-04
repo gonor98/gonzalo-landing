@@ -86,12 +86,14 @@ export const HERO_LOOP_VIDEO: {
 const LS_MATERIALS = "bonus_materials_overrides_v1";
 const LS_VIDEO = "conference_video_override_v1";
 const LS_HERO = "hero_loop_video_override_v1";
+const LS_SEO = "descargas_seo_override_v1";
 const EVT = "bonus-overrides-changed";
 
 type MaterialOverride = Partial<Pick<BonusMaterial, "title" | "description" | "cta" | "href" | "filename" | "tag">>;
 type MaterialsOverrides = Record<string, MaterialOverride>;
 type VideoOverride = Partial<typeof CONFERENCE_VIDEO>;
 type HeroOverride = Partial<typeof HERO_LOOP_VIDEO>;
+type SeoOverride = Partial<typeof DESCARGAS_SEO>;
 
 const safeParse = <T,>(raw: string | null, fallback: T): T => {
   if (!raw) return fallback;
@@ -106,6 +108,9 @@ export const readVideoOverride = (): VideoOverride =>
 
 export const readHeroOverride = (): HeroOverride =>
   typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_HERO), {} as HeroOverride);
+
+export const readSeoOverride = (): SeoOverride =>
+  typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_SEO), {} as SeoOverride);
 
 export const writeMaterialsOverrides = (next: MaterialsOverrides) => {
   localStorage.setItem(LS_MATERIALS, JSON.stringify(next));
@@ -122,10 +127,16 @@ export const writeHeroOverride = (next: HeroOverride) => {
   window.dispatchEvent(new Event(EVT));
 };
 
+export const writeSeoOverride = (next: SeoOverride) => {
+  localStorage.setItem(LS_SEO, JSON.stringify(next));
+  window.dispatchEvent(new Event(EVT));
+};
+
 export const resetOverrides = () => {
   localStorage.removeItem(LS_MATERIALS);
   localStorage.removeItem(LS_VIDEO);
   localStorage.removeItem(LS_HERO);
+  localStorage.removeItem(LS_SEO);
   window.dispatchEvent(new Event(EVT));
 };
 
@@ -169,11 +180,22 @@ export const useHeroLoopVideo = (): typeof HERO_LOOP_VIDEO => {
   return { ...HERO_LOOP_VIDEO, ...parsed };
 };
 
+export const useDescargasSeo = (): typeof DESCARGAS_SEO => {
+  const raw = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(LS_SEO) ?? "",
+    () => "",
+  );
+  const parsed = safeParse<SeoOverride>(raw || null, {});
+  return { ...DESCARGAS_SEO, ...parsed };
+};
+
 // Bundle of all overrides for export/import in admin
 export type BonusOverridesBundle = {
   materials?: MaterialsOverrides;
   video?: VideoOverride;
   hero?: HeroOverride;
+  seo?: SeoOverride;
   exportedAt?: string;
 };
 
@@ -181,6 +203,7 @@ export const exportOverrides = (): BonusOverridesBundle => ({
   materials: readMaterialsOverrides(),
   video: readVideoOverride(),
   hero: readHeroOverride(),
+  seo: readSeoOverride(),
   exportedAt: new Date().toISOString(),
 });
 
@@ -188,4 +211,5 @@ export const importOverrides = (b: BonusOverridesBundle) => {
   if (b.materials) writeMaterialsOverrides(b.materials);
   if (b.video) writeVideoOverride(b.video);
   if (b.hero) writeHeroOverride(b.hero);
+  if (b.seo) writeSeoOverride(b.seo);
 };
