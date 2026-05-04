@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SEO } from "@/components/SEO";
 import { PDFPreviewModal } from "@/components/PDFPreviewModal";
 import { trackCTAClick, trackDownload, trackPreviewOpen } from "@/lib/track";
-import { BONUS_MATERIALS, type BonusMaterial } from "@/lib/bonusMaterials";
+import { useBonusMaterials, type BonusMaterial } from "@/lib/bonusMaterials";
 
 const SITE = "https://gonzaloacuna.com";
 
@@ -78,6 +78,7 @@ const Row = ({
 };
 
 const BonusCetiDescargas = () => {
+  const materials = useBonusMaterials();
   const [preview, setPreview] = useState<null | { src: string; filename: string; title: string; trackId: string }>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -102,9 +103,10 @@ const BonusCetiDescargas = () => {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
       <SEO
-        title="Descargas Bonus CETI — Gonzalo Acuña Nava"
-        description="Catálogo directo de descargas para estudiantes CETI: PDFs de la conferencia 95 Rechazos y la guía de inicio. Comparte enlaces directos."
+        title="Descargas CETI · Guía + Slides 95 Rechazos — Gonzalo Acuña Nava"
+        description="Catálogo compartible de descargas para estudiantes CETI: PDF de la conferencia 95 Rechazos y la guía de inicio (finanzas, IA, mentalidad founder). Enlaces directos."
         path="/bonus-ceti-descargas"
+        ogImage="https://storage.googleapis.com/gpt-engineer-file-uploads/MBD99GyTQSdZybfYIUXId9PrW6t2/social-images/social-1777519428256-Generated_Image_April_28,_2026_-_1_31AM.webp"
       />
       <Nav />
 
@@ -128,7 +130,7 @@ const BonusCetiDescargas = () => {
       <section className="relative pb-24 sm:pb-32">
         <div className="mx-auto max-w-content px-6 md:px-20">
           <ul className="flex flex-col gap-4">
-            {BONUS_MATERIALS.map((m) => (
+            {materials.map((m) => (
               <Row
                 key={m.id}
                 m={m}
