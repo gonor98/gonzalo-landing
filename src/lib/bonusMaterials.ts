@@ -55,6 +55,15 @@ export const CONFERENCE_VIDEO: {
 
 export const FINPLE_URL = "https://gonzaloacuna.com/ceti";
 
+// SEO/OG defaults for the /bonus-ceti-descargas page (editable via admin)
+export const DESCARGAS_SEO = {
+  title: "Descargas CETI · Guía + Slides 95 Rechazos — Gonzalo Acuña Nava",
+  description:
+    "Catálogo compartible de descargas para estudiantes CETI: PDF de la conferencia 95 Rechazos y la guía de inicio (finanzas, IA, mentalidad founder). Enlaces directos.",
+  ogImage:
+    "https://storage.googleapis.com/gpt-engineer-file-uploads/MBD99GyTQSdZybfYIUXId9PrW6t2/social-images/social-1777519428256-Generated_Image_April_28,_2026_-_1_31AM.webp",
+};
+
 // Hero loop video (muted, autoplay) — shown in the homepage hero.
 // Default uses one of Gonzalo's existing keynote videos. Override via admin.
 export const HERO_LOOP_VIDEO: {
