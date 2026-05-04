@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { Map, Presentation, type LucideIcon } from "lucide-react";
 
 export type BonusMaterial = {
@@ -53,3 +54,74 @@ export const CONFERENCE_VIDEO: {
 };
 
 export const FINPLE_URL = "https://gonzaloacuna.com/ceti";
+
+// ---------------------------------------------------------------------------
+// Runtime overrides (localStorage) — powers the /bonus-ceti-admin panel.
+// Defaults above stay as the canonical source. Admin edits override at runtime
+// without redeploying. Cleared by clicking "Restablecer" in admin.
+// ---------------------------------------------------------------------------
+
+const LS_MATERIALS = "bonus_materials_overrides_v1";
+const LS_VIDEO = "conference_video_override_v1";
+const EVT = "bonus-overrides-changed";
+
+type MaterialOverride = Partial<Pick<BonusMaterial, "title" | "description" | "cta" | "href" | "filename" | "tag">>;
+type MaterialsOverrides = Record<string, MaterialOverride>;
+type VideoOverride = Partial<typeof CONFERENCE_VIDEO>;
+
+const safeParse = <T,>(raw: string | null, fallback: T): T => {
+  if (!raw) return fallback;
+  try { return JSON.parse(raw) as T; } catch { return fallback; }
+};
+
+export const readMaterialsOverrides = (): MaterialsOverrides =>
+  typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_MATERIALS), {} as MaterialsOverrides);
+
+export const readVideoOverride = (): VideoOverride =>
+  typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_VIDEO), {} as VideoOverride);
+
+export const writeMaterialsOverrides = (next: MaterialsOverrides) => {
+  localStorage.setItem(LS_MATERIALS, JSON.stringify(next));
+  window.dispatchEvent(new Event(EVT));
+};
+
+export const writeVideoOverride = (next: VideoOverride) => {
+  localStorage.setItem(LS_VIDEO, JSON.stringify(next));
+  window.dispatchEvent(new Event(EVT));
+};
+
+export const resetOverrides = () => {
+  localStorage.removeItem(LS_MATERIALS);
+  localStorage.removeItem(LS_VIDEO);
+  window.dispatchEvent(new Event(EVT));
+};
+
+const subscribe = (cb: () => void) => {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener(EVT, cb);
+  window.addEventListener("storage", cb);
+  return () => {
+    window.removeEventListener(EVT, cb);
+    window.removeEventListener("storage", cb);
+  };
+};
+
+export const useBonusMaterials = (): BonusMaterial[] => {
+  const overrides = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(LS_MATERIALS) ?? "",
+    () => "",
+  );
+  const parsed = safeParse<MaterialsOverrides>(overrides || null, {});
+  return BONUS_MATERIALS.map((m) => ({ ...m, ...(parsed[m.id] ?? {}) }));
+};
+
+export const useConferenceVideo = (): typeof CONFERENCE_VIDEO => {
+  const raw = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(LS_VIDEO) ?? "",
+    () => "",
+  );
+  const parsed = safeParse<VideoOverride>(raw || null, {});
+  return { ...CONFERENCE_VIDEO, ...parsed };
+};

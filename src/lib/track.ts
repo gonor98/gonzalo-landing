@@ -41,3 +41,10 @@ export const trackDownload = (file: string, location: string, action: "preview" 
 
 export const trackPreviewOpen = (file: string, location: string) =>
   track("file_preview_open", { file, location });
+
+export const trackVideo = (
+  action: "play" | "pause" | "ended" | "progress",
+  video: string,
+  location: string,
+  extra: EventParams = {},
+) => track("video_event", { action, video, location, ...extra });
