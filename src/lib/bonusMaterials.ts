@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { Map, Presentation, type LucideIcon } from "lucide-react";
 
 export type BonusMaterial = {
