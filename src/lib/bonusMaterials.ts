@@ -55,6 +55,28 @@ export const CONFERENCE_VIDEO: {
 
 export const FINPLE_URL = "https://gonzaloacuna.com/ceti";
 
+// SEO/OG defaults for the /bonus-ceti-descargas page (editable via admin)
+export const DESCARGAS_SEO = {
+  title: "Descargas CETI · Guía + Slides 95 Rechazos — Gonzalo Acuña Nava",
+  description:
+    "Catálogo compartible de descargas para estudiantes CETI: PDF de la conferencia 95 Rechazos y la guía de inicio (finanzas, IA, mentalidad founder). Enlaces directos.",
+  ogImage:
+    "https://storage.googleapis.com/gpt-engineer-file-uploads/MBD99GyTQSdZybfYIUXId9PrW6t2/social-images/social-1777519428256-Generated_Image_April_28,_2026_-_1_31AM.webp",
+};
+
+// Hero loop video (muted, autoplay) — shown in the homepage hero.
+// Default uses one of Gonzalo's existing keynote videos. Override via admin.
+export const HERO_LOOP_VIDEO: {
+  provider: "youtube" | "vimeo" | "file";
+  // For YouTube: just the videoId. For Vimeo: just the numeric id. For file: full URL.
+  source: string;
+  title: string;
+} = {
+  provider: "youtube",
+  source: "cmGTwjjw-kw",
+  title: "Gonzalo Acuña Nava — Conferencia en vivo",
+};
+
 // ---------------------------------------------------------------------------
 // Runtime overrides (localStorage) — powers the /bonus-ceti-admin panel.
 // Defaults above stay as the canonical source. Admin edits override at runtime
@@ -63,11 +85,15 @@ export const FINPLE_URL = "https://gonzaloacuna.com/ceti";
 
 const LS_MATERIALS = "bonus_materials_overrides_v1";
 const LS_VIDEO = "conference_video_override_v1";
+const LS_HERO = "hero_loop_video_override_v1";
+const LS_SEO = "descargas_seo_override_v1";
 const EVT = "bonus-overrides-changed";
 
 type MaterialOverride = Partial<Pick<BonusMaterial, "title" | "description" | "cta" | "href" | "filename" | "tag">>;
 type MaterialsOverrides = Record<string, MaterialOverride>;
 type VideoOverride = Partial<typeof CONFERENCE_VIDEO>;
+type HeroOverride = Partial<typeof HERO_LOOP_VIDEO>;
+type SeoOverride = Partial<typeof DESCARGAS_SEO>;
 
 const safeParse = <T,>(raw: string | null, fallback: T): T => {
   if (!raw) return fallback;
@@ -80,6 +106,12 @@ export const readMaterialsOverrides = (): MaterialsOverrides =>
 export const readVideoOverride = (): VideoOverride =>
   typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_VIDEO), {} as VideoOverride);
 
+export const readHeroOverride = (): HeroOverride =>
+  typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_HERO), {} as HeroOverride);
+
+export const readSeoOverride = (): SeoOverride =>
+  typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_SEO), {} as SeoOverride);
+
 export const writeMaterialsOverrides = (next: MaterialsOverrides) => {
   localStorage.setItem(LS_MATERIALS, JSON.stringify(next));
   window.dispatchEvent(new Event(EVT));
@@ -90,9 +122,21 @@ export const writeVideoOverride = (next: VideoOverride) => {
   window.dispatchEvent(new Event(EVT));
 };
 
+export const writeHeroOverride = (next: HeroOverride) => {
+  localStorage.setItem(LS_HERO, JSON.stringify(next));
+  window.dispatchEvent(new Event(EVT));
+};
+
+export const writeSeoOverride = (next: SeoOverride) => {
+  localStorage.setItem(LS_SEO, JSON.stringify(next));
+  window.dispatchEvent(new Event(EVT));
+};
+
 export const resetOverrides = () => {
   localStorage.removeItem(LS_MATERIALS);
   localStorage.removeItem(LS_VIDEO);
+  localStorage.removeItem(LS_HERO);
+  localStorage.removeItem(LS_SEO);
   window.dispatchEvent(new Event(EVT));
 };
 
@@ -124,4 +168,48 @@ export const useConferenceVideo = (): typeof CONFERENCE_VIDEO => {
   );
   const parsed = safeParse<VideoOverride>(raw || null, {});
   return { ...CONFERENCE_VIDEO, ...parsed };
+};
+
+export const useHeroLoopVideo = (): typeof HERO_LOOP_VIDEO => {
+  const raw = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(LS_HERO) ?? "",
+    () => "",
+  );
+  const parsed = safeParse<HeroOverride>(raw || null, {});
+  return { ...HERO_LOOP_VIDEO, ...parsed };
+};
+
+export const useDescargasSeo = (): typeof DESCARGAS_SEO => {
+  const raw = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(LS_SEO) ?? "",
+    () => "",
+  );
+  const parsed = safeParse<SeoOverride>(raw || null, {});
+  return { ...DESCARGAS_SEO, ...parsed };
+};
+
+// Bundle of all overrides for export/import in admin
+export type BonusOverridesBundle = {
+  materials?: MaterialsOverrides;
+  video?: VideoOverride;
+  hero?: HeroOverride;
+  seo?: SeoOverride;
+  exportedAt?: string;
+};
+
+export const exportOverrides = (): BonusOverridesBundle => ({
+  materials: readMaterialsOverrides(),
+  video: readVideoOverride(),
+  hero: readHeroOverride(),
+  seo: readSeoOverride(),
+  exportedAt: new Date().toISOString(),
+});
+
+export const importOverrides = (b: BonusOverridesBundle) => {
+  if (b.materials) writeMaterialsOverrides(b.materials);
+  if (b.video) writeVideoOverride(b.video);
+  if (b.hero) writeHeroOverride(b.hero);
+  if (b.seo) writeSeoOverride(b.seo);
 };
