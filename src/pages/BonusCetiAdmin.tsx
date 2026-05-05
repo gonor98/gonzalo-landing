@@ -317,6 +317,28 @@ const AdminInner = () => {
       <section className="pb-12">
         <div className="mx-auto max-w-content px-6 md:px-20">
           <h2 className="mb-4 font-display text-xl text-white">Video del hero (loop, mute)</h2>
+          <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-white/45">Pegar y validar URL (YouTube/Vimeo)</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <input
+                className={`${inputCls} flex-1 min-w-[260px]`}
+                value={heroUrl}
+                onChange={(e) => setHeroUrl(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+              />
+              <button
+                onClick={validateHeroUrl}
+                className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
+              >
+                Validar y aplicar
+              </button>
+            </div>
+            {heroValidation && (
+              <p className={`mt-2 inline-flex items-center gap-2 text-xs ${heroValidation.ok ? "text-emerald-400" : "text-amber-400"}`}>
+                {heroValidation.ok ? <Check size={12} /> : <AlertTriangle size={12} />} {heroValidation.msg}
+              </p>
+            )}
+          </div>
           <div className="grid grid-cols-1 gap-5 rounded-2xl border border-white/10 bg-white/[0.02] p-5 lg:grid-cols-[1fr_280px]">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Field label="Proveedor">
@@ -476,6 +498,27 @@ const AdminInner = () => {
 
       <section className="pb-24">
         <div className="mx-auto flex max-w-content flex-wrap items-center justify-end gap-3 px-6 md:px-20">
+          {snapshots.length > 0 && (
+            <details className="mr-auto w-full max-w-2xl rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+              <summary className="flex cursor-pointer items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-white/75">
+                <History size={13} /> Historial de versiones ({snapshots.length})
+              </summary>
+              <ul className="mt-3 max-h-64 space-y-2 overflow-auto">
+                {snapshots.map((s) => (
+                  <li key={s.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs">
+                    <span className="text-white/70">{new Date(s.ts).toLocaleString()}</span>
+                    <button
+                      onClick={() => restoreSnapshot(s)}
+                      className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
+                    >
+                      <RotateCcw size={11} /> Restaurar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-[10px] text-white/40">Se crea un snapshot automático cada vez que guardas.</p>
+            </details>
+          )}
           <button onClick={reset} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold">
             <RotateCcw size={13} /> Restablecer
           </button>
