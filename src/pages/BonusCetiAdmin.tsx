@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Save, RotateCcw, ExternalLink, Share2, ArrowLeft, Download as DownloadIcon,
-  Upload, Eye,
+  Upload, Eye, History, Check, AlertTriangle,
 } from "lucide-react";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -69,6 +69,38 @@ const buildHeroDraft = () => {
   };
 };
 
+/** Parse a YouTube/Vimeo URL OR id and return { provider, source } or null. */
+const parseEmbedUrl = (raw: string): { provider: "youtube" | "vimeo"; source: string } | null => {
+  const v = raw.trim();
+  if (!v) return null;
+  // Bare YouTube id (11 chars, allowed alphabet)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(v)) return { provider: "youtube", source: v };
+  // Bare Vimeo numeric id
+  if (/^\d{6,}$/.test(v)) return { provider: "vimeo", source: v };
+  try {
+    const u = new URL(v);
+    if (/youtu\.be$/.test(u.hostname)) return { provider: "youtube", source: u.pathname.slice(1) };
+    if (/youtube(-nocookie)?\.com$/.test(u.hostname)) {
+      const id = u.searchParams.get("v");
+      if (id) return { provider: "youtube", source: id };
+      const m = u.pathname.match(/\/(embed|shorts)\/([\w-]{11})/);
+      if (m) return { provider: "youtube", source: m[2] };
+    }
+    if (/vimeo\.com$/.test(u.hostname)) {
+      const m = u.pathname.match(/\/(\d{6,})/);
+      if (m) return { provider: "vimeo", source: m[1] };
+    }
+  } catch { /* not a URL */ }
+  return null;
+};
+
+const SNAPSHOTS_KEY = "bonus_admin_snapshots_v1";
+type Snapshot = { id: string; ts: string; bundle: BonusOverridesBundle };
+const readSnapshots = (): Snapshot[] => {
+  try { return JSON.parse(localStorage.getItem(SNAPSHOTS_KEY) || "[]"); } catch { return []; }
+};
+const writeSnapshots = (s: Snapshot[]) => localStorage.setItem(SNAPSHOTS_KEY, JSON.stringify(s.slice(0, 20)));
+
 const buildSeoDraft = () => {
   const o = readSeoOverride();
   return {
@@ -96,6 +128,9 @@ const AdminInner = () => {
   const [saved, setSaved] = useState(false);
   const [importMsg, setImportMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [heroUrl, setHeroUrl] = useState("");
+  const [heroValidation, setHeroValidation] = useState<null | { ok: boolean; msg: string }>(null);
+  const [snapshots, setSnapshots] = useState<Snapshot[]>(readSnapshots);
 
   useEffect(() => { if (saved) { const t = setTimeout(() => setSaved(false), 1600); return () => clearTimeout(t); } }, [saved]);
 
@@ -116,6 +151,11 @@ const AdminInner = () => {
       });
       if (Object.keys(diff).length) overrides[m.id] = diff;
     });
+    // Snapshot BEFORE writing so we can revert
+    const snap: Snapshot = { id: crypto.randomUUID(), ts: new Date().toISOString(), bundle: exportOverrides() };
+    const next = [snap, ...snapshots].slice(0, 20);
+    setSnapshots(next); writeSnapshots(next);
+
     writeMaterialsOverrides(overrides);
     writeVideoOverride({
       url: video.url || null,
@@ -126,6 +166,23 @@ const AdminInner = () => {
     writeHeroOverride({ provider: hero.provider, source: hero.source, title: hero.title });
     writeSeoOverride({ title: seo.title, description: seo.description, ogImage: seo.ogImage });
     setSaved(true);
+  };
+
+  const restoreSnapshot = (s: Snapshot) => {
+    if (!confirm(`Restaurar la versión del ${new Date(s.ts).toLocaleString()}?`)) return;
+    importOverrides(s.bundle);
+    setDraft(buildDraft()); setVideo(buildVideoDraft());
+    setHero(buildHeroDraft()); setSeo(buildSeoDraft());
+  };
+
+  const validateHeroUrl = () => {
+    const parsed = parseEmbedUrl(heroUrl);
+    if (!parsed) {
+      setHeroValidation({ ok: false, msg: "URL no reconocida. Pega un link de YouTube/Vimeo o un ID." });
+      return;
+    }
+    setHero((v) => ({ ...v, provider: parsed.provider, source: parsed.source }));
+    setHeroValidation({ ok: true, msg: `OK · ${parsed.provider} → ${parsed.source}. Recuerda Guardar.` });
   };
 
   const reset = () => {
@@ -358,13 +415,21 @@ const AdminInner = () => {
         <div className="mx-auto max-w-content px-6 md:px-20">
           <div className="mb-4 flex items-end justify-between">
             <h2 className="font-display text-xl text-white">SEO · /bonus-ceti-descargas</h2>
-            <Link
-              to="/bonus-ceti-descargas/preview"
-              target="_blank"
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold"
-            >
-              <Eye size={12} /> Vista pública
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => { save(); window.open("/bonus-ceti-descargas/preview", "_blank"); }}
+                className="inline-flex items-center gap-2 rounded-full bg-gold/90 px-3 py-1.5 text-[11px] uppercase tracking-[0.22em] text-background hover:bg-gold"
+              >
+                <Eye size={12} /> Guardar y abrir OG/Twitter preview
+              </button>
+              <Link
+                to="/bonus-ceti-descargas/preview"
+                target="_blank"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold"
+              >
+                Vista pública
+              </Link>
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_360px]">
             <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
