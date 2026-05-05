@@ -13,6 +13,9 @@ import BonusCeti from "./pages/BonusCeti.tsx";
 import BonusCetiDescargas from "./pages/BonusCetiDescargas.tsx";
 import BonusCetiDescargasPreview from "./pages/BonusCetiDescargasPreview.tsx";
 import BonusCetiAdmin from "./pages/BonusCetiAdmin.tsx";
+import Benefits from "./pages/Benefits.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 import { VideoProvider } from "@/components/VideoContext";
 
 const queryClient = new QueryClient();
@@ -30,6 +33,9 @@ const App = () => (
             <Route path="/audit-os" element={<AuditOS />} />
             <Route path="/investors" element={<Investors />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/benefits" element={<Benefits />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/bonus-ceti" element={<BonusCeti />} />
             <Route path="/bonus-ceti-descargas" element={<BonusCetiDescargas />} />
             <Route path="/bonus-ceti-descargas/preview" element={<BonusCetiDescargasPreview />} />
