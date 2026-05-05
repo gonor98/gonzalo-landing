@@ -1,4 +1,17 @@
+import { useEffect, useRef, useState } from "react";
 import { useHeroLoopVideo } from "@/lib/bonusMaterials";
+
+/** Animated gold/dark gradient placeholder shown until the video loads. */
+const GradientPoster = () => (
+  <div
+    aria-hidden
+    className="absolute inset-0 animate-pulse bg-[linear-gradient(135deg,#1a1408_0%,#08090F_45%,#3a2a0a_100%)]"
+    style={{
+      backgroundSize: "200% 200%",
+      animation: "heroLoopShimmer 3.2s ease-in-out infinite",
+    }}
+  />
+);
 
 /**
  * Muted, looping conference clip shown floating in the hero.
@@ -10,6 +23,22 @@ import { useHeroLoopVideo } from "@/lib/bonusMaterials";
  */
 export const HeroLoopVideo = () => {
   const { provider, source, title } = useHeroLoopVideo();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setInView(true)),
+      { rootMargin: "200px" },
+    );
+    io.observe(containerRef.current);
+    return () => io.disconnect();
+  }, []);
+
   if (!source) return null;
 
   const ytSrc =
@@ -20,7 +49,9 @@ export const HeroLoopVideo = () => {
         : null;
 
   const Inner = () =>
-    provider === "file" ? (
+    !inView ? (
+      <GradientPoster />
+    ) : provider === "file" ? (
       <video
         src={source}
         autoPlay
@@ -42,7 +73,8 @@ export const HeroLoopVideo = () => {
     ) : null;
 
   return (
-    <>
+    <div ref={containerRef} className="contents">
+      <style>{`@keyframes heroLoopShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}`}</style>
       {/* Desktop: bottom-left vertical card. Sits in the dark gradient
           area to NOT overlap with the portrait on the right. */}
       <div className="pointer-events-none absolute bottom-28 left-6 z-20 hidden lg:block">
@@ -61,6 +93,6 @@ export const HeroLoopVideo = () => {
           <Inner />
         </div>
       </div>
-    </>
+    </div>
   );
 };
