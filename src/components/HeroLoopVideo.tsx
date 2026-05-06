@@ -75,10 +75,11 @@ export const HeroLoopVideo = () => {
   return (
     <div ref={containerRef} className="contents">
       <style>{`@keyframes heroLoopShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}`}</style>
-      {/* Desktop: bottom-left vertical card. Sits in the dark gradient
-          area to NOT overlap with the portrait on the right. */}
-      <div className="pointer-events-none absolute bottom-28 left-6 z-20 hidden lg:block">
-        <div className="group pointer-events-auto relative aspect-[9/16] w-[180px] overflow-hidden rounded-2xl border border-gold/30 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur xl:w-[210px]">
+      {/* Desktop: floating vertical card pinned to bottom-right of the hero,
+          inside the soft right-edge fade of the portrait so it does NOT
+          cover Gonzalo's face (face sits in the upper portion of portrait). */}
+      <div className="pointer-events-none absolute bottom-32 right-8 z-20 hidden lg:block xl:right-12">
+        <div className="group pointer-events-auto relative aspect-[9/16] w-[170px] overflow-hidden rounded-2xl border border-gold/40 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur xl:w-[200px]">
           <Inner />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2.5">
             <p className="text-[9px] uppercase tracking-[0.28em] text-gold">En vivo · keynote</p>
@@ -86,11 +87,14 @@ export const HeroLoopVideo = () => {
         </div>
       </div>
 
-      {/* Mobile: compact 16:9 strip pinned bottom-right above badge bar.
-          Small enough to leave the portrait fully visible. */}
-      <div className="pointer-events-none absolute bottom-20 right-4 z-20 lg:hidden">
-        <div className="pointer-events-auto relative aspect-video w-[140px] overflow-hidden rounded-xl border border-gold/30 bg-black shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] sm:w-[180px]">
+      {/* Mobile: vertical card pinned top-right under nav, in the transparent
+          edge of the centered portrait so the face stays clean. */}
+      <div className="pointer-events-none absolute right-3 top-24 z-20 lg:hidden">
+        <div className="pointer-events-auto relative aspect-[9/16] w-[96px] overflow-hidden rounded-xl border border-gold/40 bg-black shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] sm:w-[120px]">
           <Inner />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-1.5 py-1">
+            <p className="text-[8px] uppercase tracking-[0.24em] text-gold">Keynote</p>
+          </div>
         </div>
       </div>
     </div>

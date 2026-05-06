@@ -3,7 +3,7 @@ import { ArrowDown, Play, Sparkles } from "lucide-react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { usePerfMode } from "@/hooks/usePerfMode";
-import gonzaloHero from "@/assets/gonzalo-hero-portrait.png";
+import gonzaloHero from "@/assets/gonzalo-hero.jpg";
 import stageImg from "@/assets/gonzalo-talentland-stage.jpg";
 import speakingImg from "@/assets/gonzalo-talentland-speaking.jpg";
 import panelImg from "@/assets/gonzalo-talentland-panel.jpg";
