@@ -14,9 +14,11 @@ import BonusCetiDescargas from "./pages/BonusCetiDescargas.tsx";
 import BonusCetiDescargasPreview from "./pages/BonusCetiDescargasPreview.tsx";
 import BonusCetiAdmin from "./pages/BonusCetiAdmin.tsx";
 import Benefits from "./pages/Benefits.tsx";
+import BenefitsPreview from "./pages/BenefitsPreview.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
 import { VideoProvider } from "@/components/VideoContext";
+import { LEGACY_REDIRECTS, Redirect301 } from "@/components/LegacyRedirects";
 
 const queryClient = new QueryClient();
 
@@ -34,12 +36,17 @@ const App = () => (
             <Route path="/investors" element={<Investors />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/benefits" element={<Benefits />} />
+            <Route path="/benefits/preview" element={<BenefitsPreview />} />
+            <Route path="/benefits/:id/preview" element={<BenefitsPreview />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/bonus-ceti" element={<BonusCeti />} />
             <Route path="/bonus-ceti-descargas" element={<BonusCetiDescargas />} />
             <Route path="/bonus-ceti-descargas/preview" element={<BonusCetiDescargasPreview />} />
             <Route path="/bonus-ceti-admin" element={<BonusCetiAdmin />} />
+            {Object.entries(LEGACY_REDIRECTS).map(([from, to]) => (
+              <Route key={from} path={from} element={<Redirect301 to={to} />} />
+            ))}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

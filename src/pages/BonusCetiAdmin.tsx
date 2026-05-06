@@ -28,6 +28,7 @@ import {
   type BonusOverridesBundle,
 } from "@/lib/bonusMaterials";
 import { trackVideo } from "@/lib/track";
+import { BenefitsAdminSection } from "@/components/BenefitsAdminSection";
 
 const SITE = "https://gonzaloacuna.com";
 
@@ -312,6 +313,9 @@ const AdminInner = () => {
           </div>
         </div>
       </section>
+
+      {/* Benefits catalog CRUD */}
+      <BenefitsAdminSection />
 
       {/* Hero loop video */}
       <section className="pb-12">
