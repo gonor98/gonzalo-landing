@@ -1,4 +1,5 @@
-import { type LucideIcon, GraduationCap, Sparkles, Calendar } from "lucide-react";
+import { useSyncExternalStore } from "react";
+import { type LucideIcon, GraduationCap, Sparkles, Calendar, Star, Gift } from "lucide-react";
 
 /**
  * Benefits catalog — umbrella for events, free materials, premium platform
@@ -55,3 +56,84 @@ export const getUpcomingBenefits = () =>
   BENEFITS.filter((b) => b.status === "upcoming");
 
 export { Calendar, Sparkles };
+
+// ---------------------------------------------------------------------------
+// Runtime overrides (admin CRUD)
+// ---------------------------------------------------------------------------
+const LS_BENEFITS = "benefits_overrides_v1";
+const EVT = "benefits-overrides-changed";
+
+export type BenefitOverride = Omit<BenefitEntry, "icon"> & { iconKey?: string };
+export type BenefitsBundle = {
+  edits?: Record<string, Partial<BenefitOverride>>;
+  added?: BenefitOverride[];
+  removed?: string[];
+};
+
+export const ICONS: Record<string, LucideIcon> = {
+  GraduationCap, Sparkles, Calendar, Star, Gift,
+};
+
+const safeParse = <T,>(raw: string | null, fb: T): T => {
+  if (!raw) return fb;
+  try { return JSON.parse(raw) as T; } catch { return fb; }
+};
+
+export const readBenefitsBundle = (): BenefitsBundle =>
+  typeof window === "undefined" ? {} : safeParse(localStorage.getItem(LS_BENEFITS), {} as BenefitsBundle);
+
+export const writeBenefitsBundle = (b: BenefitsBundle) => {
+  localStorage.setItem(LS_BENEFITS, JSON.stringify(b));
+  window.dispatchEvent(new Event(EVT));
+};
+
+export const resetBenefits = () => {
+  localStorage.removeItem(LS_BENEFITS);
+  window.dispatchEvent(new Event(EVT));
+};
+
+const subscribe = (cb: () => void) => {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener(EVT, cb);
+  window.addEventListener("storage", cb);
+  return () => { window.removeEventListener(EVT, cb); window.removeEventListener("storage", cb); };
+};
+
+const applyBundle = (bundle: BenefitsBundle): BenefitEntry[] => {
+  const removed = new Set(bundle.removed ?? []);
+  const edits = bundle.edits ?? {};
+  const base = BENEFITS.filter((b) => !removed.has(b.id)).map((b) => {
+    const e = edits[b.id];
+    if (!e) return b;
+    const { iconKey, ...rest } = e as BenefitOverride & { iconKey?: string };
+    return { ...b, ...rest, icon: iconKey && ICONS[iconKey] ? ICONS[iconKey] : b.icon };
+  });
+  const added = (bundle.added ?? []).map((a) => ({
+    ...a, icon: (a.iconKey && ICONS[a.iconKey]) || GraduationCap,
+  })) as BenefitEntry[];
+  return [...base, ...added];
+};
+
+export const useBenefits = (): BenefitEntry[] => {
+  const raw = useSyncExternalStore(
+    subscribe,
+    () => (typeof window === "undefined" ? "" : localStorage.getItem(LS_BENEFITS) ?? ""),
+    () => "",
+  );
+  const bundle = safeParse<BenefitsBundle>(raw || null, {});
+  return applyBundle(bundle);
+};
+
+export const exportBenefits = (): BenefitsBundle => readBenefitsBundle();
+export const importBenefits = (b: BenefitsBundle) => writeBenefitsBundle(b);
+
+/** Used by build-time validator: list of all asset paths referenced. */
+export const collectBenefitAssetPaths = (entries: BenefitEntry[] = BENEFITS): string[] => {
+  const out = new Set<string>();
+  entries.forEach((b) => {
+    [b.landingPath, b.downloadsPath].forEach((p) => {
+      // landingPath/downloadsPath are app routes, not files — skip
+    });
+  });
+  return Array.from(out);
+};
