@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SEO, personJsonLd } from "@/components/SEO";
-import { BENEFITS } from "@/lib/benefits";
+import { useBenefits } from "@/lib/benefits";
 import { trackCTAClick } from "@/lib/track";
 
 const Benefits = () => {
-  const events = BENEFITS.filter((b) => b.kind === "event");
+  const all = useBenefits();
+  const events = all.filter((b) => b.kind === "event");
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
