@@ -104,22 +104,61 @@ Si quieres que aterrice este framework en tu equipo o en un evento corporativo, 
     ],
     audience:
       "Founders Seed–Series A, COOs y líderes de operaciones que quieren pasar de pilotos a IA productiva",
-    body: `## El problema: 90% de los pilotos de IA mueren en demo
-Los founders prueban GPT, hacen una demo bonita y al mes siguen operando manual. La razón es simple: la IA no se diseña como un experimento, se diseña como un proceso.
+    body: `Te voy a ahorrar 30 minutos de LinkedIn: la mayoría de las "implementaciones de IA" que ves en tu feed son demos. Bonitas, virales, inútiles. Y lo digo desde el cariño, porque yo también caí en esa trampa los primeros seis meses construyendo CALLII.
 
-## Framework Audit OS — 4 pasos
-1. **Mapear procesos repetitivos** con costo > $10K/mes.
-2. **Definir métrica única** por proceso (ej: minutos por ticket).
-3. **Construir agente con humano-en-loop** las primeras 4 semanas.
-4. **Retirar el humano gradualmente** cuando el error baje del 3%.
+Este post es lo que hubiera querido leer en 2024, antes de quemar $40K en pilotos que nunca llegaron a producción.
 
-## Casos reales (con números)
-- **CALLII:** convertimos voz → SPEI en 47 segundos. Ahorro: 60% en operación.
-- **PropMatch:** scoring de leads inmobiliarios con LLM. Cierre +35%.
-- **Finple:** onboarding de inversionistas en 4 minutos vs 3 días.
+## El problema real: 9 de cada 10 pilotos mueren en la demo
 
-## El insight final
-La IA operativa no es un departamento. Es una **capa transversal** que el founder debe diseñar personalmente los primeros 12 meses.`,
+No es que la tecnología no funcione. Es que la tratamos como **experimento** cuando deberíamos tratarla como **proceso**. Una demo te dice "esto es posible". Un proceso te dice "esto va a correr el lunes a las 9am sin que nadie lo supervise". Son cosas distintas.
+
+El founder promedio se obsesiona con el modelo (¿GPT-5? ¿Gemini? ¿Claude?). El founder que escala se obsesiona con **el handoff**: dónde empieza la IA, dónde termina el humano, y qué pasa cuando algo falla a las 3am.
+
+## Audit OS — el framework que usamos en mis tres empresas
+
+Es lo mismo que aplicamos en PropMatch, CALLII y Finple. Cuatro pasos, en este orden, sin saltarse ninguno:
+
+### 1. Mapea procesos repetitivos con costo > $10K/mes
+Si no llega a esa línea, no metas IA. Mete un Notion bien hecho. La IA tiene costo de operación, mantenimiento y deuda técnica — sólo paga si el proceso ya te duele en la cuenta de banco.
+
+### 2. Define UNA métrica por proceso
+Una. No tres. Una. En CALLII fue "segundos de voz a SPEI". En PropMatch fue "leads calificados por hora-humano". Si no puedes describir el éxito en una métrica, no estás listo para automatizar.
+
+### 3. Construye con humano-en-loop las primeras 4 semanas
+El humano no es muleta: es **profesor**. Cada corrección que hace alimenta tu fine-tuning, tu prompt o tu base de evals. Si saltas este paso, vas a estar debuggeando alucinaciones en producción con clientes molestos. Yo ya pagué esa lección.
+
+### 4. Retira al humano cuando el error baje del 3%
+Gradual, no de golpe. Pasamos de revisar el 100% de las llamadas, al 50%, al 10%, hasta llegar al spot-check semanal. **El error 0% no existe.** Si lo persigues, no vas a lanzar nunca.
+
+## Casos reales — con los números que normalmente no se cuentan
+
+**CALLII (voz → SPEI en 47 segundos)**
+- Antes: 6 minutos promedio, agente humano, 3 errores cada 100 transacciones.
+- Después: 47 segundos, agente IA con human-in-loop, error <1%.
+- Lo que nadie te cuenta: nos tomó **11 semanas** llegar ahí, no 11 días. Y los primeros prompts eran horribles.
+
+**PropMatch (scoring de leads inmobiliarios)**
+- Cierre +35%, pero la métrica que nos cambió la vida fue otra: **el tiempo del broker dejó de irse en filtrar y se fue a cerrar**. La IA no reemplazó al broker, le devolvió el oficio.
+
+**Finple (onboarding de inversionistas)**
+- 3 días → 4 minutos. KYC + AML + perfil de riesgo automatizado.
+- Truco real: no usamos IA para el KYC. Usamos IA para **explicarle al inversionista por qué le pedimos cada documento**. La fricción no era técnica, era emocional.
+
+## Cinco tips que sólo aprendes en producción
+
+1. **Loguea TODO.** Cada prompt, cada respuesta, cada corrección humana. Tu dataset futuro vale más que tu modelo actual.
+2. **Eval antes de prod.** Construye un set de 50–100 ejemplos "de oro" y mide cada cambio contra ellos. Sin esto, vas a ciegas.
+3. **El costo no es el token, es la latencia.** Un agente que tarda 9 segundos no se usa, aunque sea perfecto.
+4. **Diseña para el día malo.** ¿Qué pasa cuando el modelo está caído? ¿Cuando alucina? ¿Cuando un cliente lo intenta romper a propósito? Si no tienes respuesta, no estás listo.
+5. **El founder es el primer prompt engineer.** No lo delegues los primeros 12 meses. Los matices del negocio viven en tu cabeza, no en la del PM.
+
+## El insight con el que me quedo
+
+La IA operativa no es un departamento. No es un "head of AI" que contratas. Es una **capa transversal** que tú, como founder, debes diseñar personalmente — al menos hasta que el sistema corra solo. Después puedes delegar. Antes, no.
+
+Si quieres que pase un día con tu equipo y diagnostiquemos juntos dónde meter IA con ROI real, hay un programa para eso. Y si sólo tienes una pregunta, escríbeme. Respondo.
+
+— Gonzalo`,
     cta: { label: "Aplica el Audit OS a tu empresa", to: "/audit-os" },
   },
   {
