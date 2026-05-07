@@ -180,24 +180,60 @@ Si quieres que pase un día con tu equipo y diagnostiquemos juntos dónde meter 
     ],
     audience:
       "Founders en early stage, estudiantes universitarios y emprendedores LATAM que están en su primer levantamiento",
-    body: `## El número detrás del titular
-95 rechazos. No de inversionistas: de **inversionistas, partners, clientes, mentores**. Cada NO me costó algo distinto: tiempo, ego, dinero. Pero ninguno me costó la convicción.
+    body: `Hay un Excel en mi laptop que casi nadie ha visto. Tiene 95 filas. Cada fila es un NO: el inversionista que dijo "estás muy verde", el cliente que firmó con la competencia, el mentor que dejó de contestarme, el partner que me dijo "esto no va a funcionar en LATAM". Lo guardo no por nostalgia. Lo guardo porque cada NO me enseñó algo que un SÍ no me hubiera enseñado nunca.
 
-## Las 3 cosas que sostienen a un founder
-1. **Narrativa interna:** lo que te dices cuando nadie escucha.
-2. **Hábitos invisibles:** el primer hábito antes de las 7am decide tu mes.
-3. **Red de personas verdaderas:** 5 personas a quienes les puedas llamar a las 11pm.
+Si estás leyendo esto y vas en tu rechazo número 12, 30 o 60: respira. No estás roto. Estás en el proceso.
 
-## El error más común
-Confundir resiliencia con aguantar. **Resiliencia es decidir mejor más rápido.**
+## El número detrás del titular
 
-## Lo que diría a mi yo de 22
-- Habla menos de la idea, ejecuta más rápido.
-- Documenta todo desde el día 1 (eso construye narrativa).
-- El dinero no resuelve problemas de equipo. Nunca.
+95 rechazos antes del primer cheque real. Y no eran sólo de fondos: eran de **inversionistas, partners, clientes, mentores y hasta amigos** que dejaron de creer. Cada NO me costó algo distinto: tiempo, ego, dinero, una relación. Pero ninguno me costó lo que de verdad importa: la convicción.
 
-## El mensaje final
-No hay atajos. Pero hay método. Y el método se enseña — para eso construí PropMatch, CALLII y Finple, y para eso doy keynotes a estudiantes en LATAM.`,
+Lo más difícil del founder journey no es el rechazo. Es **seguir presentándote después del rechazo número 40**, cuando ya no tienes argumentos nuevos y empiezas a dudar de los viejos.
+
+## Las 3 cosas que sostienen a un founder cuando todo se cae
+
+### 1. Narrativa interna
+Lo que te dices cuando nadie escucha. No es positivismo. Es **una historia coherente** sobre por qué estás haciendo esto y por qué tú. Si tu narrativa interna es "voy a probar a ver", el primer NO te tumba. Si tu narrativa es "esto va a existir y voy a ser yo quien lo construya", el rechazo 95 sigue doliendo, pero no te detiene.
+
+### 2. Hábitos invisibles
+El primer hábito antes de las 7am decide tu mes. En mi caso: 20 minutos de escritura, 30 minutos de movimiento, café sin pantalla. No es ritual místico, es **higiene mental**. Cuando llega el día malo (y llegan muchos), los hábitos te cargan por inercia.
+
+### 3. Red de personas verdaderas
+No "tu network". **Cinco personas a quienes les puedas llamar a las 11pm.** Sin agenda, sin pitch, sin máscara. Si no las tienes, deja de hacer eventos y consigue una. Es más importante que tu próxima ronda.
+
+## El error más común que veo en founders early-stage
+
+Confundir resiliencia con aguantar. No son lo mismo. **Resiliencia es decidir mejor más rápido**, no apretar los dientes y seguir empujando una piedra que no se mueve. A veces lo más resiliente es matar la idea, pivotar, despedir a tu mejor amigo del equipo, devolver el cheque. Aguantar sin pensar es necedad, no resiliencia.
+
+## Cinco tips concretos para tu próximo NO
+
+1. **Pide feedback, no validación.** "¿Qué tendría que ser cierto para que invirtieras?" abre conversaciones. "¿Qué te pareció?" cierra puertas.
+2. **Llévate un dato de cada rechazo.** Si sales con las manos vacías, perdiste doble: el cheque y la lección.
+3. **No pitchees triste.** Si vienes de tres NOs seguidos, **cancela la siguiente reunión**. La energía del founder es parte del producto.
+4. **Documenta el proceso.** Yo escribo después de cada reunión clave. En tres años, ese archivo se vuelve tu mejor activo de marca personal.
+5. **No te endeudes emocionalmente con el SÍ.** Mientras no haya wire transfer, no hay deal. Punto.
+
+## Lo que le diría hoy a mi yo de 22 años
+
+- **Habla menos de la idea, ejecuta más rápido.** Nadie te va a copiar. Y si te copian, ya perdieron porque tú llevas la narrativa.
+- **Documenta todo desde el día 1.** Vas a necesitar la historia más adelante. Para inversionistas, para tu equipo, para ti mismo cuando dudes.
+- **El dinero no resuelve problemas de equipo. Nunca.** Si la cultura está rota, el cheque la rompe más rápido.
+- **Lavar autos no fue tiempo perdido.** Fue tu primera lección de servicio al cliente. Honra los capítulos pequeños — son los que sostienen los grandes.
+- **Llama a tu mamá más seguido.** En serio.
+
+## Para los estudiantes que me escuchan en CETI, Talent Land y otras escuelas
+
+No empieces buscando "tu pasión". Empieza buscando un problema que te incomode. La pasión llega cuando llevas 18 meses peleándote con el problema y todavía no te quieres rendir. Eso es lo más cerca que tendrás de una vocación real.
+
+Y por favor: **deja de esperar el momento perfecto**. No existe. Existe el momento que decides convertir en perfecto trabajando como loco.
+
+## El mensaje con el que me quedo
+
+No hay atajos. Pero hay método. Y el método se enseña — por eso construí PropMatch, CALLII y Finple, y por eso doy keynotes a estudiantes y founders en LATAM. Si quieres vivir la conferencia completa de "95 Rechazos" con todo el material que me hubiera gustado tener a tu edad, te dejo el acceso abajo.
+
+Nos vemos del otro lado del próximo NO.
+
+— Gonzalo`,
     cta: { label: "Vive la conferencia 95 Rechazos", to: "/bonus-ceti" },
   },
 ];
