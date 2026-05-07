@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Trash2, Save, RotateCcw, Eye } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Trash2, Save, RotateCcw, Eye, History, Check, AlertTriangle, PlayCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   BENEFITS,
@@ -7,10 +7,23 @@ import {
   readBenefitsBundle,
   writeBenefitsBundle,
   resetBenefits,
+  exportBenefits,
+  importBenefits,
   type BenefitOverride,
   type BenefitsBundle,
   type BenefitStatus,
 } from "@/lib/benefits";
+import { AssetUploader } from "@/components/AssetUploader";
+import { OGPreviewCard } from "@/components/OGPreviewCard";
+import { DESCARGAS_SEO } from "@/lib/bonusMaterials";
+
+const SITE = "https://gonzaloacuna.com";
+const SNAP_KEY = "benefits_admin_snapshots_v1";
+type Snapshot = { id: string; ts: string; bundle: BenefitsBundle };
+const readSnaps = (): Snapshot[] => {
+  try { return JSON.parse(localStorage.getItem(SNAP_KEY) || "[]"); } catch { return []; }
+};
+const writeSnaps = (s: Snapshot[]) => localStorage.setItem(SNAP_KEY, JSON.stringify(s.slice(0, 20)));
 
 const inputCls =
   "w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none";
@@ -36,6 +49,9 @@ const blank = (): BenefitOverride => ({
   externalUrl: "",
   iconKey: "GraduationCap",
   highlights: [],
+  pdfUrl: "",
+  videoUrl: "",
+  thumbnailUrl: "",
 });
 
 type Row = BenefitOverride & { _origin: "base" | "added"; _removed?: boolean };
@@ -55,6 +71,9 @@ const buildRows = (b: BenefitsBundle): Row[] => {
       externalUrl: e.externalUrl ?? it.externalUrl ?? "",
       iconKey: e.iconKey ?? "GraduationCap",
       highlights: e.highlights ?? it.highlights ?? [],
+      pdfUrl: e.pdfUrl ?? it.pdfUrl ?? "",
+      videoUrl: e.videoUrl ?? it.videoUrl ?? "",
+      thumbnailUrl: e.thumbnailUrl ?? it.thumbnailUrl ?? "",
       _origin: "base", _removed: removed.has(it.id),
     };
   });
@@ -65,6 +84,9 @@ const buildRows = (b: BenefitsBundle): Row[] => {
 export const BenefitsAdminSection = () => {
   const [rows, setRows] = useState<Row[]>(() => buildRows(readBenefitsBundle()));
   const [saved, setSaved] = useState(false);
+  const [snaps, setSnaps] = useState<Snapshot[]>(readSnaps);
+  const [ogResults, setOgResults] = useState<null | OgCheck[]>(null);
+  const [ogRunning, setOgRunning] = useState(false);
 
   const update = (idx: number, patch: Partial<Row>) =>
     setRows((r) => r.map((row, i) => (i === idx ? { ...row, ...patch } : row)));
@@ -98,6 +120,10 @@ export const BenefitsAdminSection = () => {
         bundle.added!.push(clean);
       }
     });
+    // Snapshot BEFORE writing so we can revert
+    const snap: Snapshot = { id: crypto.randomUUID(), ts: new Date().toISOString(), bundle: exportBenefits() };
+    const next = [snap, ...snaps].slice(0, 20);
+    setSnaps(next); writeSnaps(next);
     writeBenefitsBundle(bundle);
     setSaved(true);
     setTimeout(() => setSaved(false), 1600);
@@ -107,6 +133,42 @@ export const BenefitsAdminSection = () => {
     if (!confirm("¿Restablecer el catálogo Benefits a los valores por defecto?")) return;
     resetBenefits();
     setRows(buildRows({}));
+  };
+
+  const restoreSnap = (s: Snapshot) => {
+    if (!confirm(`Restaurar Benefits a la versión del ${new Date(s.ts).toLocaleString()}?`)) return;
+    importBenefits(s.bundle);
+    setRows(buildRows(s.bundle));
+  };
+
+  const runOgTest = async () => {
+    setOgRunning(true); setOgResults(null);
+    const targets: OgTarget[] = [];
+    rows.filter((r) => !r._removed).forEach((r) => {
+      if (r.landingPath) targets.push({ id: r.id, label: r.title, path: r.landingPath, image: r.thumbnailUrl });
+      if (r.downloadsPath) targets.push({ id: `${r.id}-dl`, label: `${r.title} · descargas`, path: r.downloadsPath, image: r.thumbnailUrl || DESCARGAS_SEO.ogImage });
+    });
+    // Always include the descargas preview reference
+    targets.push({ id: "descargas-default", label: "CETI · descargas (default)", path: "/bonus-ceti-descargas", image: DESCARGAS_SEO.ogImage });
+    const checks: OgCheck[] = await Promise.all(targets.map(async (t) => {
+      const url = `${SITE}${t.path}`;
+      const issues: string[] = [];
+      const titleLen = t.label.length;
+      if (titleLen > 60) issues.push(`Título largo (${titleLen}>60)`);
+      let imageOk = false;
+      if (t.image) {
+        try {
+          const r = await fetch(t.image, { method: "HEAD" });
+          imageOk = r.ok;
+          if (!r.ok) issues.push(`Imagen no accesible (${r.status})`);
+        } catch { issues.push("Imagen no alcanzable"); }
+      } else {
+        issues.push("Sin imagen OG asignada");
+      }
+      return { ...t, url, issues, imageOk, ok: issues.length === 0 };
+    }));
+    setOgResults(checks);
+    setOgRunning(false);
   };
 
   return (
@@ -196,6 +258,29 @@ export const BenefitsAdminSection = () => {
                     />
                   </Field>
                 </div>
+                <div className="sm:col-span-2 grid grid-cols-1 gap-3">
+                  <AssetUploader
+                    label="PDF (descargable)"
+                    kind="pdf"
+                    folder={`benefits/${r.id}`}
+                    value={r.pdfUrl ?? ""}
+                    onChange={(v) => update(idx, { pdfUrl: v })}
+                  />
+                  <AssetUploader
+                    label="Video (mp4/webm)"
+                    kind="video"
+                    folder={`benefits/${r.id}`}
+                    value={r.videoUrl ?? ""}
+                    onChange={(v) => update(idx, { videoUrl: v })}
+                  />
+                  <AssetUploader
+                    label="Thumbnail / OG (1200x630)"
+                    kind="image"
+                    folder={`benefits/${r.id}`}
+                    value={r.thumbnailUrl ?? ""}
+                    onChange={(v) => update(idx, { thumbnailUrl: v })}
+                  />
+                </div>
               </div>
               {(r.landingPath || r.downloadsPath) && (
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -210,6 +295,75 @@ export const BenefitsAdminSection = () => {
           ))}
         </div>
 
+        {/* OG Batch Tester */}
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="font-display text-base text-white">Test automático OG/Twitter</h3>
+              <p className="mt-1 text-xs text-white/55">Renderiza preview cards de cada landing/descarga y valida título &lt; 60 chars + imagen accesible.</p>
+            </div>
+            <button
+              onClick={runOgTest}
+              disabled={ogRunning}
+              className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10 disabled:opacity-50"
+            >
+              <PlayCircle size={13} /> {ogRunning ? "Corriendo..." : "Probar todas las rutas"}
+            </button>
+          </div>
+          {ogResults && (
+            <>
+              <div className="mt-4 grid grid-cols-1 gap-1 text-xs sm:grid-cols-3">
+                <div className="rounded-lg border border-white/10 px-3 py-2 text-white/70">Total: <span className="text-white">{ogResults.length}</span></div>
+                <div className="rounded-lg border border-emerald-500/20 px-3 py-2 text-emerald-400">OK: {ogResults.filter((r) => r.ok).length}</div>
+                <div className="rounded-lg border border-amber-500/20 px-3 py-2 text-amber-400">Con avisos: {ogResults.filter((r) => !r.ok).length}</div>
+              </div>
+              <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+                {ogResults.map((r) => (
+                  <div key={r.id} className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <p className="truncate text-[11px] uppercase tracking-[0.22em] text-white/60">{r.label}</p>
+                      {r.ok ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400"><Check size={10} /> OK</span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] text-amber-400"><AlertTriangle size={10} /> Avisos</span>
+                      )}
+                    </div>
+                    <OGPreviewCard title={r.label} description={r.url} image={r.image} url={r.url} />
+                    {r.issues.length > 0 && (
+                      <ul className="mt-2 space-y-0.5 text-[11px] text-amber-300/80">
+                        {r.issues.map((i) => <li key={i}>• {i}</li>)}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Version history */}
+        {snaps.length > 0 && (
+          <details className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+            <summary className="flex cursor-pointer items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-white/75">
+              <History size={13} /> Historial Benefits ({snaps.length})
+            </summary>
+            <ul className="mt-3 max-h-64 space-y-2 overflow-auto">
+              {snaps.map((s) => (
+                <li key={s.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs">
+                  <span className="text-white/70">{new Date(s.ts).toLocaleString()}</span>
+                  <button
+                    onClick={() => restoreSnap(s)}
+                    className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
+                  >
+                    <RotateCcw size={11} /> Restaurar
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-[10px] text-white/40">Se crea un snapshot automático cada vez que guardas.</p>
+          </details>
+        )}
+
         <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
           <button onClick={reset} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold">
             <RotateCcw size={13} /> Restablecer Benefits
@@ -222,3 +376,6 @@ export const BenefitsAdminSection = () => {
     </section>
   );
 };
+
+type OgTarget = { id: string; label: string; path: string; image?: string };
+type OgCheck = OgTarget & { url: string; issues: string[]; imageOk: boolean; ok: boolean };
