@@ -24,6 +24,10 @@ export type BenefitEntry = {
   externalUrl?: string;
   icon: LucideIcon;
   highlights?: string[];
+  /** Optional uploaded assets (Lovable Cloud Storage public URLs). */
+  pdfUrl?: string;
+  videoUrl?: string;
+  thumbnailUrl?: string;
 };
 
 export const BENEFITS: BenefitEntry[] = [
