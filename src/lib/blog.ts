@@ -31,19 +31,58 @@ export const BLOG_POSTS: BlogPost[] = [
       "Inversión fraccionada",
     ],
     audience: "Founders PropTech, fondos LATAM, brokers tradicionales en transformación",
-    body: `## El cambio silencioso del Real Estate
-En LATAM, el mercado inmobiliario mueve más de **$2 trillones** y aún funciona con escrituras en papel, plazos de 90 días y mínimos de inversión imposibles para el 95% de la población. La **tokenización inmobiliaria** no es una promesa: es la actualización lógica del activo más antiguo del mundo.
+    body: `Voy a empezar con una confesión: la primera vez que un notario en Guadalajara me dijo que necesitaba 47 días para cerrar una escritura, pensé que estaba bromeando. No bromeaba. Y ese fue el momento exacto en el que entendí que el real estate en LATAM no necesita "más tecnología": necesita una arquitectura completamente nueva.
+
+Si llevas tiempo en PropTech, este post no te va a vender humo. Te voy a contar lo que hemos visto operando PropMatch en México, hablando con la CNBV, peleándonos con custodios y firmando LOIs por $195M con desarrolladores que hace dos años pensaban que blockchain era una moda.
+
+## El elefante de $2T que nadie quiere mover
+
+El inmobiliario LATAM mueve más de **$2 trillones de dólares**. Y sigue corriendo sobre tres supuestos que ya no resisten el 2026:
+
+1. Que la escritura física es la única forma de demostrar propiedad.
+2. Que un ticket mínimo de $50,000 USD es "razonable".
+3. Que la liquidez del activo es un problema del comprador, no del emisor.
+
+Cualquier founder que haya intentado vender un departamento en Polanco a un inversionista de Bogotá entiende lo absurdo del sistema. **No es un problema de UX. Es un problema de infraestructura.**
 
 ## ¿Por qué ERC-3643 y no otro estándar?
-ERC-3643 es el primer estándar permissioned que entiende lo que un regulador necesita: identidad on-chain, control de transferibilidad y compliance embebido. En PropMatch lo elegimos porque permite operar **bajo CNBV en México y SEC en US** sin reescribir el contrato.
 
-## Tres oportunidades concretas para founders
-- **Marketplaces fraccionados:** democratizar tickets desde $500 USD.
-- **Liquidez secundaria:** mercados intra-edificio entre tenedores.
-- **Renta tokenizada:** pagos automáticos vía smart contracts.
+Probamos ERC-20 (no sirve, no entiende identidad). Probamos ERC-1400 (mejor, pero los reguladores no lo entienden). Llegamos a **ERC-3643** porque es el único estándar permissioned que mete tres cosas dentro del token mismo:
 
-## El timing es ahora
-Los reguladores de México, Brasil y Colombia están abriendo sandboxes. Quien construya con compliance desde el día 1 ganará la próxima década.`,
+- **Identidad on-chain (ONCHAINID):** sabes quién está del otro lado sin romper la privacidad.
+- **Control de transferibilidad:** puedes bloquear, restringir o pausar transferencias por jurisdicción.
+- **Compliance embebido:** las reglas viven en el contrato, no en una capa externa que se puede saltar.
+
+En PropMatch lo elegimos porque nos permite **operar bajo CNBV en México y registrar el mismo activo bajo Reg D en Estados Unidos** sin reescribir el smart contract. Para un founder eso significa: una sola base de código, dos mercados, cero retrabajo regulatorio.
+
+## Tres oportunidades concretas (con números, no con vibes)
+
+### 1. Marketplaces fraccionados desde $500 USD
+No es teoría. Estamos viendo conversiones de 4.2% en landing pages que ofrecen entrar a un edificio AAA con el equivalente a una cena para dos. **Tip práctico:** no compitas en cap rate, compite en accesibilidad.
+
+### 2. Liquidez secundaria intra-edificio
+El secreto sucio: los inversionistas no quieren rendimiento, quieren **poder salirse**. Diseñar un mercado secundario donde tenedores del mismo edificio se compran entre sí resuelve más fricción que cualquier yield del 12%.
+
+### 3. Renta tokenizada con pagos automáticos
+Smart contract paga el 1° de cada mes. Sin cobranza, sin intermediario, sin "déjame revisar con mi contador". **Si vas a construir esto:** integra primero con SPEI vía un PSP regulado. La pureza on-chain mata adopción.
+
+## El error que veo en 8 de cada 10 founders PropTech
+
+Empezar por el token y dejar el compliance para "después". El compliance no es un módulo que enchufas: **es la columna vertebral del producto**. Si tu identidad on-chain, tu KYC y tu reporte regulatorio no están diseñados desde el día 1, vas a tener que tirar el MVP.
+
+## Tres tips antes de cerrar
+
+- **Habla con tu regulador antes de levantar capital.** Una carta de no objeción vale más que un term sheet.
+- **Custodio primero, exchange después.** Si no tienes custodia institucional, no tienes producto vendible a un fondo.
+- **Mide trust, no TVL.** En tokenización el KPI real es: ¿el inversionista deja entrar a su mamá? Si no, te falta narrativa.
+
+## El timing es ahora — y no lo digo para vender FOMO
+
+México, Brasil y Colombia abrieron sandboxes este año. La SEC publicó guías nuevas sobre tokens permissioned. Los family offices de LATAM por primera vez tienen mandato para invertir en tokenización. **Si estás construyendo aquí, los próximos 18 meses son los que más van a importar de la década.**
+
+Si quieres que aterrice este framework en tu equipo o en un evento corporativo, abajo te dejo cómo. Y si me escribes, dime en qué etapa estás — respondo personalmente.
+
+— Gonzalo`,
     cta: { label: "Reservar keynote PropTech", to: "/booking" },
   },
   {
