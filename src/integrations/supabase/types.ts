@@ -71,6 +71,51 @@ export type Database = {
         }
         Relationships: []
       }
+      meeting_bookings: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          email: string
+          end_time: string
+          full_name: string
+          google_event_id: string | null
+          id: string
+          meet_link: string | null
+          message: string | null
+          start_time: string
+          status: string
+          topic: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number
+          email: string
+          end_time: string
+          full_name: string
+          google_event_id?: string | null
+          id?: string
+          meet_link?: string | null
+          message?: string | null
+          start_time: string
+          status?: string
+          topic?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          email?: string
+          end_time?: string
+          full_name?: string
+          google_event_id?: string | null
+          id?: string
+          meet_link?: string | null
+          message?: string | null
+          start_time?: string
+          status?: string
+          topic?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
