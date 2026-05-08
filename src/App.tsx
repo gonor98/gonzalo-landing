@@ -19,6 +19,8 @@ import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
 import { VideoProvider } from "@/components/VideoContext";
 import { LEGACY_REDIRECTS, Redirect301 } from "@/components/LegacyRedirects";
+import { WhatsAppFloating } from "@/components/WhatsAppFloating";
+import Agenda from "./pages/Agenda.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,7 @@ const App = () => (
             <Route path="/audit-os" element={<AuditOS />} />
             <Route path="/investors" element={<Investors />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/agenda" element={<Agenda />} />
             <Route path="/benefits" element={<Benefits />} />
             <Route path="/benefits/preview" element={<BenefitsPreview />} />
             <Route path="/benefits/:id/preview" element={<BenefitsPreview />} />
@@ -50,6 +53,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <WhatsAppFloating />
         </VideoProvider>
       </BrowserRouter>
     </TooltipProvider>
