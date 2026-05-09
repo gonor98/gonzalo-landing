@@ -143,6 +143,19 @@ export const BookingSelector = () => {
 
   return (
     <div className="mx-auto max-w-5xl">
+      {/* Quick alternative: book a 30-min video call directly */}
+      <div className="mb-6 flex flex-col items-start justify-between gap-3 rounded-[14px] border border-gold/30 bg-gold/5 p-5 sm:flex-row sm:items-center">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Atajo</p>
+          <p className="mt-1 text-sm text-white/80">¿Solo quieres conocernos? Agenda una videollamada de 30 min con disponibilidad en tiempo real.</p>
+        </div>
+        <a
+          href="/agenda"
+          className="inline-flex items-center gap-2 rounded-full border border-gold px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-gold transition hover:bg-gold hover:text-background"
+        >
+          Agendar videollamada <ArrowRight size={14} />
+        </a>
+      </div>
       {/* Type selector */}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         {bookingTypes.map((b) => {
