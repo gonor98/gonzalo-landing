@@ -21,6 +21,7 @@ import { VideoProvider } from "@/components/VideoContext";
 import { LEGACY_REDIRECTS, Redirect301 } from "@/components/LegacyRedirects";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import Agenda from "./pages/Agenda.tsx";
+import AdminBookings from "./pages/AdminBookings.tsx";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/investors" element={<Investors />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/agenda" element={<Agenda />} />
+            <Route path="/admin/bookings" element={<AdminBookings />} />
             <Route path="/benefits" element={<Benefits />} />
             <Route path="/benefits/preview" element={<BenefitsPreview />} />
             <Route path="/benefits/:id/preview" element={<BenefitsPreview />} />

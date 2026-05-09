@@ -29,6 +29,35 @@ const NOTIFY_TO = "gonzalo@propmatchapp.com";
 const FROM_EMAIL = "Gonzalo Acuña Nava <onboarding@resend.dev>";
 const RESEND_GATEWAY = "https://connector-gateway.lovable.dev/resend/emails";
 
+// CETI material attached to every confirmation email.
+const CETI_PDFS = [
+  {
+    filename: "conferencia-ceti-gonzalo.pdf",
+    url: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/conferencia-ceti-gonzalo.pdf",
+  },
+  {
+    filename: "bonus-guia-estudiante-ceti.pdf",
+    url: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/bonus-guia-estudiante-ceti.pdf",
+  },
+];
+
+async function fetchAttachments() {
+  const out: { filename: string; content: string }[] = [];
+  for (const a of CETI_PDFS) {
+    try {
+      const r = await fetch(a.url);
+      if (!r.ok) continue;
+      const buf = new Uint8Array(await r.arrayBuffer());
+      let bin = "";
+      for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
+      out.push({ filename: a.filename, content: btoa(bin) });
+    } catch (e) {
+      logEvent("attachment.fetch.error", { filename: a.filename });
+    }
+  }
+  return out;
+}
+
 // PII-safe logger: never log full names, emails, or message bodies.
 const logEvent = (event: string, meta: Record<string, unknown> = {}) => {
   try {
@@ -76,7 +105,7 @@ const buildUserHtml = (b: BookingPayload) => `
         Recibimos tu solicitud para reservar a Gonzalo como ${labelFor(b.booking_type)}. Una persona del equipo te contactará en menos de <strong>48 horas hábiles</strong> con disponibilidad para Q2–Q4 2026.
       </p>
       <p style="font-size:15px;line-height:1.7;color:#444;margin:0 0 24px;">
-        Mientras tanto, puedes explorar el catálogo completo de keynotes y casos de estudio en gonzaloacuna.com.
+        Mientras tanto te dejamos adjuntos dos materiales del CETI: la conferencia "95 Rechazos" en PDF y la guía de inicio para estudiantes. Explora más en gonzaloacuna.com.
       </p>
       <div style="border-top:1px solid #eee;padding-top:18px;font-size:12px;color:#888;">
         Gonzalo Acuña Nava · CEO PropMatch · Guadalajara, México<br/>
@@ -90,6 +119,7 @@ async function sendEmail(opts: {
   subject: string;
   html: string;
   reply_to?: string;
+  attachments?: { filename: string; content: string }[];
 }) {
   const lovableKey = Deno.env.get("LOVABLE_API_KEY");
   const resendKey = Deno.env.get("RESEND_API_KEY"); // optional override
@@ -119,6 +149,7 @@ async function sendEmail(opts: {
       subject: opts.subject,
       html: opts.html,
       reply_to: opts.reply_to,
+      attachments: opts.attachments,
     }),
   });
   const text = await res.text();
@@ -204,6 +235,7 @@ Deno.serve(async (req) => {
 
     // Fire-and-forget emails (never fail the request if email errors)
     const normalized: BookingPayload = { ...body, full_name: name, email: email.toLowerCase() };
+    const attachments = await fetchAttachments();
     const emailResults = await Promise.allSettled([
       sendEmail({
         to: NOTIFY_TO,
@@ -215,6 +247,7 @@ Deno.serve(async (req) => {
         to: email,
         subject: "Recibimos tu solicitud — Gonzalo Acuña Nava",
         html: buildUserHtml(normalized),
+        attachments,
       }),
     ]);
     const emailOk = emailResults.every(

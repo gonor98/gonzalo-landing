@@ -15,6 +15,24 @@ const FROM_EMAIL = "Gonzalo Acuña <onboarding@resend.dev>";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const CETI_PDFS = [
+  { filename: "conferencia-ceti-gonzalo.pdf", url: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/conferencia-ceti-gonzalo.pdf" },
+  { filename: "bonus-guia-estudiante-ceti.pdf", url: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/bonus-guia-estudiante-ceti.pdf" },
+];
+async function fetchPdfAttachments() {
+  const out: { filename: string; content: string; content_type: string }[] = [];
+  for (const a of CETI_PDFS) {
+    try {
+      const r = await fetch(a.url);
+      if (!r.ok) continue;
+      const buf = new Uint8Array(await r.arrayBuffer());
+      let bin = ""; for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
+      out.push({ filename: a.filename, content: btoa(bin), content_type: "application/pdf" });
+    } catch {}
+  }
+  return out;
+}
+
 function buildICS(opts: {
   uid: string; title: string; description: string;
   start: Date; end: Date; meet?: string; organizer: string; attendee: string;
@@ -44,7 +62,10 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
     const body = await req.json();
-    const { full_name, email, start, end, topic, message } = body ?? {};
+    const {
+      full_name, email, start, end, topic, message,
+      organization, role, phone,
+    } = body ?? {};
     if (!full_name || !email || !start || !end) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -133,6 +154,21 @@ Deno.serve(async (req) => {
       meet_link: meetLink ?? null, google_event_id: ev.id ?? null, status: "confirmed",
     });
 
+    // Mirror into keynote_bookings so admin sees a unified inbox.
+    try {
+      await supabase.from("keynote_bookings").insert({
+        booking_type: "organizer",
+        full_name, email,
+        organization: organization ?? null,
+        role: role ?? null,
+        phone: phone ?? null,
+        topic_interest: topic ?? null,
+        event_date: startDt.toISOString().slice(0, 10),
+        message: `[Reunión agendada ${startDt.toISOString()}] ${message ?? ""}${meetLink ? `\nMeet: ${meetLink}` : ""}`,
+        status: "meeting",
+      });
+    } catch (e) { console.error("mirror insert error", e); }
+
     // 4. Send emails (with .ics)
     const ics = buildICS({
       uid: ev.id || requestId,
@@ -153,7 +189,7 @@ Deno.serve(async (req) => {
           <h1 style="font-family:Georgia,serif;font-size:26px;margin:0 0 16px;">Listo, ${full_name.split(" ")[0]}.</h1>
           <p style="font-size:15px;line-height:1.7;color:#444;">Tu reunión con Gonzalo Acuña está confirmada para <strong>${fmt}</strong> (CDMX).</p>
           ${meetLink ? `<p style="margin:20px 0;"><a href="${meetLink}" style="background:#08090F;color:#C9A84C;padding:12px 18px;border-radius:8px;text-decoration:none;font-size:14px;">Unirse por Google Meet</a></p>` : ""}
-          <p style="font-size:13px;color:#777;">Adjuntamos un archivo .ics para añadirlo a tu calendario.</p>
+          <p style="font-size:13px;color:#777;">Adjuntamos un archivo .ics para añadirlo a tu calendario y dos PDFs de regalo: la conferencia "95 Rechazos" del CETI y la guía de inicio para estudiantes.</p>
         </div>
       </div>`;
     const adminHtml = `
@@ -168,7 +204,16 @@ Deno.serve(async (req) => {
         </div>
       </div>`;
 
-    const sendEmail = (to: string, subject: string, html: string) =>
+    const pdfAttachments = await fetchPdfAttachments();
+    const userAttachments = [
+      { filename: "reunion.ics", content: icsB64, content_type: "text/calendar" },
+      ...pdfAttachments,
+    ];
+    const adminAttachments = [
+      { filename: "reunion.ics", content: icsB64, content_type: "text/calendar" },
+    ];
+
+    const sendEmail = (to: string, subject: string, html: string, attachments: any[]) =>
       fetch(RESEND, {
         method: "POST",
         headers: {
@@ -178,13 +223,13 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           from: FROM_EMAIL, to: [to], subject, html,
-          attachments: [{ filename: "reunion.ics", content: icsB64, content_type: "text/calendar" }],
+          attachments,
         }),
       }).catch(err => console.error("email error", err));
 
     await Promise.all([
-      sendEmail(email, "Tu reunión con Gonzalo Acuña está confirmada", userHtml),
-      sendEmail(ADMIN_EMAIL, `Nueva reunión: ${full_name} (${fmt})`, adminHtml),
+      sendEmail(email, "Tu reunión con Gonzalo Acuña está confirmada", userHtml, userAttachments),
+      sendEmail(ADMIN_EMAIL, `Nueva reunión: ${full_name} (${fmt})`, adminHtml, adminAttachments),
     ]);
 
     return new Response(JSON.stringify({ ok: true, meetLink, eventId: ev.id }), {
