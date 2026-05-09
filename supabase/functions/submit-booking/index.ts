@@ -105,7 +105,7 @@ const buildUserHtml = (b: BookingPayload) => `
         Recibimos tu solicitud para reservar a Gonzalo como ${labelFor(b.booking_type)}. Una persona del equipo te contactará en menos de <strong>48 horas hábiles</strong> con disponibilidad para Q2–Q4 2026.
       </p>
       <p style="font-size:15px;line-height:1.7;color:#444;margin:0 0 24px;">
-        Mientras tanto, puedes explorar el catálogo completo de keynotes y casos de estudio en gonzaloacuna.com.
+        Mientras tanto te dejamos adjuntos dos materiales del CETI: la conferencia "95 Rechazos" en PDF y la guía de inicio para estudiantes. Explora más en gonzaloacuna.com.
       </p>
       <div style="border-top:1px solid #eee;padding-top:18px;font-size:12px;color:#888;">
         Gonzalo Acuña Nava · CEO PropMatch · Guadalajara, México<br/>
