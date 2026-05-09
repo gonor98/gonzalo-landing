@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useMotionValueEvent, useTransform, useSpring } from "framer-motion";
 import { Play } from "lucide-react";
 import { useVideo } from "./VideoContext";
 import { usePerfMode } from "@/hooks/usePerfMode";
@@ -46,6 +46,11 @@ export const StickyScrollSection = () => {
     target: ref,
     offset: ["start start", "end end"],
   });
+
+  // Smooth parallax for the right column.
+  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 26, restDelta: 0.001 });
+  const parallaxY = useTransform(smooth, [0, 1], reduced ? ["0%", "0%"] : ["-4%", "4%"]);
+  const imageScale = useTransform(smooth, [0, 0.5, 1], reduced ? [1, 1, 1] : [1.05, 1, 1.05]);
 
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     // Three exact thresholds, regardless of card height.
@@ -121,35 +126,71 @@ export const StickyScrollSection = () => {
         </div>
 
         {/* Right scrolling images */}
-        <div className="order-1 md:order-2">
-          {states.map((s, i) => (
-            <div
-              key={s.title}
-              ref={(el) => (blockRefs.current[i] = el)}
-              data-index={i}
-              className="group relative h-[70vh] md:h-screen w-full cursor-pointer overflow-hidden"
-              onClick={() => open(s.videoId, s.title)}
-              role="button"
-              aria-label={`Reproducir: ${s.title}`}
-            >
-              <img
-                src={s.img}
-                alt={s.alt}
-                loading={i === 0 ? "eager" : "lazy"}
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-background/40" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-background/40 text-gold opacity-0 backdrop-blur transition-all duration-500 group-hover:scale-110 group-hover:opacity-100">
-                  <Play size={22} className="ml-1" fill="currentColor" />
-                </span>
+        <div className="order-1 md:order-2 md:relative">
+          {/* Desktop: single sticky stage with crossfade between images */}
+          <div className="hidden md:block sticky top-0 h-screen overflow-hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={current.title}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7, ease: "easeOut" as const }}
+                className="absolute inset-0 cursor-pointer group"
+                onClick={() => open(current.videoId, current.title)}
+                role="button"
+                aria-label={`Reproducir: ${current.title}`}
+              >
+                <motion.img
+                  src={current.img}
+                  alt={current.alt}
+                  style={{ y: parallaxY, scale: imageScale }}
+                  className="absolute inset-0 h-[110%] w-full object-cover -top-[5%]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-background/30" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/60 bg-background/40 text-gold backdrop-blur transition-transform duration-500 group-hover:scale-110">
+                    <Play size={22} className="ml-1" fill="currentColor" />
+                  </span>
+                </div>
+                <div className="absolute inset-0 ring-1 ring-inset ring-gold/10" />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Mobile: stack of 3 blocks (IntersectionObserver drives `active`) */}
+          <div className="md:hidden">
+            {states.map((s, i) => (
+              <div
+                key={s.title}
+                ref={(el) => (blockRefs.current[i] = el)}
+                data-index={i}
+                className="group relative h-[70vh] w-full cursor-pointer overflow-hidden"
+                onClick={() => open(s.videoId, s.title)}
+                role="button"
+                aria-label={`Reproducir: ${s.title}`}
+              >
+                <img
+                  src={s.img}
+                  alt={s.alt}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-background/40" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-background/40 text-gold backdrop-blur">
+                    <Play size={22} className="ml-1" fill="currentColor" />
+                  </span>
+                </div>
               </div>
-              <div className="absolute inset-0 ring-1 ring-inset ring-gold/10" />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Spacer to drive scroll progress on desktop (3 viewport heights) */}
+      <div aria-hidden className="hidden md:block" style={{ height: "200vh" }} />
     </section>
   );
 };
