@@ -164,7 +164,7 @@ Deno.serve(async (req) => {
         phone: phone ?? null,
         topic_interest: topic ?? null,
         event_date: startDt.toISOString().slice(0, 10),
-        message: `[Reunión agendada ${fmtNoop(startDt)}] ${message ?? ""}${meetLink ? `\nMeet: ${meetLink}` : ""}`,
+        message: `[Reunión agendada ${startDt.toISOString()}] ${message ?? ""}${meetLink ? `\nMeet: ${meetLink}` : ""}`,
         status: "meeting",
       });
     } catch (e) { console.error("mirror insert error", e); }
