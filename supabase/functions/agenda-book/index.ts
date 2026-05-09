@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
           <h1 style="font-family:Georgia,serif;font-size:26px;margin:0 0 16px;">Listo, ${full_name.split(" ")[0]}.</h1>
           <p style="font-size:15px;line-height:1.7;color:#444;">Tu reunión con Gonzalo Acuña está confirmada para <strong>${fmt}</strong> (CDMX).</p>
           ${meetLink ? `<p style="margin:20px 0;"><a href="${meetLink}" style="background:#08090F;color:#C9A84C;padding:12px 18px;border-radius:8px;text-decoration:none;font-size:14px;">Unirse por Google Meet</a></p>` : ""}
-          <p style="font-size:13px;color:#777;">Adjuntamos un archivo .ics para añadirlo a tu calendario.</p>
+          <p style="font-size:13px;color:#777;">Adjuntamos un archivo .ics para añadirlo a tu calendario y dos PDFs de regalo: la conferencia "95 Rechazos" del CETI y la guía de inicio para estudiantes.</p>
         </div>
       </div>`;
     const adminHtml = `
