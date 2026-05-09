@@ -235,6 +235,7 @@ Deno.serve(async (req) => {
 
     // Fire-and-forget emails (never fail the request if email errors)
     const normalized: BookingPayload = { ...body, full_name: name, email: email.toLowerCase() };
+    const attachments = await fetchAttachments();
     const emailResults = await Promise.allSettled([
       sendEmail({
         to: NOTIFY_TO,
@@ -246,6 +247,7 @@ Deno.serve(async (req) => {
         to: email,
         subject: "Recibimos tu solicitud — Gonzalo Acuña Nava",
         html: buildUserHtml(normalized),
+        attachments,
       }),
     ]);
     const emailOk = emailResults.every(
