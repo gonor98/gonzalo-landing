@@ -33,7 +33,7 @@ export default function Agenda() {
   const [selected, setSelected] = useState<Slot | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState<{ meetLink?: string } | null>(null);
-  const [form, setForm] = useState({ full_name: "", email: "", topic: "", message: "" });
+  const [form, setForm] = useState({ full_name: "", email: "", organization: "", role: "", phone: "", topic: "", message: "" });
   const { toast } = useToast();
 
   const days = useMemo(() => {
@@ -147,6 +147,17 @@ export default function Agenda() {
                   className="w-full rounded-lg border border-white/10 bg-background px-4 py-3 text-sm focus:border-gold focus:outline-none" />
                 <input maxLength={200} placeholder="Tema / contexto (opcional)"
                   value={form.topic} onChange={e => setForm(f => ({...f, topic: e.target.value}))}
+                  className="w-full rounded-lg border border-white/10 bg-background px-4 py-3 text-sm focus:border-gold focus:outline-none" />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <input maxLength={200} placeholder="Organización (opcional)"
+                    value={form.organization} onChange={e => setForm(f => ({...f, organization: e.target.value}))}
+                    className="w-full rounded-lg border border-white/10 bg-background px-4 py-3 text-sm focus:border-gold focus:outline-none" />
+                  <input maxLength={120} placeholder="Tu rol (opcional)"
+                    value={form.role} onChange={e => setForm(f => ({...f, role: e.target.value}))}
+                    className="w-full rounded-lg border border-white/10 bg-background px-4 py-3 text-sm focus:border-gold focus:outline-none" />
+                </div>
+                <input maxLength={40} placeholder="Teléfono / WhatsApp (opcional)"
+                  value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))}
                   className="w-full rounded-lg border border-white/10 bg-background px-4 py-3 text-sm focus:border-gold focus:outline-none" />
                 <textarea maxLength={2000} rows={4} placeholder="¿De qué quieres hablar? (opcional)"
                   value={form.message} onChange={e => setForm(f => ({...f, message: e.target.value}))}
