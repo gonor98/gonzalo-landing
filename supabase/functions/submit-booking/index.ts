@@ -29,6 +29,35 @@ const NOTIFY_TO = "gonzalo@propmatchapp.com";
 const FROM_EMAIL = "Gonzalo Acuña Nava <onboarding@resend.dev>";
 const RESEND_GATEWAY = "https://connector-gateway.lovable.dev/resend/emails";
 
+// CETI material attached to every confirmation email.
+const CETI_PDFS = [
+  {
+    filename: "conferencia-ceti-gonzalo.pdf",
+    url: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/conferencia-ceti-gonzalo.pdf",
+  },
+  {
+    filename: "bonus-guia-estudiante-ceti.pdf",
+    url: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/bonus-guia-estudiante-ceti.pdf",
+  },
+];
+
+async function fetchAttachments() {
+  const out: { filename: string; content: string }[] = [];
+  for (const a of CETI_PDFS) {
+    try {
+      const r = await fetch(a.url);
+      if (!r.ok) continue;
+      const buf = new Uint8Array(await r.arrayBuffer());
+      let bin = "";
+      for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
+      out.push({ filename: a.filename, content: btoa(bin) });
+    } catch (e) {
+      logEvent("attachment.fetch.error", { filename: a.filename });
+    }
+  }
+  return out;
+}
+
 // PII-safe logger: never log full names, emails, or message bodies.
 const logEvent = (event: string, meta: Record<string, unknown> = {}) => {
   try {
@@ -90,6 +119,7 @@ async function sendEmail(opts: {
   subject: string;
   html: string;
   reply_to?: string;
+  attachments?: { filename: string; content: string }[];
 }) {
   const lovableKey = Deno.env.get("LOVABLE_API_KEY");
   const resendKey = Deno.env.get("RESEND_API_KEY"); // optional override
@@ -119,6 +149,7 @@ async function sendEmail(opts: {
       subject: opts.subject,
       html: opts.html,
       reply_to: opts.reply_to,
+      attachments: opts.attachments,
     }),
   });
   const text = await res.text();
