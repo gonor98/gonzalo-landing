@@ -75,6 +75,26 @@ const escape = (s: string) =>
 const labelFor = (t: string) =>
   t === "bureau" ? "Speaker Bureau" : t === "organizer" ? "Event Organizer" : "Enterprise / Brand";
 
+const PDF_LINKS = {
+  conferencia: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/conferencia-ceti-gonzalo.pdf",
+  guia: "https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/bonus-guia-estudiante-ceti.pdf",
+};
+
+const fmtCDMX = (d: Date) =>
+  new Intl.DateTimeFormat("es-MX", {
+    dateStyle: "full",
+    timeStyle: "short",
+    timeZone: "America/Mexico_City",
+  }).format(d);
+
+const giftsBlock = `
+  <div style="margin:24px 0;padding:20px;background:#faf6ec;border:1px solid #e9dcb8;border-radius:12px;">
+    <p style="margin:0 0 6px;color:#9a7e2e;font-size:11px;letter-spacing:.28em;text-transform:uppercase;">📄 Tus regalos del CETI</p>
+    <p style="margin:0 0 14px;font-size:13px;color:#444;">También adjuntamos los PDFs a este correo.</p>
+    <a href="${PDF_LINKS.conferencia}" style="display:inline-block;margin:4px 6px 4px 0;padding:10px 16px;background:#08090F;color:#C9A84C;border-radius:8px;font-size:13px;text-decoration:none;">⬇ Conferencia "95 Rechazos"</a>
+    <a href="${PDF_LINKS.guia}" style="display:inline-block;margin:4px 6px 4px 0;padding:10px 16px;background:#08090F;color:#C9A84C;border-radius:8px;font-size:13px;text-decoration:none;">⬇ Guía estudiante CETI</a>
+  </div>`;
+
 const buildAdminHtml = (b: BookingPayload) => `
   <div style="font-family:Inter,Helvetica,Arial,sans-serif;background:#08090F;padding:32px;color:#fff;">
     <div style="max-width:560px;margin:0 auto;background:#0d0e16;border:1px solid rgba(201,168,76,0.25);border-radius:14px;padding:32px;">
@@ -100,13 +120,12 @@ const buildUserHtml = (b: BookingPayload) => `
   <div style="font-family:Inter,Helvetica,Arial,sans-serif;background:#ffffff;padding:32px;color:#111;">
     <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:14px;padding:36px;">
       <p style="color:#9a7e2e;font-size:11px;letter-spacing:.3em;text-transform:uppercase;margin:0 0 8px;">Solicitud recibida</p>
-      <h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 18px;color:#08090F;">Gracias, ${escape(b.full_name.split(" ")[0])}.</h1>
+      <h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 6px;color:#08090F;">Gracias, ${escape(b.full_name)}.</h1>
+      <p style="font-size:13px;color:#888;margin:0 0 18px;">Recibido el ${fmtCDMX(new Date())} (CDMX)</p>
       <p style="font-size:15px;line-height:1.7;color:#444;margin:0 0 16px;">
         Recibimos tu solicitud para reservar a Gonzalo como ${labelFor(b.booking_type)}. Una persona del equipo te contactará en menos de <strong>48 horas hábiles</strong> con disponibilidad para Q2–Q4 2026.
       </p>
-      <p style="font-size:15px;line-height:1.7;color:#444;margin:0 0 24px;">
-        Mientras tanto te dejamos adjuntos dos materiales del CETI: la conferencia "95 Rechazos" en PDF y la guía de inicio para estudiantes. Explora más en gonzaloacuna.com.
-      </p>
+      ${giftsBlock}
       <div style="border-top:1px solid #eee;padding-top:18px;font-size:12px;color:#888;">
         Gonzalo Acuña Nava · CEO PropMatch · Guadalajara, México<br/>
         Si esto fue un error, simplemente ignora este correo.
