@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Save, RotateCcw, Eye, History, Check, AlertTriangle, PlayCircle } from "lucide-react";
+import { Plus, Trash2, Save, RotateCcw, Eye, History, Check, AlertTriangle, PlayCircle, ShieldCheck, RefreshCw, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   BENEFITS,
@@ -19,11 +19,58 @@ import { DESCARGAS_SEO } from "@/lib/bonusMaterials";
 
 const SITE = "https://gonzaloacuna.com";
 const SNAP_KEY = "benefits_admin_snapshots_v1";
-type Snapshot = { id: string; ts: string; bundle: BenefitsBundle };
+type Snapshot = { id: string; ts: string; bundle: BenefitsBundle; author?: string; summary?: string };
 const readSnaps = (): Snapshot[] => {
   try { return JSON.parse(localStorage.getItem(SNAP_KEY) || "[]"); } catch { return []; }
 };
 const writeSnaps = (s: Snapshot[]) => localStorage.setItem(SNAP_KEY, JSON.stringify(s.slice(0, 20)));
+
+const KNOWN_ROUTES = new Set([
+  "/", "/speaking", "/audit-os", "/investors", "/booking", "/agenda",
+  "/benefits", "/blog",
+  "/bonus-ceti", "/bonus-ceti-descargas",
+]);
+
+type Finding = { rowId: string; rowTitle: string; severity: "error" | "warning"; message: string };
+
+const validateRows = async (rows: Row[]): Promise<Finding[]> => {
+  const out: Finding[] = [];
+  const live = rows.filter(r => !r._removed);
+  for (const r of live) {
+    const push = (sev: Finding["severity"], message: string) =>
+      out.push({ rowId: r.id, rowTitle: r.title || r.id, severity: sev, message });
+    if (!r.title?.trim()) push("error", "Título vacío");
+    if (!r.description?.trim()) push("error", "Descripción vacía");
+    if (!r.badge?.trim()) push("warning", "Badge vacío");
+    if (r.landingPath && !r.landingPath.startsWith("/")) push("error", `landingPath inválido: ${r.landingPath}`);
+    if (r.downloadsPath && !r.downloadsPath.startsWith("/")) push("error", `downloadsPath inválido: ${r.downloadsPath}`);
+    if (r.landingPath && !KNOWN_ROUTES.has(r.landingPath)) push("warning", `landingPath ${r.landingPath} no está registrado en el router`);
+    if (r.downloadsPath && !KNOWN_ROUTES.has(r.downloadsPath)) push("warning", `downloadsPath ${r.downloadsPath} no está registrado en el router`);
+    if (r.externalUrl) {
+      try { new URL(r.externalUrl); } catch { push("error", `externalUrl inválida: ${r.externalUrl}`); }
+    }
+    for (const [field, url] of [["pdfUrl", r.pdfUrl], ["videoUrl", r.videoUrl], ["thumbnailUrl", r.thumbnailUrl]] as const) {
+      if (!url) continue;
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 5000);
+        const res = await fetch(url, { method: "HEAD", signal: ctrl.signal });
+        clearTimeout(t);
+        if (!res.ok) push("error", `${field} no accesible (${res.status})`);
+      } catch {
+        push("warning", `${field} no se pudo verificar (timeout/CORS)`);
+      }
+    }
+    if (!r.thumbnailUrl) push("warning", "Sin thumbnail/OG image");
+  }
+  return out;
+};
+
+// OG batch run history
+const OG_KEY = "og_batch_runs_v1";
+type OgRun = { id: string; startedAt: string; finishedAt?: string; items: OgCheck[] };
+const readRuns = (): OgRun[] => { try { return JSON.parse(localStorage.getItem(OG_KEY) || "[]"); } catch { return []; } };
+const writeRuns = (r: OgRun[]) => localStorage.setItem(OG_KEY, JSON.stringify(r.slice(0, 20)));
 
 const inputCls =
   "w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none";
@@ -87,6 +134,10 @@ export const BenefitsAdminSection = () => {
   const [snaps, setSnaps] = useState<Snapshot[]>(readSnaps);
   const [ogResults, setOgResults] = useState<null | OgCheck[]>(null);
   const [ogRunning, setOgRunning] = useState(false);
+  const [ogRuns, setOgRuns] = useState<OgRun[]>(readRuns);
+  const [findings, setFindings] = useState<Finding[] | null>(null);
+  const [validating, setValidating] = useState(false);
+  const [pendingPublish, setPendingPublish] = useState(false);
 
   const update = (idx: number, patch: Partial<Row>) =>
     setRows((r) => r.map((row, i) => (i === idx ? { ...row, ...patch } : row)));
@@ -102,12 +153,13 @@ export const BenefitsAdminSection = () => {
 
   const restore = (idx: number) => update(idx, { _removed: false });
 
-  const save = () => {
+  const persist = () => {
     const bundle: BenefitsBundle = { edits: {}, added: [], removed: [] };
+    const changedTitles: string[] = [];
     rows.forEach((r) => {
       const { _origin, _removed, ...clean } = r;
       if (_origin === "base") {
-        if (_removed) { bundle.removed!.push(r.id); return; }
+        if (_removed) { bundle.removed!.push(r.id); changedTitles.push(`− ${r.title}`); return; }
         const baseEntry = BENEFITS.find((b) => b.id === r.id)!;
         const diff: Partial<BenefitOverride> = {};
         (Object.keys(clean) as (keyof BenefitOverride)[]).forEach((k) => {
@@ -115,19 +167,47 @@ export const BenefitsAdminSection = () => {
           if (k === "iconKey") { if (cv && cv !== "GraduationCap") (diff as Record<string, unknown>)[k] = cv; return; }
           if (JSON.stringify(cv) !== JSON.stringify(bv)) (diff as Record<string, unknown>)[k] = cv;
         });
-        if (Object.keys(diff).length) bundle.edits![r.id] = diff;
+        if (Object.keys(diff).length) {
+          bundle.edits![r.id] = diff;
+          changedTitles.push(`✎ ${r.title} (${Object.keys(diff).join(", ")})`);
+        }
       } else {
         bundle.added!.push(clean);
+        changedTitles.push(`+ ${r.title}`);
       }
     });
-    // Snapshot BEFORE writing so we can revert
-    const snap: Snapshot = { id: crypto.randomUUID(), ts: new Date().toISOString(), bundle: exportBenefits() };
+    // Snapshot BEFORE writing so we can revert; capture author + summary
+    const author = (typeof window !== "undefined" && (localStorage.getItem("admin_email") || "admin")) || "admin";
+    const summary = changedTitles.slice(0, 6).join(" · ") || "Sin cambios";
+    const snap: Snapshot = { id: crypto.randomUUID(), ts: new Date().toISOString(), bundle: exportBenefits(), author, summary };
     const next = [snap, ...snaps].slice(0, 20);
     setSnaps(next); writeSnaps(next);
     writeBenefitsBundle(bundle);
     setSaved(true);
     setTimeout(() => setSaved(false), 1600);
   };
+
+  const runValidation = async () => {
+    setValidating(true);
+    const f = await validateRows(rows);
+    setFindings(f);
+    setValidating(false);
+  };
+
+  const onPublishClick = async () => {
+    setPendingPublish(true);
+    setValidating(true);
+    const f = await validateRows(rows);
+    setFindings(f);
+    setValidating(false);
+    if (!f.some(x => x.severity === "error")) {
+      // No blockers — publish straight away
+      persist();
+      setPendingPublish(false);
+    }
+  };
+
+  const publishAnyway = () => { persist(); setFindings(null); setPendingPublish(false); };
 
   const reset = () => {
     if (!confirm("¿Restablecer el catálogo Benefits a los valores por defecto?")) return;
@@ -143,6 +223,7 @@ export const BenefitsAdminSection = () => {
 
   const runOgTest = async () => {
     setOgRunning(true); setOgResults(null);
+    const runId = crypto.randomUUID();
     const targets: OgTarget[] = [];
     rows.filter((r) => !r._removed).forEach((r) => {
       if (r.landingPath) targets.push({ id: r.id, label: r.title, path: r.landingPath, image: r.thumbnailUrl });
@@ -150,7 +231,15 @@ export const BenefitsAdminSection = () => {
     });
     // Always include the descargas preview reference
     targets.push({ id: "descargas-default", label: "CETI · descargas (default)", path: "/bonus-ceti-descargas", image: DESCARGAS_SEO.ogImage });
-    const checks: OgCheck[] = await Promise.all(targets.map(async (t) => {
+    const checks: OgCheck[] = await Promise.all(targets.map((t) => runOgCheck(t)));
+    setOgResults(checks);
+    const run: OgRun = { id: runId, startedAt: new Date().toISOString(), finishedAt: new Date().toISOString(), items: checks };
+    const nextRuns = [run, ...ogRuns].slice(0, 20);
+    setOgRuns(nextRuns); writeRuns(nextRuns);
+    setOgRunning(false);
+  };
+
+  const runOgCheck = async (t: OgTarget): Promise<OgCheck> => {
       const url = `${SITE}${t.path}`;
       const issues: string[] = [];
       const titleLen = t.label.length;
@@ -166,8 +255,16 @@ export const BenefitsAdminSection = () => {
         issues.push("Sin imagen OG asignada");
       }
       return { ...t, url, issues, imageOk, ok: issues.length === 0 };
-    }));
-    setOgResults(checks);
+  };
+
+  const retryOgFailures = async (run: OgRun) => {
+    setOgRunning(true);
+    const failed = run.items.filter(i => !i.ok);
+    const retried = await Promise.all(failed.map(f => runOgCheck(f)));
+    const merged = run.items.map(i => retried.find(r => r.id === i.id) ?? i);
+    const next = ogRuns.map(r => r.id === run.id ? { ...r, items: merged, finishedAt: new Date().toISOString() } : r);
+    setOgRuns(next); writeRuns(next);
+    if (ogResults && ogResults === run.items) setOgResults(merged);
     setOgRunning(false);
   };
 
