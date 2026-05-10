@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Search, Calendar as CalendarIcon, Mail, Phone, ExternalLink, RefreshCw } from "lucide-react";
+import { Loader2, Search, Calendar as CalendarIcon, Mail, Phone, ExternalLink, RefreshCw, History, Link2, Save, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminAuthGate } from "@/components/AdminAuthGate";
 import { SEO } from "@/components/SEO";
@@ -18,6 +18,12 @@ type Meeting = {
   message: string | null; start_time: string; end_time: string; meet_link: string | null;
   status: string; duration_minutes: number;
 };
+type AuditEntry = {
+  id: string; booking_id: string; booking_table: string;
+  actor_label: string | null; action: string; field: string | null;
+  old_value: string | null; new_value: string | null; note: string | null;
+  created_at: string;
+};
 
 const STATUSES = ["all", "new", "contacted", "confirmed", "cancelled", "meeting"];
 
@@ -28,6 +34,10 @@ function Inner() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [historyFor, setHistoryFor] = useState<{ id: string; table: string; title: string } | null>(null);
+  const [historyEntries, setHistoryEntries] = useState<AuditEntry[]>([]);
+  const [editMeetFor, setEditMeetFor] = useState<string | null>(null);
+  const [editMeetValue, setEditMeetValue] = useState("");
   const { toast } = useToast();
 
   const load = async () => {
@@ -43,6 +53,25 @@ function Inner() {
     setLoading(false);
   };
   useEffect(() => { load(); }, []);
+
+  const audit = async (entry: Omit<AuditEntry, "id" | "created_at" | "actor_label"> & { actor_label?: string | null }) => {
+    const { data: u } = await supabase.auth.getUser();
+    await supabase.from("booking_audit_log").insert({
+      ...entry,
+      actor_user_id: u.user?.id ?? null,
+      actor_label: entry.actor_label ?? u.user?.email ?? "admin",
+    });
+  };
+
+  const openHistory = async (table: string, id: string, title: string) => {
+    setHistoryFor({ id, table, title });
+    const { data } = await supabase
+      .from("booking_audit_log")
+      .select("*")
+      .eq("booking_id", id)
+      .order("created_at", { ascending: false });
+    setHistoryEntries((data ?? []) as any);
+  };
 
   const filteredKeynotes = useMemo(() => {
     const ql = q.toLowerCase();
@@ -60,14 +89,36 @@ function Inner() {
     );
   }, [meetings, q, status]);
 
-  const updateKeynote = async (id: string, patch: Partial<Keynote>) => {
-    // No update RLS on keynote_bookings; show informational toast.
-    toast({ title: "Solo lectura", description: "Para cambiar estado activa una política UPDATE en keynote_bookings." });
+  const updateKeynoteStatus = async (b: Keynote, next: string) => {
+    const { error } = await supabase.from("keynote_bookings").update({ status: next }).eq("id", b.id);
+    if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
+    await audit({
+      booking_id: b.id, booking_table: "keynote_bookings",
+      action: "status_change", field: "status",
+      old_value: b.status, new_value: next, note: null,
+    });
+    toast({ title: "Estado actualizado" }); load();
   };
-  const updateMeeting = async (id: string, patch: Partial<Meeting>) => {
-    const { error } = await supabase.from("meeting_bookings").update(patch).eq("id", id);
-    if (error) toast({ title: "No se pudo actualizar", description: error.message, variant: "destructive" });
-    else { toast({ title: "Actualizado" }); load(); }
+  const updateMeetingStatus = async (b: Meeting, next: string) => {
+    const { error } = await supabase.from("meeting_bookings").update({ status: next }).eq("id", b.id);
+    if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
+    await audit({
+      booking_id: b.id, booking_table: "meeting_bookings",
+      action: next === "cancelled" ? "cancellation" : "status_change",
+      field: "status", old_value: b.status, new_value: next, note: null,
+    });
+    toast({ title: next === "cancelled" ? "Reunión cancelada" : "Estado actualizado" }); load();
+  };
+  const saveMeetLink = async (b: Meeting) => {
+    const next = editMeetValue.trim();
+    const { error } = await supabase.from("meeting_bookings").update({ meet_link: next || null }).eq("id", b.id);
+    if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
+    await audit({
+      booking_id: b.id, booking_table: "meeting_bookings",
+      action: "meet_link_update", field: "meet_link",
+      old_value: b.meet_link, new_value: next || null, note: null,
+    });
+    setEditMeetFor(null); toast({ title: "Link de Meet actualizado" }); load();
   };
 
   const fmtDate = (iso: string) => new Date(iso).toLocaleString("es-MX", { dateStyle: "medium", timeStyle: "short" });
@@ -126,6 +177,18 @@ function Inner() {
                       {b.topic_interest && <p>🎯 {b.topic_interest}</p>}
                     </div>
                     {b.message && <p className="mt-3 whitespace-pre-wrap rounded-lg border-l-2 border-gold/40 bg-black/30 p-3 text-sm text-white/70">{b.message}</p>}
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <select
+                        value={b.status}
+                        onChange={(e) => updateKeynoteStatus(b, e.target.value)}
+                        className="rounded-full border border-white/10 bg-background px-3 py-1.5 text-[11px] uppercase tracking-widest"
+                      >
+                        {["new","contacted","confirmed","cancelled"].map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <button onClick={() => openHistory("keynote_bookings", b.id, b.full_name)} className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-[11px] uppercase tracking-widest text-white/70 hover:border-gold hover:text-gold">
+                        <History size={11} /> Historial
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>
@@ -154,11 +217,25 @@ function Inner() {
                           <ExternalLink size={11} /> Google Meet
                         </a>
                       )}
+                      {editMeetFor === b.id ? (
+                        <span className="inline-flex items-center gap-1">
+                          <input value={editMeetValue} onChange={e => setEditMeetValue(e.target.value)} placeholder="https://meet.google.com/..." className="w-64 rounded-full border border-white/15 bg-background px-3 py-1.5 text-[11px]" />
+                          <button onClick={() => saveMeetLink(b)} className="rounded-full border border-gold px-3 py-1.5 text-[11px] text-gold"><Save size={11} /></button>
+                          <button onClick={() => setEditMeetFor(null)} className="rounded-full border border-white/15 px-3 py-1.5 text-[11px]"><X size={11} /></button>
+                        </span>
+                      ) : (
+                        <button onClick={() => { setEditMeetFor(b.id); setEditMeetValue(b.meet_link ?? ""); }} className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-[11px] uppercase tracking-widest text-white/70 hover:border-gold hover:text-gold">
+                          <Link2 size={11} /> Editar Meet
+                        </button>
+                      )}
                       {b.status === "confirmed" && (
-                        <button onClick={() => updateMeeting(b.id, { status: "cancelled" })} className="rounded-full border border-red-500/40 px-3 py-1.5 text-[11px] uppercase tracking-widest text-red-300 hover:bg-red-500/10">
+                        <button onClick={() => updateMeetingStatus(b, "cancelled")} className="rounded-full border border-red-500/40 px-3 py-1.5 text-[11px] uppercase tracking-widest text-red-300 hover:bg-red-500/10">
                           Cancelar
                         </button>
                       )}
+                      <button onClick={() => openHistory("meeting_bookings", b.id, b.full_name)} className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-[11px] uppercase tracking-widest text-white/70 hover:border-gold hover:text-gold">
+                        <History size={11} /> Historial
+                      </button>
                     </div>
                   </article>
                 ))}
@@ -167,6 +244,40 @@ function Inner() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* History drawer */}
+      {historyFor && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/60" onClick={() => setHistoryFor(null)}>
+          <div onClick={(e) => e.stopPropagation()} className="h-full w-full max-w-md overflow-auto border-l border-white/10 bg-background p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Historial</p>
+                <h2 className="mt-1 font-display text-xl">{historyFor.title}</h2>
+              </div>
+              <button onClick={() => setHistoryFor(null)} className="rounded-full border border-white/15 p-2 text-white/60 hover:text-white"><X size={14} /></button>
+            </div>
+            {historyEntries.length === 0 ? (
+              <p className="text-sm text-white/50">Sin cambios registrados aún.</p>
+            ) : (
+              <ol className="space-y-3">
+                {historyEntries.map(h => (
+                  <li key={h.id} className="rounded-lg border border-white/10 bg-white/[0.02] p-3 text-sm">
+                    <p className="text-[10px] uppercase tracking-widest text-gold/80">{h.action.replace(/_/g, " ")}</p>
+                    <p className="mt-1 text-white/80">
+                      {h.field && <span className="text-white/50">{h.field}: </span>}
+                      {h.old_value && <span className="line-through text-red-300/70">{h.old_value}</span>}
+                      {h.old_value && h.new_value && " → "}
+                      {h.new_value && <span className="text-emerald-300">{h.new_value}</span>}
+                    </p>
+                    {h.note && <p className="mt-1 text-xs text-white/60">{h.note}</p>}
+                    <p className="mt-1 text-[10px] text-white/40">{h.actor_label ?? "admin"} · {fmtDate(h.created_at)}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

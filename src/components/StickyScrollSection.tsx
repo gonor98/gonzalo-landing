@@ -53,8 +53,9 @@ export const StickyScrollSection = () => {
   const imageScale = useTransform(smooth, [0, 0.5, 1], reduced ? [1, 1, 1] : [1.05, 1, 1.05]);
 
   useMotionValueEvent(scrollYProgress, "change", (p) => {
-    // Three exact thresholds, regardless of card height.
-    const next = p < 1 / 3 ? 0 : p < 2 / 3 ? 1 : 2;
+    // Three thresholds with a small bias so the last state stays visible
+    // until the section has fully finished its scroll travel.
+    const next = p < 0.34 ? 0 : p < 0.67 ? 1 : 2;
     setActive((prev) => (prev === next ? prev : next));
   });
 
@@ -81,19 +82,25 @@ export const StickyScrollSection = () => {
   const current = states[active];
 
   return (
-    <section ref={ref} className="relative bg-background">
-      <div className="mx-auto grid max-w-content md:grid-cols-[40%_60%] grid-cols-1">
-        {/* Sticky Left */}
-        <div className="relative md:sticky md:top-0 md:h-screen flex items-center md:px-20 px-6 py-16 md:py-0 order-2 md:order-1">
-          <div className="w-full max-w-md">
+    <section
+      ref={ref}
+      className="relative bg-background md:h-[300vh]"
+      aria-label="Recorrido cinemático"
+    >
+      {/* Desktop: a single sticky stage that pins for the entire section. */}
+      <div className="hidden md:block md:sticky md:top-0 md:h-screen md:overflow-hidden">
+        <div className="mx-auto grid h-full max-w-content grid-cols-[40%_60%]">
+          <div className="flex h-full items-center px-20">
+            <div className="w-full max-w-md">
             <p className="mb-6 text-[11px] uppercase tracking-[0.32em] text-gold">Capítulo</p>
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={current.label}
-                initial={{ opacity: 0, y: reduced ? 0 : 24 }}
+                  initial={{ opacity: 0, y: reduced ? 0 : 28 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: reduced ? 0 : -24 }}
-                transition={{ duration: reduced ? 0.25 : 0.55, ease: "easeOut" as const }}
+                  exit={{ opacity: 0, y: reduced ? 0 : -28 }}
+                  transition={{ duration: reduced ? 0.2 : 0.6, ease: [0.22, 1, 0.36, 1] as any }}
+                  style={{ willChange: "transform, opacity" }}
               >
                 <p className="mb-4 font-display italic text-gold/80">{current.label}</p>
                 <h3 className="font-display text-4xl md:text-5xl leading-[1.05] text-white">
@@ -124,22 +131,19 @@ export const StickyScrollSection = () => {
             </div>
           </div>
         </div>
-
-        {/* Right scrolling images */}
-        <div className="order-1 md:order-2 md:relative">
-          {/* Desktop: single sticky stage with crossfade between images */}
-          <div className="hidden md:block sticky top-0 h-screen overflow-hidden">
-            <AnimatePresence mode="wait" initial={false}>
+          <div className="relative h-full overflow-hidden">
+            <AnimatePresence mode="sync" initial={false}>
               <motion.div
                 key={current.title}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut" as const }}
+                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] as any }}
                 className="absolute inset-0 cursor-pointer group"
                 onClick={() => open(current.videoId, current.title)}
                 role="button"
                 aria-label={`Reproducir: ${current.title}`}
+                style={{ willChange: "opacity" }}
               >
                 <motion.img
                   src={current.img}
@@ -157,40 +161,41 @@ export const StickyScrollSection = () => {
               </motion.div>
             </AnimatePresence>
           </div>
-
-          {/* Mobile: stack of 3 blocks (IntersectionObserver drives `active`) */}
-          <div className="md:hidden">
-            {states.map((s, i) => (
-              <div
-                key={s.title}
-                ref={(el) => (blockRefs.current[i] = el)}
-                data-index={i}
-                className="group relative h-[70vh] w-full cursor-pointer overflow-hidden"
-                onClick={() => open(s.videoId, s.title)}
-                role="button"
-                aria-label={`Reproducir: ${s.title}`}
-              >
-                <img
-                  src={s.img}
-                  alt={s.alt}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-background/40" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-background/40 text-gold backdrop-blur">
-                    <Play size={22} className="ml-1" fill="currentColor" />
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* Spacer to drive scroll progress on desktop (3 viewport heights) */}
-      <div aria-hidden className="hidden md:block" style={{ height: "200vh" }} />
+      {/* Mobile: stacked blocks driven by IntersectionObserver. */}
+      <div className="md:hidden">
+        {states.map((s, i) => (
+          <div key={s.title} className="px-6 py-10">
+            <p className="mb-3 font-display italic text-gold/80 text-sm">{s.label}</p>
+            <h3 className="font-display text-3xl leading-tight text-white">{s.title}</h3>
+            <p className="mt-4 text-white/60 leading-relaxed">{s.body}</p>
+            <div
+              ref={(el) => (blockRefs.current[i] = el)}
+              data-index={i}
+              className="group relative mt-6 h-[60vh] w-full cursor-pointer overflow-hidden rounded-2xl"
+              onClick={() => open(s.videoId, s.title)}
+              role="button"
+              aria-label={`Reproducir: ${s.title}`}
+            >
+              <img
+                src={s.img}
+                alt={s.alt}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-background/40" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="inline-flex h-16 w-16 items-center justify-center rounded-full border border-gold/50 bg-background/40 text-gold backdrop-blur">
+                  <Play size={20} className="ml-1" fill="currentColor" />
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 };

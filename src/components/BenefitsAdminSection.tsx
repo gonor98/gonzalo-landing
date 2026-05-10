@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Save, RotateCcw, Eye, History, Check, AlertTriangle, PlayCircle } from "lucide-react";
+import { Plus, Trash2, Save, RotateCcw, Eye, History, Check, AlertTriangle, PlayCircle, ShieldCheck, RefreshCw, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   BENEFITS,
@@ -19,11 +19,58 @@ import { DESCARGAS_SEO } from "@/lib/bonusMaterials";
 
 const SITE = "https://gonzaloacuna.com";
 const SNAP_KEY = "benefits_admin_snapshots_v1";
-type Snapshot = { id: string; ts: string; bundle: BenefitsBundle };
+type Snapshot = { id: string; ts: string; bundle: BenefitsBundle; author?: string; summary?: string };
 const readSnaps = (): Snapshot[] => {
   try { return JSON.parse(localStorage.getItem(SNAP_KEY) || "[]"); } catch { return []; }
 };
 const writeSnaps = (s: Snapshot[]) => localStorage.setItem(SNAP_KEY, JSON.stringify(s.slice(0, 20)));
+
+const KNOWN_ROUTES = new Set([
+  "/", "/speaking", "/audit-os", "/investors", "/booking", "/agenda",
+  "/benefits", "/blog",
+  "/bonus-ceti", "/bonus-ceti-descargas",
+]);
+
+type Finding = { rowId: string; rowTitle: string; severity: "error" | "warning"; message: string };
+
+const validateRows = async (rows: Row[]): Promise<Finding[]> => {
+  const out: Finding[] = [];
+  const live = rows.filter(r => !r._removed);
+  for (const r of live) {
+    const push = (sev: Finding["severity"], message: string) =>
+      out.push({ rowId: r.id, rowTitle: r.title || r.id, severity: sev, message });
+    if (!r.title?.trim()) push("error", "Título vacío");
+    if (!r.description?.trim()) push("error", "Descripción vacía");
+    if (!r.badge?.trim()) push("warning", "Badge vacío");
+    if (r.landingPath && !r.landingPath.startsWith("/")) push("error", `landingPath inválido: ${r.landingPath}`);
+    if (r.downloadsPath && !r.downloadsPath.startsWith("/")) push("error", `downloadsPath inválido: ${r.downloadsPath}`);
+    if (r.landingPath && !KNOWN_ROUTES.has(r.landingPath)) push("warning", `landingPath ${r.landingPath} no está registrado en el router`);
+    if (r.downloadsPath && !KNOWN_ROUTES.has(r.downloadsPath)) push("warning", `downloadsPath ${r.downloadsPath} no está registrado en el router`);
+    if (r.externalUrl) {
+      try { new URL(r.externalUrl); } catch { push("error", `externalUrl inválida: ${r.externalUrl}`); }
+    }
+    for (const [field, url] of [["pdfUrl", r.pdfUrl], ["videoUrl", r.videoUrl], ["thumbnailUrl", r.thumbnailUrl]] as const) {
+      if (!url) continue;
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 5000);
+        const res = await fetch(url, { method: "HEAD", signal: ctrl.signal });
+        clearTimeout(t);
+        if (!res.ok) push("error", `${field} no accesible (${res.status})`);
+      } catch {
+        push("warning", `${field} no se pudo verificar (timeout/CORS)`);
+      }
+    }
+    if (!r.thumbnailUrl) push("warning", "Sin thumbnail/OG image");
+  }
+  return out;
+};
+
+// OG batch run history
+const OG_KEY = "og_batch_runs_v1";
+type OgRun = { id: string; startedAt: string; finishedAt?: string; items: OgCheck[] };
+const readRuns = (): OgRun[] => { try { return JSON.parse(localStorage.getItem(OG_KEY) || "[]"); } catch { return []; } };
+const writeRuns = (r: OgRun[]) => localStorage.setItem(OG_KEY, JSON.stringify(r.slice(0, 20)));
 
 const inputCls =
   "w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none";
@@ -87,6 +134,10 @@ export const BenefitsAdminSection = () => {
   const [snaps, setSnaps] = useState<Snapshot[]>(readSnaps);
   const [ogResults, setOgResults] = useState<null | OgCheck[]>(null);
   const [ogRunning, setOgRunning] = useState(false);
+  const [ogRuns, setOgRuns] = useState<OgRun[]>(readRuns);
+  const [findings, setFindings] = useState<Finding[] | null>(null);
+  const [validating, setValidating] = useState(false);
+  const [pendingPublish, setPendingPublish] = useState(false);
 
   const update = (idx: number, patch: Partial<Row>) =>
     setRows((r) => r.map((row, i) => (i === idx ? { ...row, ...patch } : row)));
@@ -102,12 +153,13 @@ export const BenefitsAdminSection = () => {
 
   const restore = (idx: number) => update(idx, { _removed: false });
 
-  const save = () => {
+  const persist = () => {
     const bundle: BenefitsBundle = { edits: {}, added: [], removed: [] };
+    const changedTitles: string[] = [];
     rows.forEach((r) => {
       const { _origin, _removed, ...clean } = r;
       if (_origin === "base") {
-        if (_removed) { bundle.removed!.push(r.id); return; }
+        if (_removed) { bundle.removed!.push(r.id); changedTitles.push(`− ${r.title}`); return; }
         const baseEntry = BENEFITS.find((b) => b.id === r.id)!;
         const diff: Partial<BenefitOverride> = {};
         (Object.keys(clean) as (keyof BenefitOverride)[]).forEach((k) => {
@@ -115,19 +167,47 @@ export const BenefitsAdminSection = () => {
           if (k === "iconKey") { if (cv && cv !== "GraduationCap") (diff as Record<string, unknown>)[k] = cv; return; }
           if (JSON.stringify(cv) !== JSON.stringify(bv)) (diff as Record<string, unknown>)[k] = cv;
         });
-        if (Object.keys(diff).length) bundle.edits![r.id] = diff;
+        if (Object.keys(diff).length) {
+          bundle.edits![r.id] = diff;
+          changedTitles.push(`✎ ${r.title} (${Object.keys(diff).join(", ")})`);
+        }
       } else {
         bundle.added!.push(clean);
+        changedTitles.push(`+ ${r.title}`);
       }
     });
-    // Snapshot BEFORE writing so we can revert
-    const snap: Snapshot = { id: crypto.randomUUID(), ts: new Date().toISOString(), bundle: exportBenefits() };
+    // Snapshot BEFORE writing so we can revert; capture author + summary
+    const author = (typeof window !== "undefined" && (localStorage.getItem("admin_email") || "admin")) || "admin";
+    const summary = changedTitles.slice(0, 6).join(" · ") || "Sin cambios";
+    const snap: Snapshot = { id: crypto.randomUUID(), ts: new Date().toISOString(), bundle: exportBenefits(), author, summary };
     const next = [snap, ...snaps].slice(0, 20);
     setSnaps(next); writeSnaps(next);
     writeBenefitsBundle(bundle);
     setSaved(true);
     setTimeout(() => setSaved(false), 1600);
   };
+
+  const runValidation = async () => {
+    setValidating(true);
+    const f = await validateRows(rows);
+    setFindings(f);
+    setValidating(false);
+  };
+
+  const onPublishClick = async () => {
+    setPendingPublish(true);
+    setValidating(true);
+    const f = await validateRows(rows);
+    setFindings(f);
+    setValidating(false);
+    if (!f.some(x => x.severity === "error")) {
+      // No blockers — publish straight away
+      persist();
+      setPendingPublish(false);
+    }
+  };
+
+  const publishAnyway = () => { persist(); setFindings(null); setPendingPublish(false); };
 
   const reset = () => {
     if (!confirm("¿Restablecer el catálogo Benefits a los valores por defecto?")) return;
@@ -143,6 +223,7 @@ export const BenefitsAdminSection = () => {
 
   const runOgTest = async () => {
     setOgRunning(true); setOgResults(null);
+    const runId = crypto.randomUUID();
     const targets: OgTarget[] = [];
     rows.filter((r) => !r._removed).forEach((r) => {
       if (r.landingPath) targets.push({ id: r.id, label: r.title, path: r.landingPath, image: r.thumbnailUrl });
@@ -150,7 +231,15 @@ export const BenefitsAdminSection = () => {
     });
     // Always include the descargas preview reference
     targets.push({ id: "descargas-default", label: "CETI · descargas (default)", path: "/bonus-ceti-descargas", image: DESCARGAS_SEO.ogImage });
-    const checks: OgCheck[] = await Promise.all(targets.map(async (t) => {
+    const checks: OgCheck[] = await Promise.all(targets.map((t) => runOgCheck(t)));
+    setOgResults(checks);
+    const run: OgRun = { id: runId, startedAt: new Date().toISOString(), finishedAt: new Date().toISOString(), items: checks };
+    const nextRuns = [run, ...ogRuns].slice(0, 20);
+    setOgRuns(nextRuns); writeRuns(nextRuns);
+    setOgRunning(false);
+  };
+
+  const runOgCheck = async (t: OgTarget): Promise<OgCheck> => {
       const url = `${SITE}${t.path}`;
       const issues: string[] = [];
       const titleLen = t.label.length;
@@ -166,8 +255,16 @@ export const BenefitsAdminSection = () => {
         issues.push("Sin imagen OG asignada");
       }
       return { ...t, url, issues, imageOk, ok: issues.length === 0 };
-    }));
-    setOgResults(checks);
+  };
+
+  const retryOgFailures = async (run: OgRun) => {
+    setOgRunning(true);
+    const failed = run.items.filter(i => !i.ok);
+    const retried = await Promise.all(failed.map(f => runOgCheck(f)));
+    const merged = run.items.map(i => retried.find(r => r.id === i.id) ?? i);
+    const next = ogRuns.map(r => r.id === run.id ? { ...r, items: merged, finishedAt: new Date().toISOString() } : r);
+    setOgRuns(next); writeRuns(next);
+    if (ogResults && ogResults === run.items) setOgResults(merged);
     setOgRunning(false);
   };
 
@@ -349,11 +446,14 @@ export const BenefitsAdminSection = () => {
             </summary>
             <ul className="mt-3 max-h-64 space-y-2 overflow-auto">
               {snaps.map((s) => (
-                <li key={s.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs">
-                  <span className="text-white/70">{new Date(s.ts).toLocaleString()}</span>
+                <li key={s.id} className="flex items-start justify-between gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white/80">{new Date(s.ts).toLocaleString()} · <span className="text-gold/80">{s.author ?? "admin"}</span></p>
+                    {s.summary && <p className="mt-1 truncate text-white/55">{s.summary}</p>}
+                  </div>
                   <button
                     onClick={() => restoreSnap(s)}
-                    className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
                   >
                     <RotateCcw size={11} /> Restaurar
                   </button>
@@ -364,14 +464,109 @@ export const BenefitsAdminSection = () => {
           </details>
         )}
 
+        {/* OG batch run history with retry */}
+        {ogRuns.length > 0 && (
+          <details className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+            <summary className="flex cursor-pointer items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-white/75">
+              <RefreshCw size={13} /> OG batch · runs ({ogRuns.length})
+            </summary>
+            <ul className="mt-3 space-y-2">
+              {ogRuns.map((run) => {
+                const ok = run.items.filter(i => i.ok).length;
+                const failed = run.items.filter(i => !i.ok).length;
+                const total = run.items.length;
+                const pct = total === 0 ? 0 : Math.round((ok / total) * 100);
+                return (
+                  <li key={run.id} className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-white/70">
+                        <span className="text-white/40">#{run.id.slice(0, 8)}</span> · {new Date(run.startedAt).toLocaleString()}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-emerald-400">✓ {ok}</span>
+                        <span className="text-amber-400">⚠ {failed}</span>
+                        <span className="text-white/50">{pct}%</span>
+                        {failed > 0 && (
+                          <button
+                            disabled={ogRunning}
+                            onClick={() => retryOgFailures(run)}
+                            className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10 disabled:opacity-40"
+                          >
+                            <RefreshCw size={10} /> Reintentar fallas
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+                      <div className="h-full bg-gold transition-all" style={{ width: `${pct}%` }} />
+                    </div>
+                    {failed > 0 && (
+                      <ul className="mt-2 space-y-0.5 text-[11px] text-amber-300/80">
+                        {run.items.filter(i => !i.ok).slice(0, 4).map(i => (
+                          <li key={i.id}>• {i.label}: {i.issues.join(" · ")}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        )}
+
         <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
           <button onClick={reset} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold">
-            <RotateCcw size={13} /> Restablecer Benefits
+            <RotateCcw size={13} /> Restablecer
           </button>
-          <button onClick={save} className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-[11px] uppercase tracking-[0.24em] text-background hover:shadow-[0_0_30px_rgba(201,168,76,0.5)]">
-            <Save size={13} /> {saved ? "Guardado ✓" : "Guardar Benefits"}
+          <button onClick={runValidation} disabled={validating} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold disabled:opacity-50">
+            <ShieldCheck size={13} /> {validating ? "Validando..." : "Validar"}
+          </button>
+          <button onClick={onPublishClick} disabled={validating} className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-[11px] uppercase tracking-[0.24em] text-background hover:shadow-[0_0_30px_rgba(201,168,76,0.5)] disabled:opacity-60">
+            <Save size={13} /> {saved ? "Publicado ✓" : "Publicar Benefits"}
           </button>
         </div>
+
+        {/* Pre-publish validation modal */}
+        {findings && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => { setFindings(null); setPendingPublish(false); }}>
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-2xl border border-white/10 bg-background p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Revisión pre-publicación</p>
+                  <h3 className="mt-1 font-display text-xl text-white">
+                    {findings.length === 0 ? "Todo listo ✓" : `${findings.length} hallazgo${findings.length === 1 ? "" : "s"}`}
+                  </h3>
+                </div>
+                <button onClick={() => { setFindings(null); setPendingPublish(false); }} className="rounded-full border border-white/15 p-2 text-white/60 hover:text-white"><X size={14} /></button>
+              </div>
+              {findings.length === 0 ? (
+                <p className="text-sm text-white/60">No se detectaron problemas. Puedes publicar con confianza.</p>
+              ) : (
+                <ul className="max-h-72 space-y-2 overflow-auto">
+                  {findings.map((f, i) => (
+                    <li key={i} className={`rounded-lg border px-3 py-2 text-sm ${f.severity === "error" ? "border-red-500/30 bg-red-500/5 text-red-300" : "border-amber-500/30 bg-amber-500/5 text-amber-300"}`}>
+                      <span className="text-[10px] uppercase tracking-widest opacity-70">{f.severity}</span>
+                      <p className="mt-0.5"><strong>{f.rowTitle}:</strong> {f.message}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="mt-4 flex justify-end gap-2">
+                {pendingPublish && (
+                  <button
+                    onClick={publishAnyway}
+                    disabled={findings.some(f => f.severity === "error")}
+                    className="rounded-full bg-gold px-5 py-2 text-[11px] uppercase tracking-widest text-background disabled:cursor-not-allowed disabled:opacity-40"
+                    title={findings.some(f => f.severity === "error") ? "Hay errores que bloquean la publicación" : ""}
+                  >
+                    Publicar de todas formas
+                  </button>
+                )}
+                <button onClick={() => { setFindings(null); setPendingPublish(false); }} className="rounded-full border border-white/15 px-5 py-2 text-[11px] uppercase tracking-widest text-white/70">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

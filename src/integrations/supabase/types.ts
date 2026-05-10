@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_audit_log: {
+        Row: {
+          action: string
+          actor_label: string | null
+          actor_user_id: string | null
+          booking_id: string
+          booking_table: string
+          created_at: string
+          field: string | null
+          id: string
+          new_value: string | null
+          note: string | null
+          old_value: string | null
+        }
+        Insert: {
+          action: string
+          actor_label?: string | null
+          actor_user_id?: string | null
+          booking_id: string
+          booking_table: string
+          created_at?: string
+          field?: string | null
+          id?: string
+          new_value?: string | null
+          note?: string | null
+          old_value?: string | null
+        }
+        Update: {
+          action?: string
+          actor_label?: string | null
+          actor_user_id?: string | null
+          booking_id?: string
+          booking_table?: string
+          created_at?: string
+          field?: string | null
+          id?: string
+          new_value?: string | null
+          note?: string | null
+          old_value?: string | null
+        }
+        Relationships: []
+      }
       keynote_bookings: {
         Row: {
           audience_size: string | null

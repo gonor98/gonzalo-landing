@@ -186,10 +186,28 @@ Deno.serve(async (req) => {
       <div style="font-family:Inter,Arial,sans-serif;background:#fff;padding:32px;color:#111;">
         <div style="max-width:560px;margin:0 auto;border:1px solid #eee;border-radius:14px;padding:32px;">
           <p style="color:#9a7e2e;font-size:11px;letter-spacing:.3em;text-transform:uppercase;margin:0 0 8px;">Reunión confirmada</p>
-          <h1 style="font-family:Georgia,serif;font-size:26px;margin:0 0 16px;">Listo, ${full_name.split(" ")[0]}.</h1>
-          <p style="font-size:15px;line-height:1.7;color:#444;">Tu reunión con Gonzalo Acuña está confirmada para <strong>${fmt}</strong> (CDMX).</p>
+          <h1 style="font-family:Georgia,serif;font-size:26px;margin:0 0 6px;">Listo, ${full_name}.</h1>
+          <p style="font-size:13px;color:#888;margin:0 0 16px;">Reunión agendada en zona horaria CDMX.</p>
+          <div style="margin:18px 0;padding:18px;background:#faf6ec;border:1px solid #e9dcb8;border-radius:12px;">
+            <p style="margin:0;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#9a7e2e;">📅 Cuándo</p>
+            <p style="margin:6px 0 0;font-size:16px;color:#08090F;font-weight:600;">${fmt}</p>
+            <p style="margin:4px 0 0;font-size:12px;color:#666;">America/Mexico_City</p>
+          </div>
+          ${[organization, role, phone, topic].some(Boolean) ? `
+          <table style="width:100%;border-collapse:collapse;font-size:13px;color:#444;margin:8px 0 16px;">
+            ${organization ? `<tr><td style="padding:4px 0;color:#888;">Organización</td><td>${organization}</td></tr>` : ""}
+            ${role ? `<tr><td style="padding:4px 0;color:#888;">Rol</td><td>${role}</td></tr>` : ""}
+            ${phone ? `<tr><td style="padding:4px 0;color:#888;">Teléfono</td><td>${phone}</td></tr>` : ""}
+            ${topic ? `<tr><td style="padding:4px 0;color:#888;">Tema</td><td>${topic}</td></tr>` : ""}
+          </table>` : ""}
           ${meetLink ? `<p style="margin:20px 0;"><a href="${meetLink}" style="background:#08090F;color:#C9A84C;padding:12px 18px;border-radius:8px;text-decoration:none;font-size:14px;">Unirse por Google Meet</a></p>` : ""}
-          <p style="font-size:13px;color:#777;">Adjuntamos un archivo .ics para añadirlo a tu calendario y dos PDFs de regalo: la conferencia "95 Rechazos" del CETI y la guía de inicio para estudiantes.</p>
+          <div style="margin:24px 0;padding:18px;background:#faf6ec;border:1px solid #e9dcb8;border-radius:12px;">
+            <p style="margin:0 0 6px;color:#9a7e2e;font-size:11px;letter-spacing:.28em;text-transform:uppercase;">📄 Tus regalos del CETI</p>
+            <p style="margin:0 0 12px;font-size:13px;color:#444;">También están adjuntos a este correo.</p>
+            <a href="https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/conferencia-ceti-gonzalo.pdf" style="display:inline-block;margin:4px 6px 4px 0;padding:10px 16px;background:#08090F;color:#C9A84C;border-radius:8px;font-size:13px;text-decoration:none;">⬇ Conferencia "95 Rechazos"</a>
+            <a href="https://fgrmmpznaserhmydsccr.supabase.co/storage/v1/object/public/benefits-assets/attachments/bonus-guia-estudiante-ceti.pdf" style="display:inline-block;margin:4px 6px 4px 0;padding:10px 16px;background:#08090F;color:#C9A84C;border-radius:8px;font-size:13px;text-decoration:none;">⬇ Guía estudiante CETI</a>
+          </div>
+          <p style="font-size:12px;color:#999;margin-top:18px;">Adjuntamos también un archivo .ics para añadir la reunión a tu calendario.</p>
         </div>
       </div>`;
     const adminHtml = `
