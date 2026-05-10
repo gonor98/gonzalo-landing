@@ -446,11 +446,14 @@ export const BenefitsAdminSection = () => {
             </summary>
             <ul className="mt-3 max-h-64 space-y-2 overflow-auto">
               {snaps.map((s) => (
-                <li key={s.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs">
-                  <span className="text-white/70">{new Date(s.ts).toLocaleString()}</span>
+                <li key={s.id} className="flex items-start justify-between gap-3 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-xs">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white/80">{new Date(s.ts).toLocaleString()} · <span className="text-gold/80">{s.author ?? "admin"}</span></p>
+                    {s.summary && <p className="mt-1 truncate text-white/55">{s.summary}</p>}
+                  </div>
                   <button
                     onClick={() => restoreSnap(s)}
-                    className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10"
                   >
                     <RotateCcw size={11} /> Restaurar
                   </button>
@@ -461,14 +464,109 @@ export const BenefitsAdminSection = () => {
           </details>
         )}
 
+        {/* OG batch run history with retry */}
+        {ogRuns.length > 0 && (
+          <details className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+            <summary className="flex cursor-pointer items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-white/75">
+              <RefreshCw size={13} /> OG batch · runs ({ogRuns.length})
+            </summary>
+            <ul className="mt-3 space-y-2">
+              {ogRuns.map((run) => {
+                const ok = run.items.filter(i => i.ok).length;
+                const failed = run.items.filter(i => !i.ok).length;
+                const total = run.items.length;
+                const pct = total === 0 ? 0 : Math.round((ok / total) * 100);
+                return (
+                  <li key={run.id} className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-white/70">
+                        <span className="text-white/40">#{run.id.slice(0, 8)}</span> · {new Date(run.startedAt).toLocaleString()}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-emerald-400">✓ {ok}</span>
+                        <span className="text-amber-400">⚠ {failed}</span>
+                        <span className="text-white/50">{pct}%</span>
+                        {failed > 0 && (
+                          <button
+                            disabled={ogRunning}
+                            onClick={() => retryOgFailures(run)}
+                            className="inline-flex items-center gap-1 rounded-full border border-gold/40 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-gold hover:bg-gold/10 disabled:opacity-40"
+                          >
+                            <RefreshCw size={10} /> Reintentar fallas
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+                      <div className="h-full bg-gold transition-all" style={{ width: `${pct}%` }} />
+                    </div>
+                    {failed > 0 && (
+                      <ul className="mt-2 space-y-0.5 text-[11px] text-amber-300/80">
+                        {run.items.filter(i => !i.ok).slice(0, 4).map(i => (
+                          <li key={i.id}>• {i.label}: {i.issues.join(" · ")}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        )}
+
         <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
           <button onClick={reset} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold">
-            <RotateCcw size={13} /> Restablecer Benefits
+            <RotateCcw size={13} /> Restablecer
           </button>
-          <button onClick={save} className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-[11px] uppercase tracking-[0.24em] text-background hover:shadow-[0_0_30px_rgba(201,168,76,0.5)]">
-            <Save size={13} /> {saved ? "Guardado ✓" : "Guardar Benefits"}
+          <button onClick={runValidation} disabled={validating} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-[11px] uppercase tracking-[0.22em] text-white/75 hover:border-gold/40 hover:text-gold disabled:opacity-50">
+            <ShieldCheck size={13} /> {validating ? "Validando..." : "Validar"}
+          </button>
+          <button onClick={onPublishClick} disabled={validating} className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-[11px] uppercase tracking-[0.24em] text-background hover:shadow-[0_0_30px_rgba(201,168,76,0.5)] disabled:opacity-60">
+            <Save size={13} /> {saved ? "Publicado ✓" : "Publicar Benefits"}
           </button>
         </div>
+
+        {/* Pre-publish validation modal */}
+        {findings && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => { setFindings(null); setPendingPublish(false); }}>
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-2xl border border-white/10 bg-background p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Revisión pre-publicación</p>
+                  <h3 className="mt-1 font-display text-xl text-white">
+                    {findings.length === 0 ? "Todo listo ✓" : `${findings.length} hallazgo${findings.length === 1 ? "" : "s"}`}
+                  </h3>
+                </div>
+                <button onClick={() => { setFindings(null); setPendingPublish(false); }} className="rounded-full border border-white/15 p-2 text-white/60 hover:text-white"><X size={14} /></button>
+              </div>
+              {findings.length === 0 ? (
+                <p className="text-sm text-white/60">No se detectaron problemas. Puedes publicar con confianza.</p>
+              ) : (
+                <ul className="max-h-72 space-y-2 overflow-auto">
+                  {findings.map((f, i) => (
+                    <li key={i} className={`rounded-lg border px-3 py-2 text-sm ${f.severity === "error" ? "border-red-500/30 bg-red-500/5 text-red-300" : "border-amber-500/30 bg-amber-500/5 text-amber-300"}`}>
+                      <span className="text-[10px] uppercase tracking-widest opacity-70">{f.severity}</span>
+                      <p className="mt-0.5"><strong>{f.rowTitle}:</strong> {f.message}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="mt-4 flex justify-end gap-2">
+                {pendingPublish && (
+                  <button
+                    onClick={publishAnyway}
+                    disabled={findings.some(f => f.severity === "error")}
+                    className="rounded-full bg-gold px-5 py-2 text-[11px] uppercase tracking-widest text-background disabled:cursor-not-allowed disabled:opacity-40"
+                    title={findings.some(f => f.severity === "error") ? "Hay errores que bloquean la publicación" : ""}
+                  >
+                    Publicar de todas formas
+                  </button>
+                )}
+                <button onClick={() => { setFindings(null); setPendingPublish(false); }} className="rounded-full border border-white/15 px-5 py-2 text-[11px] uppercase tracking-widest text-white/70">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
