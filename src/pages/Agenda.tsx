@@ -34,6 +34,7 @@ export default function Agenda() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState<{ meetLink?: string } | null>(null);
   const [form, setForm] = useState({ full_name: "", email: "", organization: "", role: "", phone: "", topic: "", message: "" });
+  const [hp, setHp] = useState("");
   const { toast } = useToast();
 
   const days = useMemo(() => {
@@ -62,7 +63,7 @@ export default function Agenda() {
     if (!selected) return;
     setSubmitting(true);
     const { data, error } = await supabase.functions.invoke("agenda-book", {
-      body: { ...form, start: selected.start, end: selected.end },
+      body: { ...form, start: selected.start, end: selected.end, website: hp },
     });
     setSubmitting(false);
     if (error || (data as any)?.error) {
@@ -134,6 +135,16 @@ export default function Agenda() {
             <section>
               <h2 className="mb-4 text-sm uppercase tracking-widest text-white/50">Tus datos</h2>
               <form onSubmit={handleBook} className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={hp}
+                  onChange={(e) => setHp(e.target.value)}
+                  style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                />
                 <div className="text-sm text-white/70">
                   {selected ? (
                     <>Reservando: <strong className="text-gold">{fmtDate(date)} · {fmtTime(selected.start)}</strong></>
