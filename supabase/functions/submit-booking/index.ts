@@ -1,4 +1,5 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { checkRateLimit, getClientIp, isHoneypotTripped, notifyBooking } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -198,6 +199,14 @@ Deno.serve(async (req) => {
       return reject(400, "Cuerpo de petición inválido.", "body");
     }
 
+    // Honeypot: silently accept and drop
+    if (isHoneypotTripped(body as any)) {
+      logEvent("honeypot.tripped");
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const allowed = ["bureau", "organizer", "enterprise"];
     if (!body || !allowed.includes(body.booking_type)) {
       logEvent("validation.failed", { field: "booking_type" });
@@ -226,6 +235,20 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
+    // Rate limit + duplicate detection
+    const ip = getClientIp(req);
+    const fingerprint = `keynote:${email.toLowerCase()}:${body.booking_type}:${(body.event_date ?? "")}`;
+    const rl = await checkRateLimit({
+      supabase, ip, functionName: "submit-booking", fingerprint, max: 5, windowSec: 60,
+    });
+    if (!rl.allowed) {
+      logEvent("rate_limit.blocked", { reason: rl.reason });
+      const msg = rl.reason === "duplicate"
+        ? "Ya recibimos esta solicitud. Te contactaremos en breve."
+        : "Demasiadas solicitudes. Espera unos minutos e intenta de nuevo.";
+      return reject(rl.reason === "duplicate" ? 409 : 429, msg);
+    }
+
     const { data, error } = await supabase
       .from("keynote_bookings")
       .insert({
@@ -251,6 +274,13 @@ Deno.serve(async (req) => {
       return reject(500, "No pudimos guardar tu solicitud. Intenta de nuevo en unos segundos.");
     }
     logEvent("db.insert.ok", { id: data.id, type: body.booking_type });
+
+    // Slack/Telegram notify (fire-and-forget)
+    notifyBooking({
+      type: "keynote",
+      action: "created",
+      booking: { id: data.id, full_name: name, email: email.toLowerCase(), ...body },
+    });
 
     // Fire-and-forget emails (never fail the request if email errors)
     const normalized: BookingPayload = { ...body, full_name: name, email: email.toLowerCase() };
