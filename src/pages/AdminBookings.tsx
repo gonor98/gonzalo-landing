@@ -63,6 +63,26 @@ function Inner() {
     });
   };
 
+  const notifyChange = async (
+    type: "keynote" | "meeting",
+    booking: any,
+    field: string,
+    from: any,
+    to: any,
+  ) => {
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      await supabase.functions.invoke("notify-booking", {
+        body: {
+          type: "status_change",
+          action: "updated",
+          booking: { ...booking, _kind: type },
+          change: { field, from, to, actor: u.user?.email ?? "admin" },
+        },
+      });
+    } catch (e) { console.warn("notify failed", e); }
+  };
+
   const openHistory = async (table: string, id: string, title: string) => {
     setHistoryFor({ id, table, title });
     const { data } = await supabase
