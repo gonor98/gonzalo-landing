@@ -1,81 +1,112 @@
-## Plan: Mejoras de emails, admin, Benefits y scrollytelling
+## Plan: Premium UX, SEO, recordatorios, webhooks, rate-limiting y captcha
 
-Voy a abordar 6 bloques. Antes de implementar, te confirmo el alcance porque es grande y algunos puntos tienen decisiones de producto.
-
----
-
-### 1. Emails de confirmación mejorados
-**Archivos:** `supabase/functions/agenda-book/index.ts`, `supabase/functions/submit-booking/index.ts`
-
-- Header con nombre completo del cliente (no solo el primer nombre).
-- Fecha y hora formateadas explícitamente en zona **America/Mexico_City** ("Lunes 12 de mayo, 2026 · 10:00 a.m. (CDMX)").
-- Bloque destacado "📄 Tus regalos" con 2 botones que apunten a las URLs públicas de los PDFs en `benefits-assets`, además del adjunto.
-- Resumen del booking (organización, rol, teléfono, tema) cuando estén disponibles.
-- Para `submit-booking`: misma estructura visual, sin .ics, con los 2 PDFs como descarga directa + adjuntos.
+Antes de tocar código necesito confirmar 3 decisiones porque definen alcance y secretos requeridos.
 
 ---
 
-### 2. Audit log en `/admin/bookings`
-**Migración nueva:** tabla `booking_audit_log` (`id`, `booking_id`, `booking_table`, `actor_user_id`, `action`, `field`, `old_value`, `new_value`, `note`, `created_at`) con RLS solo admin.
-**UI:** En `AdminBookings.tsx` añadir:
-- Botón "Historial" por fila → drawer con timeline.
-- Acciones que escriben al log: cambio de status, cancelación, edición de meet_link.
-- Si cambia `meet_link` o `status`, se inserta una fila de auditoría desde el cliente (admin autenticado, `auth.uid()` como actor).
+### 1. Auditoría de UX y "wow factor" parallax/premium
+
+Reviso todas las secciones del home y páginas clave (`HeroSection`, `RisingLeaderSection`, `AchievementsOverview`, `StickyScrollSection`, `SpeakerReel`, `VentureStack`, `ThemesGrid`, `MilestonesSection`, `MasonryGrid`, `PodcastsSection`, `CTASection`, `Agenda`, `Booking`, `Benefits`).
+
+Aplico mejoras concretas:
+- **Hero**: parallax real con `useScroll` sobre el video loop, capa de partículas/aurora suave, fade-in escalonado del título con `clip-path`, mouse-follow gradient sutil.
+- **AchievementsOverview**: contador animado al entrar en viewport + tilt 3D suave en cards.
+- **StickyScrollSection**: ya tiene parallax, añado `mix-blend-mode` en el badge de capítulo y micro-glitch en el cambio de estado.
+- **SpeakerReel / MasonryGrid**: hover con `scale + brightness`, parallax del thumbnail dentro de su contenedor.
+- **MilestonesSection**: línea de tiempo con `scaleY` controlado por scroll progress.
+- **VentureStack**: `cards stack` con z-rotation al scroll.
+- **CTASection**: gradient animado + magnetic button.
+- **Cursor**: ya existe `CustomCursor`, refuerzo magnetismo en CTAs.
+- **Globales**: `prefers-reduced-motion` respetado, `will-change` puntual, lazy-load consistente, transiciones de página con `framer-motion`.
 
 ---
 
-### 3. Validador pre-publish para Benefits
-**Nuevo:** `src/lib/benefitsValidator.ts` + integración en `BenefitsAdminSection.tsx`.
-- Reglas: `title`, `description`, `badge` no vacíos; `pdfUrl`/`videoUrl`/`thumbnailUrl` accesibles (HEAD fetch con timeout); `landingPath`/`downloadsPath` existen en el router; `externalUrl` válida.
-- Severidad: `error` (bloquea publish) vs `warning`.
-- Modal "Revisión pre-publicación" con lista de hallazgos por benefit + botón "Publicar de todas formas" solo si no hay errores.
+### 2. SEO — JSON-LD Person + Event
+
+- Mantengo `personJsonLd` actual (ya está en `SEO.tsx`).
+- Nuevo: `eventJsonLd(booking)` builder en `SEO.tsx` que genera schema `Event` con `name`, `startDate`, `location`, `performer: Person(Gonzalo)`, `eventStatus`, `eventAttendanceMode`.
+- En `Speaking.tsx` y `Booking.tsx` pinto JSON-LD `Event` agregando los próximos eventos confirmados (lista hardcoded de keynotes pasadas/próximas en `src/lib/events.ts`).
+- En página individual de evento (si la creas en el futuro), se inyecta el evento específico.
+- En `/agenda` añado JSON-LD `Service` (asesoría 1:1) además del Person.
 
 ---
 
-### 4. Panel OG batch — reintentar fallas y ver progreso
-**Nuevo:** `src/components/OGBatchPanel.tsx` (dentro de Benefits admin).
-- Estado en `localStorage` (`og_batch_runs_v1`): por cada intento `{id, startedAt, items: [{benefitId, status, attempts, error}]}`.
-- Tabla con progreso (% completado, fallidos, exitosos), botón "Reintentar fallas" que reejecuta solo los `failed`.
-- Vista de detalle por ID con timeline de intentos.
-*Nota:* la generación OG actual es client-side; mantenemos esa arquitectura.
+### 3. Recordatorio 24h antes — cron + Resend
+
+- Nueva edge function `send-meeting-reminders` que:
+  - Lee `meeting_bookings` y `keynote_bookings` con `start_time/event_date` entre `now+23h` y `now+25h`, `status` activo y `reminded_at IS NULL`.
+  - Envía email vía Resend (mismo template visual que confirmación, asunto "Recordatorio: tu reunión con Gonzalo en 24h"), con link de Meet / detalles del evento + 2 PDFs CETI.
+  - Marca `reminded_at = now()` para no duplicar.
+- **Migración**: añado columna `reminded_at TIMESTAMPTZ` a ambas tablas + `pg_cron` + `pg_net` enabled + job cada 15 min vía `supabase--insert` (no migración, contiene anon key).
 
 ---
 
-### 5. Historial de versiones de Benefits
-**Nuevo:** `src/lib/benefitsHistory.ts` + panel en `BenefitsAdminSection.tsx`.
-- Cada `writeBenefitsBundle` snapshot a `localStorage` `benefits_history_v1` con `{id, timestamp, actor (admin email/local), diff resumido, bundle completo}`.
-- UI: lista cronológica con "Ver diff" y "Restaurar a esta versión".
-- Límite a 50 versiones (FIFO).
+### 4. Webhook Slack/Telegram — nuevos bookings y cambios de estado
+
+Decisión 1 abajo define cuál implemento. Recomiendo **Slack** vía conector ya disponible.
+
+- Nueva edge function `notify-booking` (POST: `{type, booking, change?}`).
+- Llamada desde:
+  - `submit-booking` y `agenda-book` al crear (server-side, no requiere auth).
+  - Cliente en `AdminBookings.tsx` al cambiar status / meet_link / cancelar.
+- Mensaje formateado con bloques Slack (nombre, email, tema, fecha, status badge) + link a `/admin/bookings`.
+- Si elige Telegram, uso `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` (pediré secrets).
 
 ---
 
-### 6. Fix de scrollytelling y parallax del hero
-**Archivos:** `src/components/HeroSection.tsx`, `src/components/HeroLoopVideo.tsx`, `src/components/StickyScrollSection.tsx`.
-- Auditar el hero: revisar transforms con `useScroll`/`useTransform`, sustituir cualquier `scroll-snap` que rompa el sticky, usar `will-change: transform` y `translate3d`.
-- StickyScrollSection: validar que el `200vh` spacer no genere salto en mobile (390px viewport actual), añadir `prefers-reduced-motion`.
-- Cross-fade más limpio con `easing` cubic-bezier y `mix-blend-mode` cuando aplique.
+### 5. Rate limiting + anti-spam en edge functions
+
+- Nueva tabla `request_log` (`ip`, `function_name`, `created_at`) con índice por (ip, function_name, created_at).
+- Helper `checkRateLimit(supabase, ip, fn, max=5, windowSec=60)` en cada edge function (`submit-booking`, `agenda-book`).
+- Detección anti-duplicado: hash `(email + start_time | event_date)` en últimos 10 min → 409.
+- Honeypot field `website` en formularios; si viene relleno → 200 silencioso (sin enviar).
 
 ---
 
-### 7. Análisis · Mejoras adicionales recomendadas
-Después de revisar el código, sugiero (NO implemento sin tu OK):
+### 6. Captcha invisible (Cloudflare Turnstile)
 
-1. **Rate limiting en edge functions**: hoy `agenda-book` y `submit-booking` aceptan POST anónimo sin throttle → vulnerables a spam. Añadir tabla `request_log` por IP + límite 5/min.
-2. **Captcha invisible** (hCaptcha o Turnstile) en formularios públicos.
-3. **Webhook Slack/Telegram** para notificar nuevos bookings en tiempo real al admin.
-4. **Auto-confirmación con buffer**: bloquear slots ±15 min alrededor de eventos existentes.
-5. **Recordatorio 24h antes** de la reunión (cron + Resend).
-6. **Página `/agenda` en mobile**: el viewport actual es 390px — revisar el selector de fecha y slots.
-7. **SEO**: faltan `canonical` y JSON-LD `Person` + `Event` en varias páginas.
-8. **Telemetría**: hoy `track.ts` existe pero no captura conversión booking. Añadir eventos.
+- Recomiendo **Turnstile** (gratis, sin fricción, no requiere cuenta de pago).
+- Frontend: widget invisible en `Agenda.tsx` y `BookingSelector.tsx` que genera token al submit.
+- Edge functions validan token contra `https://challenges.cloudflare.com/turnstile/v0/siteverify` con `TURNSTILE_SECRET_KEY`.
+- Si falla → 403.
+- `VITE_TURNSTILE_SITE_KEY` (publishable) en código, secret en Supabase secrets.
 
 ---
 
-### Preguntas antes de empezar
+### Detalles técnicos
 
-1. **Audit log**: ¿está bien que el actor sea el admin autenticado (auth.uid)? ¿O quieres que también registre acciones del sistema (edge functions)?
-2. **Historial Benefits**: ¿guardamos en localStorage (rápido, por dispositivo) o en una tabla Supabase (compartido entre admins)?
-3. **Mejoras adicionales (sección 7)**: ¿cuáles quieres que incluya en esta misma vuelta? Recomiendo al menos 1, 4 y 6.
-4. **Fix scrollytelling**: ¿hay un comportamiento específico que se rompe (salto, jitter, video que no carga) o lo dejo a mi criterio basado en el código actual?
+```
+Nuevos archivos:
+- supabase/functions/send-meeting-reminders/index.ts
+- supabase/functions/notify-booking/index.ts
+- supabase/functions/_shared/rate-limit.ts
+- supabase/functions/_shared/turnstile.ts
+- src/lib/events.ts
+- src/components/TurnstileWidget.tsx
 
-Confirma y arranco.
+Editados:
+- supabase/functions/submit-booking/index.ts (+rate-limit, +turnstile, +notify, +honeypot)
+- supabase/functions/agenda-book/index.ts (idem + reminded_at default null)
+- src/pages/Agenda.tsx, src/components/BookingSelector.tsx (Turnstile + honeypot)
+- src/pages/AdminBookings.tsx (call notify-booking on status change)
+- src/components/SEO.tsx (eventJsonLd + serviceJsonLd helpers)
+- src/pages/Speaking.tsx, Booking.tsx, Agenda.tsx (inject event JSON-LD)
+- HeroSection, AchievementsOverview, MilestonesSection, VentureStack, CTASection, MasonryGrid (parallax/wow upgrades)
+
+Migración:
+- ALTER meeting_bookings/keynote_bookings ADD reminded_at TIMESTAMPTZ
+- CREATE TABLE request_log + RLS (deny-all)
+- ENABLE pg_cron, pg_net
+Insert (no migración):
+- cron.schedule del recordatorio cada 15 min
+```
+
+---
+
+### Decisiones que necesito de ti
+
+1. **Webhook**: ¿Slack (recomendado, ya tienes el conector) o Telegram (necesitaré `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`)?
+2. **Captcha**: ¿confirmas Cloudflare Turnstile? (Necesitaré `TURNSTILE_SITE_KEY` y `TURNSTILE_SECRET_KEY` desde https://dash.cloudflare.com/?to=/:account/turnstile, gratis).
+3. **Recordatorio**: ¿también enviamos un segundo recordatorio 1h antes para meetings 1:1, o solo 24h?
+
+Confirma y arranco con todo.
