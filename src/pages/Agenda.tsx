@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
-import { SEO } from "@/components/SEO";
+import { SEO, personJsonLd, serviceJsonLd } from "@/components/SEO";
 
 interface Slot { start: string; end: string; available: boolean }
 
@@ -76,7 +76,12 @@ export default function Agenda() {
 
   return (
     <div className="min-h-screen bg-background text-white">
-      <SEO title="Agenda una reunión · Gonzalo Acuña" description="Agenda una videollamada con Gonzalo Acuña Nava. Disponibilidad en tiempo real con Google Meet." />
+      <SEO
+        title="Agenda una reunión · Gonzalo Acuña"
+        description="Agenda una videollamada con Gonzalo Acuña Nava. Disponibilidad en tiempo real con Google Meet."
+        path="/agenda"
+        jsonLd={[personJsonLd, serviceJsonLd]}
+      />
       <Nav />
       <main className="mx-auto max-w-content px-6 pb-24 pt-32 md:px-20">
         <header className="mb-12 max-w-2xl">
