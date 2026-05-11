@@ -165,4 +165,4 @@ export const serviceJsonLd = {
   description:
     "Keynotes, advisory y mentorías 1:1 con Gonzalo Acuña Nava sobre PropTech, IA Operativa, tokenización y liderazgo.",
   url: `${SITE_URL}/booking`,
-});
+};
