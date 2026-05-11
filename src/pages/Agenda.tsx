@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
-import { SEO } from "@/components/SEO";
+import { SEO, personJsonLd, serviceJsonLd } from "@/components/SEO";
 
 interface Slot { start: string; end: string; available: boolean }
 
@@ -34,6 +34,7 @@ export default function Agenda() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState<{ meetLink?: string } | null>(null);
   const [form, setForm] = useState({ full_name: "", email: "", organization: "", role: "", phone: "", topic: "", message: "" });
+  const [hp, setHp] = useState("");
   const { toast } = useToast();
 
   const days = useMemo(() => {
@@ -62,7 +63,7 @@ export default function Agenda() {
     if (!selected) return;
     setSubmitting(true);
     const { data, error } = await supabase.functions.invoke("agenda-book", {
-      body: { ...form, start: selected.start, end: selected.end },
+      body: { ...form, start: selected.start, end: selected.end, website: hp },
     });
     setSubmitting(false);
     if (error || (data as any)?.error) {
@@ -75,7 +76,12 @@ export default function Agenda() {
 
   return (
     <div className="min-h-screen bg-background text-white">
-      <SEO title="Agenda una reunión · Gonzalo Acuña" description="Agenda una videollamada con Gonzalo Acuña Nava. Disponibilidad en tiempo real con Google Meet." />
+      <SEO
+        title="Agenda una reunión · Gonzalo Acuña"
+        description="Agenda una videollamada con Gonzalo Acuña Nava. Disponibilidad en tiempo real con Google Meet."
+        path="/agenda"
+        jsonLd={[personJsonLd, serviceJsonLd]}
+      />
       <Nav />
       <main className="mx-auto max-w-content px-6 pb-24 pt-32 md:px-20">
         <header className="mb-12 max-w-2xl">
@@ -134,6 +140,16 @@ export default function Agenda() {
             <section>
               <h2 className="mb-4 text-sm uppercase tracking-widest text-white/50">Tus datos</h2>
               <form onSubmit={handleBook} className="space-y-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={hp}
+                  onChange={(e) => setHp(e.target.value)}
+                  style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                />
                 <div className="text-sm text-white/70">
                   {selected ? (
                     <>Reservando: <strong className="text-gold">{fmtDate(date)} · {fmtTime(selected.start)}</strong></>

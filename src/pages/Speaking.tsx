@@ -2,7 +2,8 @@ import { Nav } from "@/components/Nav";
 import { ThemesGrid } from "@/components/ThemesGrid";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { CTASection } from "@/components/CTASection";
-import { SEO, personJsonLd } from "@/components/SEO";
+import { SEO, personJsonLd, eventJsonLd } from "@/components/SEO";
+import { upcomingEvents, pastEvents } from "@/lib/events";
 import { SocialRail } from "@/components/SocialRail";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
@@ -16,7 +17,7 @@ const Speaking = () => {
         title="Speaking Hub — 33 keynotes de Gonzalo Acuña Nava"
         description="Catálogo completo de 33 keynotes en PropTech, IA Operativa, Liderazgo y Resiliencia. Filtra por categoría y reserva disponibilidad para Q2–Q4 2026."
         path="/speaking"
-        jsonLd={personJsonLd}
+        jsonLd={[personJsonLd, ...upcomingEvents.map(eventJsonLd), ...pastEvents.map(eventJsonLd)]}
       />
       <ScrollProgressBar />
       <Nav />

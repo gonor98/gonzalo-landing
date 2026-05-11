@@ -63,6 +63,26 @@ function Inner() {
     });
   };
 
+  const notifyChange = async (
+    type: "keynote" | "meeting",
+    booking: any,
+    field: string,
+    from: any,
+    to: any,
+  ) => {
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      await supabase.functions.invoke("notify-booking", {
+        body: {
+          type: "status_change",
+          action: "updated",
+          booking: { ...booking, _kind: type },
+          change: { field, from, to, actor: u.user?.email ?? "admin" },
+        },
+      });
+    } catch (e) { console.warn("notify failed", e); }
+  };
+
   const openHistory = async (table: string, id: string, title: string) => {
     setHistoryFor({ id, table, title });
     const { data } = await supabase
@@ -97,6 +117,7 @@ function Inner() {
       action: "status_change", field: "status",
       old_value: b.status, new_value: next, note: null,
     });
+    notifyChange("keynote", b, "status", b.status, next);
     toast({ title: "Estado actualizado" }); load();
   };
   const updateMeetingStatus = async (b: Meeting, next: string) => {
@@ -107,6 +128,7 @@ function Inner() {
       action: next === "cancelled" ? "cancellation" : "status_change",
       field: "status", old_value: b.status, new_value: next, note: null,
     });
+    notifyChange("meeting", b, "status", b.status, next);
     toast({ title: next === "cancelled" ? "Reunión cancelada" : "Estado actualizado" }); load();
   };
   const saveMeetLink = async (b: Meeting) => {
@@ -118,6 +140,7 @@ function Inner() {
       action: "meet_link_update", field: "meet_link",
       old_value: b.meet_link, new_value: next || null, note: null,
     });
+    notifyChange("meeting", b, "meet_link", b.meet_link, next || null);
     setEditMeetFor(null); toast({ title: "Link de Meet actualizado" }); load();
   };
 

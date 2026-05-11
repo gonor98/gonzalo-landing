@@ -75,7 +75,7 @@ export const BookingSelector = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("submit-booking", {
-        body: { booking_type: type, ...values },
+        body: { booking_type: type, ...values, website: values.website ?? "" },
       });
 
       // Surface 4xx/5xx body messages from the edge function
@@ -195,6 +195,17 @@ export const BookingSelector = () => {
           <p className="mb-8 text-sm text-white/60">{config.description}</p>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {/* Honeypot — hidden from users, bots fill it */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={values.website ?? ""}
+              onChange={(e) => setField("website", e.target.value)}
+              style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+            />
             {config.fields.map((f) => {
               const id = `f-${f.name}`;
               const isWide = f.type === "textarea";

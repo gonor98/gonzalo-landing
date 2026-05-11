@@ -1,4 +1,5 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { checkRateLimit, getClientIp, isHoneypotTripped, notifyBooking } from "../_shared/security.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -62,6 +63,11 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
     const body = await req.json();
+    if (isHoneypotTripped(body)) {
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const {
       full_name, email, start, end, topic, message,
       organization, role, phone,
@@ -80,6 +86,26 @@ Deno.serve(async (req) => {
     if (!(endDt > startDt)) {
       return new Response(JSON.stringify({ error: "Invalid range" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Rate limit + dedupe (same email + slot)
+    const supabaseRl = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const ip = getClientIp(req);
+    const fingerprint = `meeting:${String(email).toLowerCase()}:${startDt.toISOString()}`;
+    const rl = await checkRateLimit({
+      supabase: supabaseRl, ip, functionName: "agenda-book", fingerprint, max: 5, windowSec: 60,
+    });
+    if (!rl.allowed) {
+      const msg = rl.reason === "duplicate"
+        ? "Ya enviamos esta reserva. Revisa tu correo."
+        : "Demasiadas solicitudes. Espera unos minutos.";
+      return new Response(JSON.stringify({ error: msg }), {
+        status: rl.reason === "duplicate" ? 409 : 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -249,6 +275,16 @@ Deno.serve(async (req) => {
       sendEmail(email, "Tu reunión con Gonzalo Acuña está confirmada", userHtml, userAttachments),
       sendEmail(ADMIN_EMAIL, `Nueva reunión: ${full_name} (${fmt})`, adminHtml, adminAttachments),
     ]);
+
+    notifyBooking({
+      type: "meeting",
+      action: "created",
+      booking: {
+        id: ev.id, full_name, email,
+        start_time: startDt.toISOString(), end_time: endDt.toISOString(),
+        topic, message, organization, role, phone, meet_link: meetLink,
+      },
+    });
 
     return new Response(JSON.stringify({ ok: true, meetLink, eventId: ev.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

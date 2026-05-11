@@ -94,3 +94,75 @@ export const personJsonLd = {
     "TNW Amsterdam Finalist",
   ],
 };
+
+export interface EventInput {
+  name: string;
+  startDate: string;
+  endDate?: string;
+  city: string;
+  country: string;
+  venue?: string;
+  url?: string;
+  description?: string;
+  status?: "scheduled" | "completed" | "cancelled";
+  attendanceMode?: "offline" | "online" | "mixed";
+}
+
+const ATT_MODE: Record<string, string> = {
+  offline: "https://schema.org/OfflineEventAttendanceMode",
+  online: "https://schema.org/OnlineEventAttendanceMode",
+  mixed: "https://schema.org/MixedEventAttendanceMode",
+};
+const STATUS: Record<string, string> = {
+  scheduled: "https://schema.org/EventScheduled",
+  completed: "https://schema.org/EventScheduled",
+  cancelled: "https://schema.org/EventCancelled",
+};
+
+export const eventJsonLd = (e: EventInput) => ({
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: e.name,
+  startDate: e.startDate,
+  ...(e.endDate ? { endDate: e.endDate } : {}),
+  eventStatus: STATUS[e.status ?? "scheduled"],
+  eventAttendanceMode: ATT_MODE[e.attendanceMode ?? "offline"],
+  ...(e.description ? { description: e.description } : {}),
+  ...(e.url ? { url: e.url } : {}),
+  location: {
+    "@type": "Place",
+    name: e.venue ?? `${e.city}, ${e.country}`,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: e.city,
+      addressCountry: e.country,
+    },
+  },
+  performer: {
+    "@type": "Person",
+    name: "Gonzalo Acuña Nava",
+    url: SITE_URL,
+  },
+  organizer: e.venue
+    ? { "@type": "Organization", name: e.venue }
+    : undefined,
+  offers: {
+    "@type": "Offer",
+    url: `${SITE_URL}/booking`,
+    availability: "https://schema.org/InStock",
+    price: "0",
+    priceCurrency: "MXN",
+    validFrom: e.startDate,
+  },
+});
+
+export const serviceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Keynote Speaking & Strategic Advisory",
+  provider: { "@type": "Person", name: "Gonzalo Acuña Nava", url: SITE_URL },
+  areaServed: ["MX", "US", "ES", "PT", "BR", "CO", "AR", "CL", "PE"],
+  description:
+    "Keynotes, advisory y mentorías 1:1 con Gonzalo Acuña Nava sobre PropTech, IA Operativa, tokenización y liderazgo.",
+  url: `${SITE_URL}/booking`,
+};

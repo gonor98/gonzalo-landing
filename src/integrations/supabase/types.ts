@@ -71,6 +71,7 @@ export type Database = {
           message: string | null
           organization: string | null
           phone: string | null
+          reminded_at: string | null
           role: string | null
           status: string
           topic_interest: string | null
@@ -89,6 +90,7 @@ export type Database = {
           message?: string | null
           organization?: string | null
           phone?: string | null
+          reminded_at?: string | null
           role?: string | null
           status?: string
           topic_interest?: string | null
@@ -107,6 +109,7 @@ export type Database = {
           message?: string | null
           organization?: string | null
           phone?: string | null
+          reminded_at?: string | null
           role?: string | null
           status?: string
           topic_interest?: string | null
@@ -124,6 +127,8 @@ export type Database = {
           id: string
           meet_link: string | null
           message: string | null
+          reminded_1h_at: string | null
+          reminded_at: string | null
           start_time: string
           status: string
           topic: string | null
@@ -138,6 +143,8 @@ export type Database = {
           id?: string
           meet_link?: string | null
           message?: string | null
+          reminded_1h_at?: string | null
+          reminded_at?: string | null
           start_time: string
           status?: string
           topic?: string | null
@@ -152,9 +159,35 @@ export type Database = {
           id?: string
           meet_link?: string | null
           message?: string | null
+          reminded_1h_at?: string | null
+          reminded_at?: string | null
           start_time?: string
           status?: string
           topic?: string | null
+        }
+        Relationships: []
+      }
+      request_log: {
+        Row: {
+          created_at: string
+          fingerprint: string | null
+          function_name: string
+          id: string
+          ip: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint?: string | null
+          function_name: string
+          id?: string
+          ip: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string | null
+          function_name?: string
+          id?: string
+          ip?: string
         }
         Relationships: []
       }
