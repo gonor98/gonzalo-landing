@@ -1,6 +1,6 @@
-import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, MotionValue } from "framer-motion";
 import { ArrowDown, Play, Sparkles } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { usePerfMode } from "@/hooks/usePerfMode";
 import gonzaloHero from "@/assets/gonzalo-hero.jpg";
@@ -66,6 +66,29 @@ export const HeroSection = () => {
   const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
+  // Mouse-tracked spotlight (premium feel) — disabled on reduced motion / touch
+  const mx = useMotionValue(50);
+  const my = useMotionValue(30);
+  const mxs = useSpring(mx, { stiffness: 60, damping: 18, mass: 0.4 });
+  const mys = useSpring(my, { stiffness: 60, damping: 18, mass: 0.4 });
+  useEffect(() => {
+    if (reduced) return;
+    const el = ref.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      mx.set(((e.clientX - r.left) / r.width) * 100);
+      my.set(((e.clientY - r.top) / r.height) * 100);
+    };
+    el.addEventListener("mousemove", onMove);
+    return () => el.removeEventListener("mousemove", onMove);
+  }, [reduced, mx, my]);
+  const spotlight = useTransform(
+    [mxs, mys] as any,
+    ([x, y]: number[]) =>
+      `radial-gradient(600px circle at ${x}% ${y}%, rgba(201,168,76,0.18), transparent 60%)`
+  );
+
   // Lighter parallax distances on reduced devices, then we also "freeze" the
   // motion values via inline style overrides below.
   const yBack = useParallax(scrollYProgress, reduced ? 0 : 220);
@@ -84,6 +107,13 @@ export const HeroSection = () => {
       {/* Aurora gradient — animated luminous backdrop */}
       <div className="aurora pointer-events-none absolute inset-0" aria-hidden />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_120%,rgba(201,168,76,0.22),transparent_70%)]" />
+
+      {/* Mouse-tracked spotlight */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 hidden md:block mix-blend-screen"
+        style={{ background: spotlight as any }}
+      />
 
       {/* Portrait — desktop */}
       <motion.div
