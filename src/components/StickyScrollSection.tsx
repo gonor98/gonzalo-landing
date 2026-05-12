@@ -142,34 +142,37 @@ export const StickyScrollSection = () => {
           </div>
         </div>
           <div className="relative h-full overflow-hidden">
-            <AnimatePresence mode="sync" initial={false}>
-              <motion.div
-                key={current.title}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] as any }}
-                className="absolute inset-0 cursor-pointer group"
-                onClick={() => open(current.videoId, current.title)}
-                role="button"
-                aria-label={`Reproducir: ${current.title}`}
-                style={{ willChange: "opacity" }}
-              >
+            {/* Stacked posters: all three rendered at once and cross-faded via
+                opacity. Eliminates AnimatePresence churn and guarantees the
+                next chapter is fully decoded before it appears. */}
+            <div
+              className="absolute inset-0 cursor-pointer group"
+              onClick={() => open(current.videoId, current.title)}
+              role="button"
+              aria-label={`Reproducir: ${current.title}`}
+            >
+              {states.map((s, i) => (
                 <motion.img
-                  src={current.img}
-                  alt={current.alt}
+                  key={s.title}
+                  src={s.img}
+                  alt={s.alt}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchPriority={i === 0 ? "high" : "low"}
                   style={{ y: parallaxY, scale: imageScale }}
+                  animate={{ opacity: i === active ? 1 : 0 }}
+                  transition={{ duration: reduced ? 0.2 : 0.7, ease: [0.22, 1, 0.36, 1] as any }}
                   className="absolute inset-0 h-[110%] w-full object-cover -top-[5%]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-background/30" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/60 bg-background/40 text-gold backdrop-blur transition-transform duration-500 group-hover:scale-110">
-                    <Play size={22} className="ml-1" fill="currentColor" />
-                  </span>
-                </div>
-                <div className="absolute inset-0 ring-1 ring-inset ring-gold/10" />
-              </motion.div>
-            </AnimatePresence>
+              ))}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-background/30" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="inline-flex h-20 w-20 items-center justify-center rounded-full border border-gold/60 bg-background/40 text-gold backdrop-blur transition-transform duration-500 group-hover:scale-110">
+                  <Play size={22} className="ml-1" fill="currentColor" />
+                </span>
+              </div>
+              <div className="absolute inset-0 ring-1 ring-inset ring-gold/10" />
+            </div>
           </div>
         </div>
       </div>

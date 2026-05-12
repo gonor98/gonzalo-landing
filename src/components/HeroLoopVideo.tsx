@@ -50,8 +50,9 @@ export const HeroLoopVideo = () => {
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           onLoadedData={() => setLoaded(true)}
+          poster={undefined}
           className="h-full w-full object-cover"
           aria-label={title}
         />
