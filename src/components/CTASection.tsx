@@ -1,10 +1,11 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 
 const MagneticLink = ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => {
   const ref = useRef<HTMLAnchorElement>(null);
+  const navigate = useNavigate();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 180, damping: 16, mass: 0.4 });
@@ -21,7 +22,7 @@ const MagneticLink = ({ to, children, className }: { to: string; children: React
       ref={ref as any}
       // @ts-ignore - framer motion forwards to <a>; we use Link separately for SPA
       href={to}
-      onClick={(e) => { e.preventDefault(); window.history.pushState({}, "", to); window.dispatchEvent(new PopStateEvent("popstate")); }}
+      onClick={(e) => { e.preventDefault(); navigate(to); }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       style={{ x: sx, y: sy }}
