@@ -1,6 +1,37 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useRef } from "react";
+
+const MagneticLink = ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const navigate = useNavigate();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 180, damping: 16, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 180, damping: 16, mass: 0.4 });
+  const onMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    x.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 30);
+    y.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 30);
+  };
+  const onLeave = () => { x.set(0); y.set(0); };
+  return (
+    <motion.a
+      ref={ref as any}
+      // @ts-ignore - framer motion forwards to <a>; we use Link separately for SPA
+      href={to}
+      onClick={(e) => { e.preventDefault(); navigate(to); }}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ x: sx, y: sy }}
+      className={className}
+    >
+      {children}
+    </motion.a>
+  );
+};
 
 export const CTASection = () => {
   return (
@@ -25,13 +56,13 @@ export const CTASection = () => {
         </p>
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
+          <MagneticLink
             to="/booking"
-            className="group inline-flex items-center gap-3 rounded-full bg-gold px-8 py-4 text-sm uppercase tracking-[0.22em] text-background transition-all hover:shadow-[0_0_40px_rgba(201,168,76,0.45)]"
+            className="group inline-flex items-center gap-3 rounded-full bg-gold px-8 py-4 text-sm uppercase tracking-[0.22em] text-background transition-shadow hover:shadow-[0_0_60px_rgba(201,168,76,0.55)] will-change-transform"
           >
             Reservar Keynote
             <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
+          </MagneticLink>
           <Link
             to="/audit-os"
             className="inline-flex items-center gap-3 rounded-full border border-gold px-8 py-4 text-sm uppercase tracking-[0.22em] text-gold transition-all hover:bg-gold/10"
