@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
+import { usePerfMode } from "@/hooks/usePerfMode";
 
 const blocks = [
   { label: "Ecosistema", number: "3", desc: "startups simultáneas pre-seed" },
@@ -9,9 +10,10 @@ const blocks = [
 
 export const MilestonesSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 20%"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 70, damping: 22 });
-  const lineScaleX = useTransform(smooth, [0, 1], [0, 1]);
+  const lineScaleX = useTransform(smooth, [0, 1], [reduced ? 1 : 0, 1]);
 
   return (
     <section ref={ref} id="empresas" className="relative bg-background py-[120px] md:px-20 px-6">
@@ -28,10 +30,10 @@ export const MilestonesSection = () => {
         {blocks.map((b, i) => (
           <motion.div
             key={b.label}
-            initial={{ opacity: 0, y: 40 }}
+            initial={reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, delay: i * 0.12, ease: "easeOut" }}
+            transition={{ duration: reduced ? 0 : 0.7, delay: reduced ? 0 : i * 0.12, ease: "easeOut" }}
             className={`relative md:px-12 ${i > 0 ? "md:border-l md:border-gold/25" : ""}`}
           >
             <p className="mb-4 text-[11px] uppercase tracking-[0.32em] text-gold">{b.label}</p>

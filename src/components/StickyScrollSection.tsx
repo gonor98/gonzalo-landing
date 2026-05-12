@@ -41,6 +41,16 @@ export const StickyScrollSection = () => {
   const { open } = useVideo();
   const { reduced } = usePerfMode();
 
+  // Preload all stage images on mount so AnimatePresence transitions never
+  // flicker or "pop in" while the user scrolls between chapters.
+  useEffect(() => {
+    states.forEach((s) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = s.img;
+    });
+  }, []);
+
   // Drive `active` from scroll progress on desktop (sticky behavior).
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -49,8 +59,8 @@ export const StickyScrollSection = () => {
 
   // Smooth parallax for the right column.
   const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 26, restDelta: 0.001 });
-  const parallaxY = useTransform(smooth, [0, 1], reduced ? ["0%", "0%"] : ["-4%", "4%"]);
-  const imageScale = useTransform(smooth, [0, 0.5, 1], reduced ? [1, 1, 1] : [1.05, 1, 1.05]);
+  const parallaxY = useTransform(smooth, [0, 1], reduced ? ["0%", "0%"] : ["-3%", "3%"]);
+  const imageScale = useTransform(smooth, [0, 0.5, 1], reduced ? [1, 1, 1] : [1.04, 1, 1.04]);
 
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     // Three thresholds with a small bias so the last state stays visible

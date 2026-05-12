@@ -2,19 +2,22 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
+import { usePerfMode } from "@/hooks/usePerfMode";
 
 const MagneticLink = ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const navigate = useNavigate();
+  const { reduced } = usePerfMode();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 180, damping: 16, mass: 0.4 });
   const sy = useSpring(y, { stiffness: 180, damping: 16, mass: 0.4 });
   const onMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (reduced) return;
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
-    x.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 30);
-    y.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 30);
+    x.set(((e.clientX - (r.left + r.width / 2)) / r.width) * 22);
+    y.set(((e.clientY - (r.top + r.height / 2)) / r.height) * 22);
   };
   const onLeave = () => { x.set(0); y.set(0); };
   return (
@@ -23,9 +26,9 @@ const MagneticLink = ({ to, children, className }: { to: string; children: React
       // @ts-ignore - framer motion forwards to <a>; we use Link separately for SPA
       href={to}
       onClick={(e) => { e.preventDefault(); navigate(to); }}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ x: sx, y: sy }}
+      onMouseMove={reduced ? undefined : onMove}
+      onMouseLeave={reduced ? undefined : onLeave}
+      style={reduced ? undefined : { x: sx, y: sy }}
       className={className}
     >
       {children}
@@ -34,16 +37,17 @@ const MagneticLink = ({ to, children, className }: { to: string; children: React
 };
 
 export const CTASection = () => {
+  const { reduced } = usePerfMode();
   return (
     <section id="contacto" className="relative overflow-hidden bg-background py-[140px] md:px-20 px-6">
       <div className="absolute inset-0 radial-gold opacity-90" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: reduced ? 0 : 0.8, ease: "easeOut" }}
         className="relative mx-auto max-w-content text-center"
       >
         <p className="mb-6 text-[11px] uppercase tracking-[0.32em] text-gold">Disponible Q2–Q4 2026</p>
