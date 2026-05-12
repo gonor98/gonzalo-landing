@@ -91,12 +91,12 @@ export const HeroSection = () => {
 
   // Lighter parallax distances on reduced devices, then we also "freeze" the
   // motion values via inline style overrides below.
-  const yBack = useParallax(scrollYProgress, reduced ? 0 : 220);
-  const yMid = useParallax(scrollYProgress, reduced ? 0 : 120);
-  const yFront = useParallax(scrollYProgress, reduced ? 0 : -60);
-  const yText = useTransform(scrollYProgress, [0, 1], ["0%", reduced ? "0%" : "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, reduced ? 0.4 : 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, reduced ? 1 : 1.08]);
+  const yBack = useParallax(scrollYProgress, reduced ? 0 : 160);
+  const yMid = useParallax(scrollYProgress, reduced ? 0 : 90);
+  const yFront = useParallax(scrollYProgress, reduced ? 0 : -45);
+  const yText = useTransform(scrollYProgress, [0, 1], ["0%", reduced ? "0%" : "22%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, reduced ? 0.6 : 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, reduced ? 1 : 1.06]);
 
   return (
     <section
@@ -108,12 +108,14 @@ export const HeroSection = () => {
       <div className="aurora pointer-events-none absolute inset-0" aria-hidden />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_120%,rgba(201,168,76,0.22),transparent_70%)]" />
 
-      {/* Mouse-tracked spotlight */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 hidden md:block mix-blend-screen"
-        style={{ background: spotlight as any }}
-      />
+      {/* Mouse-tracked spotlight (disabled on reduced motion) */}
+      {!reduced && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 hidden md:block mix-blend-screen"
+          style={{ background: spotlight as any }}
+        />
+      )}
 
       {/* Portrait — desktop */}
       <motion.div
