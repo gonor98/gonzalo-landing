@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useHeroLoopVideo } from "@/lib/bonusMaterials";
+import { usePerfMode } from "@/hooks/usePerfMode";
 
 /** Animated gold/dark gradient placeholder shown only while the embed boots. */
 const GradientPoster = () => (
@@ -25,9 +26,10 @@ const GradientPoster = () => (
 export const HeroLoopVideo = () => {
   const { provider, source, title } = useHeroLoopVideo();
   const [loaded, setLoaded] = useState(false);
+  const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll();
   // Gentle parallax: the floating card drifts up as the user scrolls the hero.
-  const y = useTransform(scrollYProgress, [0, 0.4], [0, -60]);
+  const y = useTransform(scrollYProgress, [0, 0.4], [0, reduced ? 0 : -40]);
 
   if (!source) return null;
 
