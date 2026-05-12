@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef } from "react";
 
 const blocks = [
   { label: "Ecosistema", number: "3", desc: "startups simultáneas pre-seed" },
@@ -7,8 +8,22 @@ const blocks = [
 ];
 
 export const MilestonesSection = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 20%"] });
+  const smooth = useSpring(scrollYProgress, { stiffness: 70, damping: 22 });
+  const lineScaleX = useTransform(smooth, [0, 1], [0, 1]);
+
   return (
-    <section id="empresas" className="relative bg-background py-[120px] md:px-20 px-6">
+    <section ref={ref} id="empresas" className="relative bg-background py-[120px] md:px-20 px-6">
+      {/* Scroll-driven gold filament */}
+      <div className="mx-auto mb-16 hidden max-w-content md:block">
+        <div className="relative h-px w-full overflow-hidden bg-white/[0.06]">
+          <motion.div
+            style={{ scaleX: lineScaleX, transformOrigin: "0% 50%" }}
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-gold to-transparent shadow-[0_0_24px_rgba(201,168,76,0.5)]"
+          />
+        </div>
+      </div>
       <div className="mx-auto max-w-content grid gap-10 md:grid-cols-3 md:gap-0">
         {blocks.map((b, i) => (
           <motion.div
