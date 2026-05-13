@@ -20,6 +20,29 @@ const renderBody = (md: string) => {
         </h2>
       );
     }
+    // Inline image: ![alt](src)
+    const imgMatch = block.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (imgMatch) {
+      const [, alt, src] = imgMatch;
+      return (
+        <figure key={i} className="mt-10 overflow-hidden rounded-2xl border border-white/10">
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            decoding="async"
+            width={1536}
+            height={864}
+            className="h-auto w-full object-cover"
+          />
+          {alt && (
+            <figcaption className="bg-white/[0.02] px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-white/45">
+              {alt}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
     if (/^[-•]\s/.test(block)) {
       const items = block.split("\n").map((l) => l.replace(/^[-•]\s+/, ""));
       return (
@@ -74,7 +97,7 @@ const BlogPost = () => {
         title={`${post.title} · Blog Gonzalo Acuña Nava`}
         description={post.description}
         path={`/blog/${post.slug}`}
-        ogImage="https://gonzaloacuna.com/og-gonzalo.jpg"
+        ogImage={post.cover}
         jsonLd={jsonLd}
       />
       <Nav />
@@ -108,6 +131,20 @@ const BlogPost = () => {
           <p className="mt-4 text-[11px] uppercase tracking-[0.22em] text-white/35">
             Para: {post.audience}
           </p>
+          {post.cover && (
+            <figure className="mt-8 overflow-hidden rounded-3xl border border-white/10">
+              <img
+                src={post.cover}
+                alt={post.title}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                width={1536}
+                height={864}
+                className="h-auto w-full object-cover"
+              />
+            </figure>
+          )}
         </div>
 
         <div className="mx-auto mt-10 max-w-3xl px-6 pb-10 md:px-0">
