@@ -45,7 +45,7 @@ export const BLOG_POSTS: BlogPost[] = [
 
 Si llevas tiempo en PropTech, este post no te va a vender humo. Te voy a contar lo que hemos visto operando PropMatch en México, hablando con la CNBV, peleándonos con custodios y firmando LOIs por $195M con desarrolladores que hace dos años pensaban que blockchain era una moda.
 
-![Skyline de Ciudad de México al atardecer con hexágonos blockchain superpuestos](${"BLOG_IMG_PROPTECH_1"})
+![Skyline de Ciudad de México al atardecer con hexágonos blockchain superpuestos](${proptechCover})
 
 ## El elefante de $2T que nadie quiere mover
 
@@ -147,7 +147,7 @@ Si quieres que aterrice este framework en tu equipo o en un evento corporativo, 
 
 Este post es lo que hubiera querido leer en 2024, antes de quemar $40K en pilotos que nunca llegaron a producción.
 
-![Manos de founder operando un dashboard de IA con métricas en dorado](${"BLOG_IMG_IA_1"})
+![Manos de founder operando un dashboard de IA con métricas en dorado](${iaOperativaCover})
 
 ## El problema real: 9 de cada 10 pilotos mueren en la demo
 
@@ -250,7 +250,7 @@ Si quieres que pase un día con tu equipo y diagnostiquemos juntos dónde meter 
 
 Si estás leyendo esto y vas en tu rechazo número 12, 30 o 60: respira. No estás roto. Estás en el proceso.
 
-![Founder caminando sobre una montaña de cartas de rechazo hacia una luz dorada](${"BLOG_IMG_RECHAZOS_1"})
+![Founder caminando sobre una montaña de cartas de rechazo hacia una luz dorada](${rechazosCover})
 
 ## El número detrás del titular
 
@@ -338,7 +338,7 @@ Nos vemos del otro lado del próximo NO.
 
 Spoiler: probablemente sí. Pero tienes más palancas de las que crees.
 
-![Founder firmando un term sheet en un boardroom con luz dorada](${"BLOG_IMG_RONDA_1"})
+![Founder firmando un term sheet en un boardroom con luz dorada](${levantarRondaCover})
 
 ## Antes de levantar, contesta estas 3 preguntas
 
@@ -453,7 +453,7 @@ Si quieres revisar tu deck o tu term sheet conmigo en una sesión 1:1, escríbem
 
 Si vas a tomar decisiones que involucran blockchain, **este es el mínimo que tienes que entender** para no firmar lo que no debes.
 
-![Smart contract proyectado sobre una bóveda con nodos dorados](${"BLOG_IMG_WEB3_1"})
+![Smart contract proyectado sobre una bóveda con nodos dorados](${web3FoundersCover})
 
 ## Las 4 capas que importan (y nadie te explica en orden)
 
@@ -570,7 +570,7 @@ Si quieres que revisemos tu arquitectura Web3 o tu modelo de tokenización, escr
 
 No es un post motivacional. Es el método exacto que uso, con el calendario, las herramientas y los errores que ya pagué.
 
-![Founder en escenario frente a una audiencia masiva](${"BLOG_IMG_MARCA_1"})
+![Founder en escenario frente a una audiencia masiva](${marcaPersonalCover})
 
 ## La premisa: tu marca personal es infraestructura, no vanidad
 
