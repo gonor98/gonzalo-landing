@@ -1,3 +1,10 @@
+import proptechCover from "@/assets/blog-proptech-cover.jpg";
+import iaOperativaCover from "@/assets/blog-ia-operativa-cover.jpg";
+import rechazosCover from "@/assets/blog-95-rechazos-cover.jpg";
+import levantarRondaCover from "@/assets/blog-levantar-ronda-cover.jpg";
+import web3FoundersCover from "@/assets/blog-web3-founders-cover.jpg";
+import marcaPersonalCover from "@/assets/blog-marca-personal-cover.jpg";
+
 export type BlogPost = {
   slug: string;
   title: string;
@@ -7,7 +14,7 @@ export type BlogPost = {
   readMinutes: number;
   keywords: string[];
   audience: string;
-  cover?: string;
+  cover: string;
   body: string; // markdown-ish (rendered with simple parser)
   cta: { label: string; to: string };
 };
@@ -22,18 +29,23 @@ export const BLOG_POSTS: BlogPost[] = [
     description:
       "PropTech LATAM en 2026: tokenización inmobiliaria con ERC-3643, casos reales y oportunidad de $2T para founders y fondos. Análisis de Gonzalo Acuña Nava (CEO PropMatch).",
     date: "2026-04-12",
-    readMinutes: 8,
+    readMinutes: 12,
     keywords: [
       "PropTech LATAM",
       "Tokenización inmobiliaria",
       "ERC-3643",
       "Real estate digital",
       "Inversión fraccionada",
+      "Blockchain inmobiliaria México",
+      "Security token offering LATAM",
     ],
     audience: "Founders PropTech, fondos LATAM, brokers tradicionales en transformación",
+    cover: proptechCover,
     body: `Voy a empezar con una confesión: la primera vez que un notario en Guadalajara me dijo que necesitaba 47 días para cerrar una escritura, pensé que estaba bromeando. No bromeaba. Y ese fue el momento exacto en el que entendí que el real estate en LATAM no necesita "más tecnología": necesita una arquitectura completamente nueva.
 
 Si llevas tiempo en PropTech, este post no te va a vender humo. Te voy a contar lo que hemos visto operando PropMatch en México, hablando con la CNBV, peleándonos con custodios y firmando LOIs por $195M con desarrolladores que hace dos años pensaban que blockchain era una moda.
+
+![Skyline de Ciudad de México al atardecer con hexágonos blockchain superpuestos](${proptechCover})
 
 ## El elefante de $2T que nadie quiere mover
 
@@ -55,26 +67,50 @@ Probamos ERC-20 (no sirve, no entiende identidad). Probamos ERC-1400 (mejor, per
 
 En PropMatch lo elegimos porque nos permite **operar bajo CNBV en México y registrar el mismo activo bajo Reg D en Estados Unidos** sin reescribir el smart contract. Para un founder eso significa: una sola base de código, dos mercados, cero retrabajo regulatorio.
 
+## La arquitectura que terminó funcionando (después de tirar dos)
+
+Para que esto no quede en abstracto, te dejo el stack real que corremos hoy:
+
+- **Capa de identidad:** ONCHAINID + KYC providers locales (Truora en LATAM, Sumsub para flujos US).
+- **Capa de token:** ERC-3643 sobre Polygon, con bridge planeado a Base para H2 2026.
+- **Capa de compliance:** módulos de transferencia atados a residencia fiscal y umbrales por inversionista.
+- **Capa de pagos:** SPEI vía PSP regulado en MX, ACH vía partner en US. Los rieles fiat siguen mandando.
+- **Capa de reporte:** tablero único que escupe XML para CNBV y CSV para auditor US, desde la misma fuente de verdad.
+
+Si te suena over-engineered, lo es a propósito: **el día que un regulador toca la puerta, esa arquitectura es lo que te mantiene operando** en lugar de pausando.
+
 ## Tres oportunidades concretas (con números, no con vibes)
 
 ### 1. Marketplaces fraccionados desde $500 USD
-No es teoría. Estamos viendo conversiones de 4.2% en landing pages que ofrecen entrar a un edificio AAA con el equivalente a una cena para dos. **Tip práctico:** no compitas en cap rate, compite en accesibilidad.
+No es teoría. Estamos viendo conversiones de 4.2% en landing pages que ofrecen entrar a un edificio AAA con el equivalente a una cena para dos. **Tip práctico:** no compitas en cap rate, compite en accesibilidad. El millennial mexicano no quiere ser dueño del 100% de un departamento, quiere ser dueño del 0.5% de cinco edificios distintos.
 
 ### 2. Liquidez secundaria intra-edificio
-El secreto sucio: los inversionistas no quieren rendimiento, quieren **poder salirse**. Diseñar un mercado secundario donde tenedores del mismo edificio se compran entre sí resuelve más fricción que cualquier yield del 12%.
+El secreto sucio: los inversionistas no quieren rendimiento, quieren **poder salirse**. Diseñar un mercado secundario donde tenedores del mismo edificio se compran entre sí resuelve más fricción que cualquier yield del 12%. Empieza por order-book intra-edificio antes de soñar con un AMM público.
 
 ### 3. Renta tokenizada con pagos automáticos
-Smart contract paga el 1° de cada mes. Sin cobranza, sin intermediario, sin "déjame revisar con mi contador". **Si vas a construir esto:** integra primero con SPEI vía un PSP regulado. La pureza on-chain mata adopción.
+Smart contract paga el 1° de cada mes. Sin cobranza, sin intermediario, sin "déjame revisar con mi contador". **Si vas a construir esto:** integra primero con SPEI vía un PSP regulado. La pureza on-chain mata adopción. El inversionista quiere ver su pesos en su CLABE, no su USDC en su wallet.
 
 ## El error que veo en 8 de cada 10 founders PropTech
 
 Empezar por el token y dejar el compliance para "después". El compliance no es un módulo que enchufas: **es la columna vertebral del producto**. Si tu identidad on-chain, tu KYC y tu reporte regulatorio no están diseñados desde el día 1, vas a tener que tirar el MVP.
+
+El segundo error: querer hacer una STO global desde el día uno. **Empieza por un solo país, un solo activo, un solo tipo de inversionista.** Cuando ese flujo cierra, replicas. Antes, estás escribiendo PowerPoints, no producto.
 
 ## Tres tips antes de cerrar
 
 - **Habla con tu regulador antes de levantar capital.** Una carta de no objeción vale más que un term sheet.
 - **Custodio primero, exchange después.** Si no tienes custodia institucional, no tienes producto vendible a un fondo.
 - **Mide trust, no TVL.** En tokenización el KPI real es: ¿el inversionista deja entrar a su mamá? Si no, te falta narrativa.
+
+## Métricas que sí importan en una STO LATAM
+
+Olvídate de TVL. Estos son los KPIs que reviso con mi equipo cada lunes:
+
+- **Tiempo de KYC promedio (target: < 4 minutos).** Cualquier cosa arriba de 10 mata conversión.
+- **Repeat investor rate a 90 días.** Si el inversionista vuelve, validaste la tesis.
+- **Spread bid-ask en mercado secundario.** Es tu mejor proxy de liquidez real.
+- **% de inversionistas que invitan a un familiar.** El verdadero NPS de tokenización.
+- **Costo por wire transfer de salida.** Si es alto, tu producto es una trampa.
 
 ## El timing es ahora — y no lo digo para vender FOMO
 
@@ -94,19 +130,24 @@ Si quieres que aterrice este framework en tu equipo o en un evento corporativo, 
     description:
       "Framework práctico de IA operativa para founders. Cómo lograr ROI medible en 60 días con casos reales de PropMatch, CALLII y Finple.",
     date: "2026-03-22",
-    readMinutes: 9,
+    readMinutes: 13,
     keywords: [
       "IA operativa",
       "Inteligencia artificial empresas",
       "Automatización founders",
       "ROI IA",
       "AI agents producción",
+      "Audit OS",
+      "Implementación IA LATAM",
     ],
     audience:
       "Founders Seed–Series A, COOs y líderes de operaciones que quieren pasar de pilotos a IA productiva",
+    cover: iaOperativaCover,
     body: `Te voy a ahorrar 30 minutos de LinkedIn: la mayoría de las "implementaciones de IA" que ves en tu feed son demos. Bonitas, virales, inútiles. Y lo digo desde el cariño, porque yo también caí en esa trampa los primeros seis meses construyendo CALLII.
 
 Este post es lo que hubiera querido leer en 2024, antes de quemar $40K en pilotos que nunca llegaron a producción.
+
+![Manos de founder operando un dashboard de IA con métricas en dorado](${iaOperativaCover})
 
 ## El problema real: 9 de cada 10 pilotos mueren en la demo
 
@@ -130,6 +171,18 @@ El humano no es muleta: es **profesor**. Cada corrección que hace alimenta tu f
 ### 4. Retira al humano cuando el error baje del 3%
 Gradual, no de golpe. Pasamos de revisar el 100% de las llamadas, al 50%, al 10%, hasta llegar al spot-check semanal. **El error 0% no existe.** Si lo persigues, no vas a lanzar nunca.
 
+## El stack mínimo que recomiendo en 2026
+
+Después de probar de todo, este es el stack más barato que aguanta producción real:
+
+- **Orquestación:** un framework liviano (LangGraph o n8n si tu equipo no es técnico).
+- **Modelo principal:** Gemini 2.5 Flash o GPT-5 mini. Reserva los modelos pro para casos de razonamiento complejo.
+- **Vector store:** pgvector dentro de tu Postgres. No metas otra base de datos a tu vida.
+- **Observabilidad:** Langfuse o Helicone desde el día uno. Sin trazas no hay diagnóstico.
+- **Evals:** un repo con 100 ejemplos curados que corres en CI antes de cada deploy.
+
+No necesitas más. Y si alguien te quiere vender una "plataforma all-in-one" por $5K al mes, pídele primero que te muestre la base de evals.
+
 ## Casos reales — con los números que normalmente no se cuentan
 
 **CALLII (voz → SPEI en 47 segundos)**
@@ -143,6 +196,17 @@ Gradual, no de golpe. Pasamos de revisar el 100% de las llamadas, al 50%, al 10%
 **Finple (onboarding de inversionistas)**
 - 3 días → 4 minutos. KYC + AML + perfil de riesgo automatizado.
 - Truco real: no usamos IA para el KYC. Usamos IA para **explicarle al inversionista por qué le pedimos cada documento**. La fricción no era técnica, era emocional.
+
+## Los costos invisibles que nadie pone en el deck
+
+Cuando un VC pregunta "¿cuánto te cuesta el agente?", todos contestamos lo del token. Mentira. El costo real es:
+
+- **Latencia:** cada segundo extra te tira la conversión 5%.
+- **Re-prompting humano:** las primeras semanas tu mejor PM va a vivir adentro del log viewer.
+- **Compliance interno:** alguien tiene que firmar que el agente no le habló feo a un cliente.
+- **Deuda de evals:** si no la pagas semanalmente, te alcanza a los tres meses.
+
+Pónlos en tu modelo financiero o vas a llegar a Series A pidiendo capital para "cosas que no sabíamos que costaban".
 
 ## Cinco tips que sólo aprendes en producción
 
@@ -170,19 +234,23 @@ Si quieres que pase un día con tu equipo y diagnostiquemos juntos dónde meter 
     description:
       "Lecciones reales de liderazgo founder y resiliencia emprendedora. Cómo construí PropMatch, CALLII y Finple después de 95 rechazos. Por Gonzalo Acuña Nava.",
     date: "2026-02-18",
-    readMinutes: 7,
+    readMinutes: 11,
     keywords: [
       "Liderazgo founder",
       "Resiliencia emprendedora",
       "Mentalidad startup",
       "Levantar capital LATAM",
       "Crecimiento personal CEO",
+      "Founder journey México",
     ],
     audience:
       "Founders en early stage, estudiantes universitarios y emprendedores LATAM que están en su primer levantamiento",
+    cover: rechazosCover,
     body: `Hay un Excel en mi laptop que casi nadie ha visto. Tiene 95 filas. Cada fila es un NO: el inversionista que dijo "estás muy verde", el cliente que firmó con la competencia, el mentor que dejó de contestarme, el partner que me dijo "esto no va a funcionar en LATAM". Lo guardo no por nostalgia. Lo guardo porque cada NO me enseñó algo que un SÍ no me hubiera enseñado nunca.
 
 Si estás leyendo esto y vas en tu rechazo número 12, 30 o 60: respira. No estás roto. Estás en el proceso.
+
+![Founder caminando sobre una montaña de cartas de rechazo hacia una luz dorada](${rechazosCover})
 
 ## El número detrás del titular
 
@@ -204,6 +272,14 @@ No "tu network". **Cinco personas a quienes les puedas llamar a las 11pm.** Sin 
 ## El error más común que veo en founders early-stage
 
 Confundir resiliencia con aguantar. No son lo mismo. **Resiliencia es decidir mejor más rápido**, no apretar los dientes y seguir empujando una piedra que no se mueve. A veces lo más resiliente es matar la idea, pivotar, despedir a tu mejor amigo del equipo, devolver el cheque. Aguantar sin pensar es necedad, no resiliencia.
+
+## El día que casi tiro todo (y lo que me hizo seguir)
+
+Septiembre de 2022. Tres NOs en una semana. La nómina alcanzaba para 11 días. Mi cofundador me llamó a las 10pm para decirme que su esposa estaba pidiendo que renunciara. Me senté en el coche en el estacionamiento de un Oxxo y, por primera vez, escribí en mi notas: *"creo que esto se acabó"*.
+
+Lo que me hizo seguir no fue motivación. Fue **un cliente que me mandó un audio de WhatsApp** dándome las gracias por algo chiquito que habíamos resuelto esa mañana. Una frase: "ustedes nos están salvando el cierre". No era un cheque. Era evidencia de que el problema que perseguíamos era real para alguien más que nosotros.
+
+**Aprendizaje práctico:** ten una carpeta llamada *"prueba de que esto importa"* con cada mensaje, video o métrica que confirme que estás resolviendo algo real. Vas a necesitar esa carpeta más veces de las que crees.
 
 ## Cinco tips concretos para tu próximo NO
 
@@ -235,6 +311,352 @@ Nos vemos del otro lado del próximo NO.
 
 — Gonzalo`,
     cta: { label: "Vive la conferencia 95 Rechazos", to: "/bonus-ceti" },
+  },
+  {
+    slug: "levantar-primera-ronda-latam-2026",
+    title:
+      "Cómo levantar tu primera ronda en LATAM en 2026: term sheet, valuación y los errores que casi me cuestan PropMatch",
+    excerpt:
+      "Una guía honesta para founders LATAM que están en su primer levantamiento: cómo armar el data room, qué pedir en el term sheet y los errores que vi quemarse a tres amigos cercanos.",
+    description:
+      "Cómo levantar capital semilla en LATAM en 2026: term sheet, valuación, SAFE, data room y errores comunes. Guía de Gonzalo Acuña Nava (CEO PropMatch).",
+    date: "2026-05-02",
+    readMinutes: 12,
+    keywords: [
+      "Levantar capital LATAM",
+      "Ronda semilla México",
+      "Term sheet founder",
+      "Valuación startup early stage",
+      "SAFE LATAM",
+      "Fundraising 2026",
+      "Venture capital México",
+    ],
+    audience:
+      "Founders pre-seed y seed en LATAM levantando su primera ronda institucional",
+    cover: levantarRondaCover,
+    body: `Si me hubieran dado este post hace tres años, habría firmado mejores papeles, perdido menos equity y dormido más. Lo escribo ahora porque cada semana me llega un DM de un founder LATAM con el mismo mensaje: *"voy a levantar mi primera ronda y no sé si me están cobrando caro el cheque"*.
+
+Spoiler: probablemente sí. Pero tienes más palancas de las que crees.
+
+![Founder firmando un term sheet en un boardroom con luz dorada](${levantarRondaCover})
+
+## Antes de levantar, contesta estas 3 preguntas
+
+### 1. ¿Tienes evidencia o tienes promesa?
+Los fondos LATAM ya no compran promesa pura. **Lo mínimo que necesitas hoy:** $5K–$20K MRR si eres SaaS, 100 transacciones reales si eres marketplace, o un piloto firmado con una marca relevante si vendes B2B. Sin eso, estás levantando friends & family aunque te digas pre-seed.
+
+### 2. ¿Quién es el lead y por qué te conviene?
+"Lead" no es el cheque más grande. Es **quien marca términos, abre puertas y carga la ronda contigo**. Pregunta por su última inversión: ¿el founder lo recomendaría a las 11pm? Si el lead no defiende a sus founders, vas a aprenderlo a la mala.
+
+### 3. ¿Cuánto runway compras y para qué milestones?
+Regla simple: levanta para 18 meses, no 12. Y define **dos milestones bookendable** (uno a 6 meses, otro a 12) que justifiquen tu próxima ronda al doble de valuación.
+
+## Term sheet: las 7 cláusulas que importan más que la valuación
+
+La gente se obsesiona con el cap. Lo entiendo. Pero estas siete líneas pesan más en el largo plazo:
+
+1. **Liquidation preference (1x non-participating).** Si te ofrecen 2x participating, sal corriendo.
+2. **Pro-rata rights.** Importante para tus inversionistas buenos, peligroso si lo das a todos.
+3. **Anti-dilution (broad-based weighted average).** Nunca aceptes full-ratchet. Nunca.
+4. **Board composition.** Pre-seed: tú + cofundador + 1 inversionista. No más.
+5. **Protective provisions.** Lista corta. Si te dan 14 cosas que requieren su voto, te ataste.
+6. **Vesting del founder.** Sí, vas a tener vesting. Negocia que te cuente el tiempo previo (single trigger acceleration en cambio de control).
+7. **Information rights.** Mensual, no semanal. Tu trabajo es construir, no reportar.
+
+**Tip que cuesta un cheque:** lleva el term sheet a un abogado especializado en VC LATAM (no tu primo abogado). Cuesta $1,500–$3,500 USD. Te ahorra cientos de miles más adelante.
+
+## SAFE vs Nota convertible vs Equity directa
+
+Para LATAM en 2026, mi orden de preferencia:
+
+- **SAFE post-money con valuation cap (estilo YC):** rápido, barato, transparente. Default para pre-seed.
+- **Nota convertible:** úsala sólo si el inversionista la exige, y revisa la tasa de descuento más que la tasa de interés.
+- **Equity directa (priced round):** vale la pena cuando levantas $1M+ y tienes lead serio. Antes, es overhead innecesario.
+
+**Trampa típica en LATAM:** algunos fondos locales todavía piden "instrumentos híbridos" diseñados por su despacho. Eso suele ser código de "queremos términos peores que el mercado pero envueltos bonito". Si no puedes explicar el instrumento en una servilleta, no lo firmes.
+
+## El data room que cierra rondas (y el que las traba)
+
+Después de tres levantamientos, este es el orden exacto que uso:
+
+1. **One-pager** (problema, solución, tracción, equipo, pedido).
+2. **Deck completo** (12–15 slides, máximo).
+3. **Modelo financiero** en Google Sheets (no PDF, los VCs van a jugar con los supuestos).
+4. **Cohortes y unit economics** del último trimestre.
+5. **Cap table actual y post-money simulado.**
+6. **Contratos clave** (clientes top 5, proveedores críticos, IP).
+7. **Estatutos y constancias fiscales.**
+8. **Carpeta "extras"** con press, videos del producto y testimonios.
+
+Si tu data room tarda más de 30 minutos en armar cuando un fondo te lo pide, **es porque no estabas listo para levantar**. Está bien. Cierra esa conversación y vuelve cuando lo estés.
+
+## Errores que vi quemarse a founders amigos
+
+- **Aceptar el primer SÍ "para no perderlo".** Casi siempre es el peor cheque. Los fondos que se mueven primero suelen ser los más oportunistas.
+- **Dar 30% en pre-seed.** Mata tu Series A antes de existir. Techo: 18–22%.
+- **Decir "no aplica" a la pregunta de churn.** Aplica siempre. Si no la sabes, te van a descontar el cheque por opacidad.
+- **Pelear la valuación y regalar las cláusulas.** El cap es ego. Las cláusulas son negocio.
+- **No tener un "no walk-away point" antes de la reunión.** Si no sabes a qué le dirías que no, vas a decir que sí a todo bajo presión.
+
+## El kit emocional para una ronda
+
+Esto no aparece en ningún libro de fundraising y es lo que más me sirvió:
+
+- **Una persona ajena al cap table** a quien le cuentas todas las reuniones. Coach, mentor, terapeuta. Alguien.
+- **Un calendario protegido para deep work.** Levantar ronda no es excusa para dejar de construir. El producto sigue siendo la mejor sales tool.
+- **Una rutina física no negociable.** Tres veces por semana mínimo. La diferencia entre cerrar bien o mal una llamada a las 6pm es bioquímica.
+- **Una fecha tope auto-impuesta.** "Cierro la ronda el 30 de junio o sigo construyendo con revenue." Sin fecha, te vas a quedar 8 meses pitcheando.
+
+## El framework que uso para decidir
+
+Cuando tengo un term sheet, contesto esto en una hoja:
+
+- ¿Este inversionista hace mejor a la empresa pasado mañana, o sólo el viernes?
+- ¿Mi vida operativa va a ser mejor o peor con él en el board?
+- ¿Sus últimas tres inversiones están vivas y contentas?
+- ¿La estructura me deja levantar Series A en buenas condiciones?
+
+Si tres de las cuatro respuestas son sí, firmo. Si dos son no, paso. Y los que pasamos no son los que perdimos plata: son los que ganamos años.
+
+## Cierre
+
+Levantar tu primera ronda no te hace founder. Cerrar bien tu primera ronda te ahorra **diez peleas que no quieres dar** los próximos tres años. Tómate la semana extra para revisar términos. Tu yo de Series A te lo va a agradecer.
+
+Si quieres revisar tu deck o tu term sheet conmigo en una sesión 1:1, escríbeme. Y si vienes a Talent Land o a alguno de mis eventos en LATAM, me encanta abrir esta conversación en vivo.
+
+— Gonzalo`,
+    cta: { label: "Agenda una sesión 1:1", to: "/booking" },
+  },
+  {
+    slug: "web3-founders-no-tecnicos-2026",
+    title:
+      "Web3 para founders no técnicos: smart contracts, custodia y compliance explicados sin humo",
+    excerpt:
+      "Si vas a construir algo serio sobre blockchain en 2026, este es el mapa que necesitas: contratos, wallets, custodia y reguladores explicados como si fuera tu primer día.",
+    description:
+      "Guía clara de Web3 para founders LATAM no técnicos: smart contracts, custodia institucional, wallets, compliance y errores caros. Por Gonzalo Acuña Nava.",
+    date: "2026-05-09",
+    readMinutes: 12,
+    keywords: [
+      "Web3 LATAM",
+      "Smart contracts founders",
+      "Custodia institucional crypto",
+      "Compliance blockchain",
+      "Wallets institucionales",
+      "Tokenización empresas",
+      "Founder no técnico Web3",
+    ],
+    audience:
+      "Founders LATAM no técnicos que están evaluando construir producto sobre blockchain o tokenizar un activo",
+    cover: web3FoundersCover,
+    body: `Hace dos años un founder muy bueno me dijo en una llamada: *"No entiendo Web3, ¿me lo explicas como si tuviera 12 años?"*. Le contesté que sí, pero la verdad es que tampoco lo había explicado nunca para un founder no técnico que tomara decisiones serias. Este post es esa explicación, tres años después y mil tropezones más tarde.
+
+Si vas a tomar decisiones que involucran blockchain, **este es el mínimo que tienes que entender** para no firmar lo que no debes.
+
+![Smart contract proyectado sobre una bóveda con nodos dorados](${web3FoundersCover})
+
+## Las 4 capas que importan (y nadie te explica en orden)
+
+Olvídate por un minuto de Bitcoin, NFTs y memes. Cuando construyes algo serio, sólo importan estas cuatro capas:
+
+1. **Capa de cuenta:** wallets. Quién es quién.
+2. **Capa de activo:** tokens. Qué se mueve.
+3. **Capa de regla:** smart contracts. Bajo qué condiciones se mueve.
+4. **Capa de custodia:** quién tiene las llaves cuando algo se rompe.
+
+Si entiendes estas cuatro, ya entiendes 80% del Web3 productivo. El otro 20% es jerga.
+
+## Smart contracts en cristiano
+
+Un smart contract es **un Excel que ejecuta solo y nadie puede borrar**. Eso es todo. Si la celda B2 dice "si A1 > 100, paga al wallet X", lo va a hacer. Para siempre. Sin excepciones.
+
+Las tres preguntas que tienes que hacer antes de aprobar uno:
+
+- **¿Es upgradeable o inmutable?** Inmutable suena romántico, pero si encuentras un bug, perdiste. Upgradeable te da control, pero alguien tiene la llave del upgrade. **Decide quién y cómo.**
+- **¿Quién lo auditó?** Pide el reporte de auditoría (CertiK, OpenZeppelin, Halborn, Nethermind son las serias). Sin auditoría, no firmas.
+- **¿Qué pasa si tu jurisdicción cambia las reglas?** Necesitas un mecanismo de pausa o de control de transferencias. ERC-3643 lo trae, ERC-20 no.
+
+## Wallets: la decisión más subestimada del founder
+
+Hay 4 tipos y la diferencia es brutal:
+
+- **EOA (wallet personal, tipo MetaMask):** una persona, una llave. Si la pierde, perdió todo. Útil para usuarios finales. **Nunca para tesorería.**
+- **Multisig (Safe, ex-Gnosis):** varias firmas requeridas para mover fondos. Es el mínimo para tesorería de empresa.
+- **MPC (Fireblocks, Copper, BitGo):** la llave nunca existe completa, se reconstruye matemáticamente entre varias partes. Es el estándar institucional.
+- **Smart wallet con account abstraction (ERC-4337):** lo nuevo. Permite gas patrocinado, recovery social y reglas custom. Útil para tu producto cara al usuario final.
+
+**Regla práctica:** tu tesorería corporativa va en MPC con multisig. Tu producto cara al usuario va en smart wallet con account abstraction. Mezclar las dos es de las cosas que más caro cobran.
+
+## Custodia: el tema que cierra rondas o las mata
+
+Cuando un fondo serio te pregunta "¿quién custodia los activos?", lo que está midiendo es: *"si esta empresa quiebra mañana, ¿se pierde el dinero del usuario?"*. Si tu respuesta es "nosotros", probablemente no levantas.
+
+Las opciones reales en 2026:
+
+- **Custodio institucional regulado** (Fireblocks, Anchorage, Komainu, BitGo): caro, pero abre puertas a banca, fondos y reguladores.
+- **Custodia self con MPC + auditoría externa:** viable si tienes un CTO con experiencia, equipo de seguridad y póliza de seguro. No improvises esto.
+- **Custodia compartida por contrato:** los activos viven en un smart contract, las llaves del upgrade están con un trustee externo. Híbrido elegante para tokenización.
+
+## Compliance: el músculo que te diferencia
+
+En LATAM 2026, el compliance dejó de ser un costo y empezó a ser un moat. Lo que tienes que tener desde el día 1:
+
+- **KYC y AML para cada wallet que toca tu producto.** No optional.
+- **Lista de sanciones (OFAC, ONU, locales) corriendo en tiempo real.**
+- **Trazabilidad on-chain de cada flujo** (Chainalysis, Elliptic o TRM Labs).
+- **Política escrita de qué haces si llegan a una dirección sospechosa.**
+- **Carta de no objeción o sandbox formal** con tu regulador local.
+
+Cada uno de estos puntos te suena caro. Lo es. Y aún así es más barato que un susto regulatorio que te cierra las cuentas bancarias por seis meses (lo he visto pasar).
+
+## La conversación con tu banco (sí, sigue importando)
+
+El banco tradicional sigue siendo el cuello de botella. Lo que mejor me ha funcionado:
+
+- Llega con tu **carta de no objeción**, tu **contrato con el custodio** y tu **flujograma de fondos**.
+- Pide específicamente al área de "compliance corporativo", no al ejecutivo de cuenta.
+- Ofrece reportes mensuales proactivos. No esperes a que pregunten.
+- Ten plan B y plan C de banco. Diversifica.
+
+## Errores caros que ya vi
+
+- **Lanzar token sin asesoría legal local.** Hay países LATAM donde un token mal estructurado es valor inmobiliario no autorizado. Multas reales.
+- **Custodia "temporal" en wallets personales del founder.** Es la forma más rápida de perder todo y tu reputación.
+- **Documentación en grupo de WhatsApp.** No sirve como evidencia. Mueve todo a herramientas con bitácora real.
+- **Confundir descentralización con anonimato.** El producto puede ser descentralizado, la empresa no puede ser anónima.
+
+## El stack que recomiendo para empezar barato pero bien
+
+- **Cadena:** Polygon o Base (gas barato, ecosistema serio).
+- **Tesorería:** Safe + Fireblocks Sandbox.
+- **Identidad:** ONCHAINID + Truora/Sumsub.
+- **Compliance on-chain:** TRM Labs (gratis para volúmenes bajos al inicio).
+- **Asesoría:** un despacho con vertical fintech LATAM y otro de US-securities.
+
+Con eso, en 60–90 días tienes una operación Web3 defendible.
+
+## El cierre honesto
+
+Web3 no va a desaparecer y no va a salvarte la empresa. Es **infraestructura nueva** para mover valor con menos fricción. Si tu producto necesita esa infraestructura, vale cada peso. Si lo estás metiendo porque suena bien en el deck, te va a costar más de lo que te va a dar.
+
+Si quieres que revisemos tu arquitectura Web3 o tu modelo de tokenización, escríbeme. Doy keynotes corporativos sobre esto y también sesiones 1:1 con founders.
+
+— Gonzalo`,
+    cta: { label: "Reservar consultoría Web3", to: "/booking" },
+  },
+  {
+    slug: "marca-personal-founder-28m-alcance-sin-agencia",
+    title:
+      "Marca personal de founder: cómo construí 2.8M de alcance sin agencia ni publicidad pagada",
+    excerpt:
+      "El sistema exacto que usé para pasar de 0 a 2.8M de personas alcanzadas y 200+ keynotes en 15 países, sin agencia, sin ads y sin perder días enteros publicando.",
+    description:
+      "Cómo construir una marca personal de founder en LATAM en 2026: contenido, keynotes, narrativa y método cine-empresa. Caso real de Gonzalo Acuña Nava.",
+    date: "2026-05-12",
+    readMinutes: 11,
+    keywords: [
+      "Marca personal founder",
+      "Personal branding CEO",
+      "Crecer en LinkedIn LATAM",
+      "Speaker LATAM",
+      "Contenido founder",
+      "Narrativa empresarial",
+      "Método cine-empresa",
+    ],
+    audience:
+      "Founders LATAM, ejecutivos C-level y emprendedores que quieren construir distribución propia sin depender de medios o agencias",
+    cover: marcaPersonalCover,
+    body: `Cuando empecé a publicar en redes en 2022, mi mejor amigo me dijo: *"te vas a quemar, los CEOs serios no andan haciendo videos"*. Tres años después, esos videos abrieron 200+ keynotes, 47 portadas de medios y la mayoría de los deals que cerramos en PropMatch. **El "founder serio" que no hace contenido en 2026 está renunciando a su mejor canal de distribución gratis.**
+
+No es un post motivacional. Es el método exacto que uso, con el calendario, las herramientas y los errores que ya pagué.
+
+![Founder en escenario frente a una audiencia masiva](${marcaPersonalCover})
+
+## La premisa: tu marca personal es infraestructura, no vanidad
+
+Lo entiendo. Suena a coach. Pero los números dicen otra cosa:
+
+- En PropMatch, **el 38% de nuestros leads enterprise vienen directamente de mis publicaciones.** Sin ads.
+- El **costo por lead calificado** es 1/12 de lo que pagaríamos en performance marketing B2B.
+- En cada ronda, los inversionistas que me siguen llegan con **40–60% menos preguntas** porque ya conocen la tesis.
+
+Si te vas a tardar 12 horas a la semana en algo, que sea en lo que más rinde por hora. Para un founder en 2026, **eso es contenido propio**.
+
+## El método cine-empresa en 4 capas
+
+Es lo que enseño en talleres corporativos y lo que uso yo cada semana. Cuatro capas, no tres, no cinco:
+
+### 1. Tesis
+Una frase que repites 10,000 veces sin aburrirte. La mía: *"En LATAM no falta talento, falta infraestructura para que el talento construya"*. Si no tienes tesis, vas a publicar humo.
+
+### 2. Capítulos
+Tres a cinco temas en los que tienes derecho a opinar **por experiencia, no por lectura**. Yo: PropTech, IA operativa, founder journey, LATAM, Web3. Punto. Si publico de cocina, pierdo mi propio activo.
+
+### 3. Formatos
+Para cada capítulo defines 2–3 formatos. Mi mix actual: video largo (YouTube), reflexión escrita (LinkedIn), clip vertical de keynote (TikTok/IG/Shorts), boletín mensual. Mezcla la misma tesis en formatos distintos hasta cansarte. Cuando te cansas tú, el público recién está entendiendo.
+
+### 4. Distribución
+El error más caro: publicar y rezar. Tienes que diseñar un loop. El mío: cada keynote → 30 clips verticales → 3 posts largos → 1 newsletter → 1 episodio de podcast como invitado. **Una hora de escenario alimenta seis semanas de contenido.**
+
+## Mi calendario real (sin filtros)
+
+- **Lunes 7:00–7:45am:** escribo el post largo de la semana. Sin distracciones.
+- **Martes 12:00–13:00:** sesión de grabación de 4 videos cortos en mi oficina (luz natural, micro de $90).
+- **Miércoles:** publica el largo. Respondo TODO comentario las primeras dos horas. Esto duplica alcance, sin trucos.
+- **Jueves:** clips verticales con un editor freelance en Filipinas (USD $400/mes me edita 16–20 clips).
+- **Viernes 15:00:** boletín a la lista privada de inversionistas y clientes (1,200 personas, 62% open rate).
+- **Sábado y domingo:** cero contenido. Cero. Esa pausa también es estrategia.
+
+12 horas a la semana. Ni una más. Si no cabe en 12 horas, simplifico — no contrato.
+
+## Lo que NO hago (y me ha funcionado)
+
+- **No uso agencias.** Es tu voz; nadie la conoce mejor. Editor sí, agencia no.
+- **No persigo viralidad.** Persigo recurrencia. Mejor 5,000 personas que me leen siempre que 500K que me vieron una vez.
+- **No publico todos los días.** Tres piezas a la semana bien hechas pegan más que siete mediocres.
+- **No vendo en cada post.** Regla 80/20: 80% valor, 20% oferta. Cuando vendo, lo hago directo y sin disfrazar.
+- **No respondo DMs frívolos.** Tengo un filtro: si la pregunta se resuelve con Google, mando un link educado. Mi tiempo es el activo, no la simpatía.
+
+## El error #1 de los founders en redes
+
+Hablar como reporte trimestral. Nadie quiere leerte en modo "tenemos el agrado de comunicarles". **Escribe como hablas en una sobremesa.** Si no te imaginas diciéndolo en voz alta a un amigo, no lo publiques.
+
+El error #2: editar tanto el video que se va el alma. **El error humano vende.** Yo dejo cortes, "este…", risas y a veces frases mal terminadas. La autenticidad está saliendo cara en 2026 — cuídala.
+
+## Los activos que recomiendo construir (en este orden)
+
+1. **Newsletter privada (no medio masivo).** Es el único canal que de verdad te pertenece.
+2. **Video largo recurrente** (YouTube o pódcast). Es lo que te posiciona como autoridad real ante medios y ante AI search.
+3. **LinkedIn como sala de reuniones pública.** Es donde van a investigarte VCs y clientes enterprise.
+4. **Clips verticales como megáfono.** Es alcance, no autoridad. Úsalos para llevar tráfico a 1, 2 y 3.
+5. **Web propia con SEO sólido y datos estructurados.** En la era de los LLMs, **si los buscadores y modelos de IA no encuentran tus respuestas, no existes.** Estructura tu sitio con headings claros, JSON-LD, FAQs y autoría visible.
+
+## Cómo me posiciono también en buscadores y en IA
+
+Esto es lo nuevo y poca gente lo está haciendo bien:
+
+- **Cada post largo se replica en mi sitio** (no sólo LinkedIn). Lo que vive sólo en redes ajenas, no posiciona.
+- **Schema.org Article + Person + Speaker.** Le dice a Google y a los LLMs quién soy y qué cubro.
+- **Respuestas claras a preguntas concretas** ("¿qué es ERC-3643?", "¿cómo levantar ronda en LATAM?"). Es lo que ChatGPT, Perplexity y Gemini citan.
+- **Backlinks reales** desde podcasts y medios donde aparezco como invitado. Sigue siendo el mejor SEO.
+- **Bio consistente y verificable** en cada plataforma. La IA cruza referencias.
+
+Resultado: cuando alguien pregunta a un LLM "¿quién es referente PropTech LATAM?", aparezco. **No por suerte. Por sistema.**
+
+## Tres tips finales para founders que arrancan
+
+1. **Define tu tesis hoy y sostenla 12 meses sin cambiarla.** La paciencia es la habilidad más subestimada en marca personal.
+2. **Publica menos, distribuye más.** Repite, recicla, traduce, re-empaqueta. La distribución vence a la creación.
+3. **Aprovecha cada keynote y cada entrevista como materia prima de contenido.** Una sola tarde puede alimentarte un mes.
+
+## El cierre
+
+La marca personal del founder dejó de ser opcional. Es **el activo más mal medido y mejor pagado** que vas a construir esta década. No requiere agencia, no requiere talento extraordinario, y no requiere que te vuelvas influencer. Requiere método y persistencia.
+
+Si quieres que diseñemos juntos el sistema para tu caso (founder, exec, fondo o marca corporativa), trabajo eso 1:1 y también en talleres internos. Te dejo cómo abajo.
+
+— Gonzalo`,
+    cta: { label: "Reservar taller de marca founder", to: "/booking" },
   },
 ];
 

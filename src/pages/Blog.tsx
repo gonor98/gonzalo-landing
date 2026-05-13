@@ -64,6 +64,19 @@ const Blog = () => {
               transition={{ duration: 0.5, delay: i * 0.06 }}
               className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-6 transition-all hover:border-gold/40"
             >
+              {p.cover && (
+                <div className="-mx-6 -mt-6 mb-5 overflow-hidden">
+                  <img
+                    src={p.cover}
+                    alt={p.title}
+                    loading="lazy"
+                    decoding="async"
+                    width={1536}
+                    height={864}
+                    className="h-44 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              )}
               <div className="mb-4 flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-white/45">
                 <span className="inline-flex items-center gap-1"><Calendar size={11} /> {new Date(p.date).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" })}</span>
                 <span>·</span>
