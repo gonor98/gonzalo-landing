@@ -38,6 +38,8 @@ export const StickyScrollSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const debug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "scroll";
   const { open } = useVideo();
   const { reduced } = usePerfMode();
 
@@ -67,6 +69,7 @@ export const StickyScrollSection = () => {
     // until the section has fully finished its scroll travel.
     const next = p < 0.34 ? 0 : p < 0.67 ? 1 : 2;
     setActive((prev) => (prev === next ? prev : next));
+    if (debug) setProgress(p);
   });
 
   // Mobile fallback (no sticky): IntersectionObserver per block.
@@ -209,6 +212,14 @@ export const StickyScrollSection = () => {
           </div>
         ))}
       </div>
+
+      {debug && (
+        <div className="pointer-events-none fixed bottom-4 right-4 z-[80] rounded-lg border border-gold/40 bg-background/90 px-3 py-2 font-mono text-[11px] text-gold backdrop-blur">
+          <div>scroll: {(progress * 100).toFixed(1)}%</div>
+          <div>active chapter: {active + 1} / {states.length}</div>
+          <div>thresholds: 0–34 · 34–67 · 67–100</div>
+        </div>
+      )}
     </section>
   );
 };
