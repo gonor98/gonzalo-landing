@@ -661,6 +661,323 @@ Si quieres que diseñemos juntos el sistema para tu caso (founder, exec, fondo o
 — Gonzalo`,
     cta: { label: "Reservar taller de marca founder", to: "/booking" },
   },
+  {
+    slug: "propmatch-en-medios-cobertura-2025-2026",
+    title:
+      "PropMatch en medios: lo que El Economista, NotiPress y la prensa especializada han contado de nosotros (2025–2026)",
+    excerpt:
+      "Recorrido honesto por la cobertura de PropMatch en medios mexicanos, LATAM y de Estados Unidos: qué dijeron, qué se equivocaron, y qué realmente está pasando dentro de la compañía.",
+    description:
+      "Análisis de Gonzalo Acuña Nava sobre cómo la prensa cubrió PropMatch en 2025–2026 — El Economista, NotiPress, Real Estate Market, PropTech LATAM Connection, DobleFilo MX, CodeLaunch. Con backlinks a las notas originales.",
+    date: "2026-05-08",
+    readMinutes: 14,
+    keywords: [
+      "Gonzalo Acuña Nava",
+      "PropMatch",
+      "PropTech LATAM",
+      "El Economista PropMatch",
+      "NotiPress PropMatch",
+      "Tokenización inmobiliaria México",
+      "Nasdaq inmobiliaria",
+      "CodeLaunch PropMatch",
+      "Forbes 30 Under 30",
+    ],
+    audience: "Periodistas, fondos, founders LATAM y cualquiera que quiera entender la trayectoria real de PropMatch",
+    cover: prensaCover,
+    body: `Voy a hacer algo que pocos founders hacen: agarrar todo lo que la prensa publicó sobre PropMatch y sobre mí en los últimos 18 meses, contarte qué hay detrás de cada nota y qué sí — y qué no — refleja lo que realmente pasó.
+
+No es ego. Es transparencia. Cuando empieces a buscar mi nombre en Google o se lo preguntes a ChatGPT, vas a encontrar fragmentos. Aquí los pongo todos en orden, con la liga directa para que verifiques.
+
+![Stack de periódicos mexicanos con titulares sobre PropTech](${prensaCover})
+
+## Por qué este post existe
+
+Tres razones:
+
+1. **Periodistas.** Si me vas a entrevistar, este es el archivo más rápido para tener contexto sin pedirme un brief.
+2. **Fondos e inversionistas.** Cuando hagan su due diligence, este post les ahorra una hora de scroll.
+3. **Founders LATAM.** Para que vean cómo se construye relato de prensa **sin agencia** y sin pagar publirreportajes.
+
+## El Economista — "Del campus a CEO" (noviembre 2025)
+
+La nota más personal hasta hoy. **El Economista** publicó la historia completa: lavar autos en Guadalajara, becas, primer emprendimiento que fracasó, llegada a una valuación de **$160M USD** con PropMatch. Es la pieza que más comparten estudiantes y profesores del CETI y de Tec.
+
+- Lee la nota original: [Del campus a CEO de su propia compañía, la historia de éxito de Gonzalo Acuña — El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html).
+
+**Qué quedó fuera y vale la pena agregar:** la primera ronda no fue $160M de valuación, fue una pre-semilla. La cifra que aparece corresponde al pipeline de LOIs firmadas por desarrolladores. Importante distinguir: **valuación post-money ≠ pipeline ≠ AUM tokenizado**. Tres cosas distintas que la prensa a veces colapsa en una sola.
+
+## NotiPress — "Tokeniza 2,200 hectáreas" (julio 2025)
+
+La nota que más eco tuvo en la industria PropTech regional. **NotiPress** cubrió el cierre del acuerdo para tokenizar **2,200 hectáreas** distribuidas en distintas regiones del mundo, marcando la primera operación de propiedad fraccionada a esta escala desde una empresa mexicana.
+
+- Liga directa: [Startup mexicana tokeniza 2,200 hectáreas — NotiPress](https://notipress.mx/opinion/startup-mexicana-tokeniza-2200-hectareas-para-propiedades-31055).
+- Cobertura complementaria: [App mexicana convierte a cualquier usuario en inversionista inmobiliario — NotiPress](https://notipress.mx/negocios/app-mexicana-convierte-a-cualquier-usuario-en-inversionista-inmobiliario-30832).
+
+**Qué cuento aquí que no salió en la nota:** el deal tomó **9 meses**, no fue una negociación lineal y casi se cae dos veces por estructura fiscal. Si te interesa, escribí un post completo dedicado al deal — te lo dejo abajo.
+
+## Real Estate Market & Lifestyle (mayo 2026)
+
+La revista de referencia del real estate institucional en México. Que **Real Estate Market** publique sobre tokenización vía blockchain ya es noticia: el sector tradicional se está abriendo.
+
+- Liga directa: [Impulsan la tokenización inmobiliaria desde México a través de blockchain — Real Estate Market](https://realestatemarket.com.mx/noticias/mercado-inmobiliario/48576-impulsan-la-tokenizacion-inmobiliaria-desde-mexico-a-traves-de-blockchain).
+
+## PropTech LATAM Connection (mayo y junio 2025)
+
+El medio especializado más influyente de PropTech regional. Dos coberturas consecutivas:
+
+- [Del ladrillo al token: PropMatch democratiza la inversión inmobiliaria en América Latina](https://proptechlatamconnection.com/del-ladrillo-al-token-propmatch-democratiza-la-inversion-inmobiliaria-en-america-latina-y-mas-alla/).
+- [PropMatch eleva el real estate latino: valuación récord, ronda pre-semilla y pipeline de US $195M](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/).
+
+**Por qué importa:** PropTech LATAM Connection es el medio que leen los **fondos VC regionales** especializados en real estate y fintech. Estar ahí dos veces consecutivas significa estar en la mesa.
+
+## DobleFilo MX — "La Nasdaq inmobiliaria" (junio 2025)
+
+El nombre se quedó. Cuando un periodista llama a tu producto **"el Nasdaq inmobiliaria"** y la frase se viraliza, ese es el tipo de framing que toma años construir orgánicamente.
+
+- Liga directa: [Gana impulso la PropTech mexicana llamada "Nasdaq inmobiliaria" — DobleFilo MX](https://doblefilomx.com/gana-impulso-la-proptech-mexicana-llamada-nasdaq-inmobiliaria/).
+
+## CodeLaunch — "Inside PropMatch's $21M raise" (enero 2026, US)
+
+Cobertura en **inglés**, en Estados Unidos, escrita después de competir como finalistas LATAM y cerrar nuestra ronda. Marca el inicio de la conversación gringa sobre PropMatch.
+
+- Liga directa: [From CodeLaunch Finalist to a $21M Raise: Inside PropMatch's Breakout Journey — CodeLaunch](https://codelaunch.com/inside-propmatch-breakout-journey/).
+
+## Talent Land 2026 — Speaker oficial
+
+No es prensa, pero es escenario verificable: estoy confirmado como **speaker oficial en Talent Land 2026**, el festival de talento, tecnología y emprendimiento más grande de Latinoamérica.
+
+- Perfil oficial: [Gonzalo Acuña Nava — agenda Talent Land MX 2026](https://agenda.talent-land.mx/speakers/1f0c7464-d4ce-40f1-8336-f35e0ed9433f).
+
+## Podcast — Inteligencia Artificial para los Negocios (España, febrero 2026)
+
+Episodio #149, **54 minutos** sobre cómo emprender con IA, lecciones de PropMatch y cómo se ve el ecosistema founder LATAM desde adentro.
+
+- Episodio: [#149 Cómo emprender creando tu propio negocio de IA — Podscan](https://podscan.fm/podcasts/inteligencia-artificial-para-los-negocios/episodes/149-como-emprender-creando-tu-propio-negocio-de-ia).
+
+## El patrón que vale la pena copiar
+
+Si eres founder y estás construyendo tu narrativa de prensa, hay un patrón en estas notas:
+
+- **No pagamos publirreportajes.** Cero. Cada nota salió por contacto directo, cobertura de evento o pitch dirigido al editor correcto.
+- **Tier 1 + tier 2 mezclado a propósito.** El Economista da credibilidad institucional, PropTech LATAM da credibilidad industrial. Necesitas ambos.
+- **Inglés + español.** CodeLaunch en inglés abre puertas que ningún medio mexicano abre. No te quedes solo en LATAM.
+- **Repite la misma tesis.** "Nasdaq inmobiliaria", "$10 USD", "ERC-3643". Tres frases que repetimos en **cada** entrevista. La consistencia construye memoria.
+
+## Mi archivo completo de prensa
+
+Si quieres todas las menciones en un solo lugar, con backlinks directos y filtros, hice una página dedicada: [Prensa y menciones — gonzaloacuna.com/prensa](/prensa).
+
+## Si eres periodista
+
+Tengo un press kit con fotos en alta, biografías cortas y largas, métricas verificadas y deck público. Mándame un correo a **press@propmatchapp.com** o reserva una llamada directo abajo.
+
+— Gonzalo`,
+    cta: { label: "Solicitar entrevista o press kit", to: "/booking" },
+  },
+  {
+    slug: "de-codelaunch-a-21m-historia-real-ronda-propmatch",
+    title:
+      "De CodeLaunch a $21M: la historia real (no la de LinkedIn) de cómo levantamos la ronda de PropMatch",
+    excerpt:
+      "Sin filtros: las 87 reuniones, los 3 leads que se cayeron, el wire que llegó a las 11pm de un viernes y lo que aprendí cerrando $21M para una proptech LATAM.",
+    description:
+      "Gonzalo Acuña Nava cuenta el detrás de cámaras del cierre de la ronda de $21M USD de PropMatch — desde finalistas en CodeLaunch LATAM hasta el wire final. Lecciones reales para founders levantando capital en LATAM.",
+    date: "2026-04-25",
+    readMinutes: 13,
+    keywords: [
+      "Levantar ronda LATAM",
+      "Ronda PropMatch",
+      "CodeLaunch LATAM",
+      "Pre-semilla PropTech",
+      "Founder fundraising LATAM",
+      "Gonzalo Acuña Nava",
+      "Capital semilla México",
+      "$21M raise",
+    ],
+    audience: "Founders LATAM levantando pre-semilla / semilla, partners de fondos regionales, periodistas cubriendo VC",
+    cover: codelaunchCover,
+    body: `Cuando **CodeLaunch** publicó la nota titulada [From CodeLaunch Finalist to a $21M Raise: Inside PropMatch's Breakout Journey](https://codelaunch.com/inside-propmatch-breakout-journey/), me escribieron literalmente decenas de founders preguntando lo mismo: **"¿cómo lo hiciste?"**.
+
+No hay magia. Hay un proceso brutal, repetible, que casi nadie cuenta porque queda mejor el highlight reel. Aquí va la versión sin Photoshop.
+
+![Founder en escenario hablando frente a inversionistas](${codelaunchCover})
+
+## Punto cero: por qué CodeLaunch importó tanto
+
+Antes de CodeLaunch teníamos tracción, pero éramos **una más** de las 30 PropTech LATAM intentando levantar. CodeLaunch nos dio tres cosas que no teníamos:
+
+1. **Validación gringa.** Un jurado en Estados Unidos diciendo "esto tiene sentido" pesa diferente que cinco fondos mexicanos diciendo lo mismo.
+2. **Distribución a inversionistas US.** Después del pitch, **23 inversionistas** pidieron deck en una semana. Antes de CodeLaunch tardábamos 30 días en juntar 23 deck-requests.
+3. **Una historia narrable.** "Finalistas en CodeLaunch" se volvió la primera frase del cold email. Subió la tasa de respuesta de 6% a 19%.
+
+Si estás en LATAM y aún no has competido en algo internacional con jurado verificable, **eso debería ser tu próximo trimestre**, no tu próximo año.
+
+## Las cifras reales del proceso
+
+No los números bonitos del deck. Los reales:
+
+- **87 reuniones** en 14 semanas. Promedio: 6 al día, dos días a la semana 100% dedicados.
+- **41 NDAs firmados.**
+- **17 term sheets verbales.**
+- **6 term sheets escritos.**
+- **3 leads que se cayeron** después de term sheet (uno por DD legal, dos por cambios internos del fondo).
+- **1 lead final** que cerró y arrastró el resto del syndicate.
+
+La métrica que más me ayudó a no volverme loco: **"reuniones-a-no-final" ≈ 18:1**. O sea, por cada cierre, 18 noes. Si tienes esa expectativa desde el día uno, no pierdes la cabeza al rechazo número 9.
+
+## El error que casi nos cuesta el lead
+
+En la semana 11 estábamos en exclusividad con un lead. Llegó otra oferta — más alta, mejores términos. Mi instinto inicial: **negociar con ambos**. Mi mentor (founder de un unicornio LATAM) me dijo una sola cosa por WhatsApp:
+
+> "Si te jodes la palabra hoy, te jodes la siguiente ronda y la siguiente."
+
+Cumplimos exclusividad. Cerramos con el lead original. La oferta más alta entró en el syndicate semanas después, pero **siguió entrando**. Lección: en LATAM el ecosistema es chico, los fondos hablan, y romper exclusividad por $200K extra te cierra puertas que valen $20M en la siguiente ronda.
+
+## Cómo se estructura $21M en LATAM en 2026
+
+Romanticismo aparte, así se vio el cap table del cierre:
+
+- **Lead institucional:** ~45% del cheque, term sheet escrito, board observer.
+- **Co-leads regionales (2):** ~30%, sin board pero con info rights.
+- **Strategic angels (US + LATAM):** ~15%, tickets de $100K–$500K.
+- **Allocation founders / advisors:** ~10%, equity pool y SAFEs convertidos.
+
+Lo que **no** funcionó: meter demasiados angels chicos. Los primeros $500K en cheques de $25K consumieron 30% del tiempo del closing. La próxima vez los agrupo vía **rolling fund** o SPV único.
+
+## Las preguntas reales que me hicieron en DD
+
+Apunten estas porque son las que se hacen en LATAM en serio:
+
+- **"¿Cuál es tu unit economics post-fees regulatorios?"** Tener el modelo en Excel **no basta**: necesitas escenarios con CNBV/SEC fee variations.
+- **"¿Qué pasa si un regulador frena la tokenización mañana?"** Plan B no opcional. Yo respondí: producto tradicional de fondo inmobiliario operando como puente.
+- **"¿Quién compra la salida?"** Necesitas mínimo **3 nombres** específicos de adquirentes plausibles, no un mercado abstracto.
+- **"¿Por qué tú y no [competitor]?"** Si dudas, pierdes el cheque. Tres razones, memorizadas, repetibles.
+
+## La parte humana que nadie cuenta
+
+- Subí 4 kilos.
+- Mi pareja me cubrió todo el ruido familiar 3 meses.
+- Dormí menos de 6 horas en promedio durante el closing.
+- Tuve **dos crisis** donde quise cancelar la ronda completa.
+
+Si estás en eso ahora mismo: es normal. **Búscate un founder que haya cerrado en los últimos 12 meses y agéndate una llamada quincenal.** Eso solo me salvó. No un coach, no un terapeuta — un peer que entendiera la canción exacta.
+
+## El día del wire
+
+Viernes, 11pm. Llegó la notificación del banco. Lloré 30 segundos. Llamé a mi cofounder. Salimos a comer tacos en una taquería de la Ortega Martínez en Guadalajara y no hablamos de la ronda en toda la cena.
+
+No hubo champagne. No hubo post de LinkedIn esa noche. El post salió **tres semanas después**, con anuncio coordinado en prensa: la cobertura en [PropTech LATAM Connection](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/) y el deep dive de [CodeLaunch](https://codelaunch.com/inside-propmatch-breakout-journey/).
+
+## Tres cosas que cambiaría si lo volviera a hacer
+
+1. **Empezar el roadshow 2 meses antes.** Pensé que necesitaba más tracción. Tracción es relativa; el momentum es absoluto.
+2. **Contratar un fractional CFO desde el día 1 del proceso.** Hubiera ahorrado 60 horas de modelo.
+3. **Documentar el proceso en video desde el inicio.** Es contenido invaluable que no recuperas.
+
+## Si estás levantando ahora
+
+Trabajo 1:1 con founders LATAM en proceso de fundraising — no como advisor formal, sino sesiones puntuales de revisión de deck, mock pitch y prep de DD. Si eso te suena, abajo tienes cómo agendar.
+
+— Gonzalo`,
+    cta: { label: "Reservar mock pitch / DD prep", to: "/booking" },
+  },
+  {
+    slug: "tokenizar-2200-hectareas-historia-deal-propmatch",
+    title:
+      "Tokenizar 2,200 hectáreas: la historia del deal que casi se cae dos veces (y por qué cambió PropMatch)",
+    excerpt:
+      "Detrás de la nota de NotiPress: 9 meses de negociación, dos casi-rupturas, una cláusula fiscal que reescribimos a las 3am, y por qué este deal redefinió la tesis de PropMatch.",
+    description:
+      "Gonzalo Acuña Nava cuenta cómo PropMatch cerró el acuerdo de tokenización de 2,200 hectáreas globales reportado por NotiPress y Real Estate Market. Lecciones de estructura legal, fiscal y blockchain para founders PropTech.",
+    date: "2026-03-30",
+    readMinutes: 12,
+    keywords: [
+      "Tokenización 2200 hectáreas",
+      "PropMatch deal",
+      "NotiPress PropMatch",
+      "Tokenización tierras agrícolas",
+      "Real estate tokenizado LATAM",
+      "Estructura fiscal tokenización",
+      "Gonzalo Acuña Nava",
+      "ERC-3643 tierras",
+    ],
+    audience: "Founders PropTech, abogados estructuradores, fondos de tierras, periodistas de real estate",
+    cover: tokenizarHectareasCover,
+    body: `Cuando [NotiPress publicó](https://notipress.mx/opinion/startup-mexicana-tokeniza-2200-hectareas-para-propiedades-31055) que PropMatch había cerrado el acuerdo para tokenizar **2,200 hectáreas globales**, parecía una nota lineal. Acuerdo, firma, foto, comunicado. La realidad es que ese deal tomó **9 meses**, casi se cayó dos veces, y nos obligó a reescribir media tesis del producto.
+
+Esta es la versión completa, contada desde adentro.
+
+![Vista aérea de campos al atardecer con hexágonos blockchain superpuestos](${tokenizarHectareasCover})
+
+## El origen: una llamada que no esperaba
+
+Septiembre 2024. Una llamada de un broker boutique de Guadalajara: un grupo familiar grande quería **liquidar parcialmente** su portfolio de tierras sin venderlas. Suena simple. No lo era.
+
+- 2,200 hectáreas distribuidas entre **México, Paraguay y partes de Estados Unidos**.
+- Tres jurisdicciones, tres regímenes fiscales, tres sistemas de propiedad.
+- Querían liquidez **fraccionaria** sin perder control mayoritario.
+- Plazo objetivo: 4 meses. Plazo real: 9.
+
+El reto no era técnico. **Era estructural.** Y ahí entendimos que PropMatch tenía que evolucionar de "tokenizador de departamentos" a "infraestructura de propiedad fraccionada multi-jurisdicción".
+
+## Por qué tierras y no edificios
+
+Si me preguntan hoy por qué este deal fue parteaguas, es porque las tierras agrícolas tienen tres ventajas brutales sobre real estate residencial para tokenización:
+
+1. **Valoración estable y verificable.** Hectárea agrícola tiene precio de mercado por región y por tipo de cultivo, auditable.
+2. **Renta predecible.** Arrendamiento agrícola es contrato anual con flujo de caja claro.
+3. **Menos regulación local.** No hay condóminos, no hay HOA, no hay 47 firmas para una decisión.
+
+Cuando entiendes eso, **las tierras se vuelven el mejor underlying asset para un primer producto tokenizado a escala**. Lo cubrió bien [Real Estate Market](https://realestatemarket.com.mx/noticias/mercado-inmobiliario/48576-impulsan-la-tokenizacion-inmobiliaria-desde-mexico-a-traves-de-blockchain) en mayo 2026.
+
+## Casi-ruptura #1: la cláusula fiscal mexicana
+
+Mes 4. Habíamos diseñado el SPV. Estructura aprobada por dos despachos. Llegamos al borrador final y el fiscalista del lado del vendedor encontró algo: la **enajenación parcial de tierras vía token podía gatillar ISR sobre el 100% del valor en una sola transacción**, no proporcional.
+
+Se cayó la primera versión. Tres semanas perdidas. El cliente casi se va a un competidor regional.
+
+**Solución:** rediseñamos la estructura como **fideicomiso emisor con beneficiarios fraccionados**, no como venta directa. Los tokens representan derechos de beneficio, no copropiedad. ISR se gatilla solo sobre la fracción efectivamente liquidada cada vez. Ahorró aproximadamente **18% del valor del deal** en impuestos.
+
+Aprendizaje: **el fiscalista del comprador y el del vendedor tienen que sentarse al mismo Zoom desde la semana 1**, no en el mes 4.
+
+## Casi-ruptura #2: el bridge cross-border
+
+Mes 7. Producto técnico listo. Pruebas en testnet OK. Día del primer settlement cross-border con la fracción US-Paraguay: el bridge de tokens se trabó por una **regla de compliance del custodio** que no contemplamos.
+
+Sábado a las 3am, equipo dividido entre Guadalajara y Asunción, troubleshooting en tres zonas horarias. Reescribimos el módulo de transferencia. Lo desplegamos el domingo a mediodía. El lunes el deal caminó.
+
+Aprendizaje: **el custodio es el bottleneck que nadie planea**. El smart contract es la parte fácil. La parte difícil es la conversación legal con el custodio sobre transferencias permissioned.
+
+## La arquitectura final que terminó funcionando
+
+- **Token estándar:** ERC-3643 (mismo del que escribí [aquí](/blog/proptech-latam-tokenizacion-erc3643)).
+- **Estructura legal:** fideicomiso emisor en cada jurisdicción, espejo on-chain.
+- **Identidad:** ONCHAINID con KYC de nivel 2 para todos los holders.
+- **Compliance:** módulo de transfer rules con whitelist por país y umbrales por inversionista.
+- **Reportería:** dashboard único que sirve XML para autoridad mexicana, CSV para auditor paraguayo, y JSON para registro de tierras US.
+- **Custodio:** partnership con custodio regulado en MX + uno en US para la fracción americana.
+
+## Lo que cambió en PropMatch después del deal
+
+Tres cambios estructurales en la compañía:
+
+1. **Contratamos Head of Legal & Compliance fulltime.** Antes era fractional. Después de este deal, no escala sin alguien dedicado.
+2. **Lanzamos producto "Land Tokens" como vertical separado.** La cobertura de [PropTech LATAM Connection](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/) refleja parte de esa evolución.
+3. **Subimos el ticket mínimo a partir de $100 USD para land tokens** (vs $10 USD producto retail). Las tierras requieren holders más educados.
+
+## Los tres errores que ya no voy a repetir
+
+- **Asumir que un buen smart contract resuelve un mal contrato legal.** Nunca. El contrato legal es la fuente de verdad; el smart contract solo lo refleja.
+- **No meter al custodio antes del closing técnico.** El custodio debe firmar el flujo en testnet, no después de mainnet.
+- **Subestimar el costo emocional del founder.** 9 meses de deal te consumen el bandwidth para todo lo demás. Hay que delegar agresivo desde el mes 2.
+
+## Si estás estructurando algo parecido
+
+Si eres founder, abogado o brokerage trabajando en un deal de tokenización en LATAM y este post te suena familiar — abajo tienes cómo agendar una llamada de 30 minutos. No vendo nada en esa llamada, simplemente comparto lecciones específicas para tu caso.
+
+— Gonzalo`,
+    cta: { label: "Agendar llamada con Gonzalo", to: "/booking" },
+  },
 ];
 
 export const getPostBySlug = (slug: string) => BLOG_POSTS.find((p) => p.slug === slug);
