@@ -4,6 +4,9 @@ import rechazosCover from "@/assets/blog-95-rechazos-cover.jpg";
 import levantarRondaCover from "@/assets/blog-levantar-ronda-cover.jpg";
 import web3FoundersCover from "@/assets/blog-web3-founders-cover.jpg";
 import marcaPersonalCover from "@/assets/blog-marca-personal-cover.jpg";
+import prensaCover from "@/assets/blog-prensa-cover.jpg";
+import codelaunchCover from "@/assets/blog-codelaunch-cover.jpg";
+import tokenizarHectareasCover from "@/assets/blog-tokenizar-hectareas-cover.jpg";
 
 export type BlogPost = {
   slug: string;
