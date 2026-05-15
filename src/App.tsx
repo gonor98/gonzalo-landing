@@ -17,6 +17,7 @@ import Benefits from "./pages/Benefits.tsx";
 import BenefitsPreview from "./pages/BenefitsPreview.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
+import Press from "./pages/Press.tsx";
 import { VideoProvider } from "@/components/VideoContext";
 import { LEGACY_REDIRECTS, Redirect301 } from "@/components/LegacyRedirects";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
@@ -45,6 +46,8 @@ const App = () => (
             <Route path="/benefits/:id/preview" element={<BenefitsPreview />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/prensa" element={<Press />} />
+            <Route path="/press" element={<Press />} />
             <Route path="/bonus-ceti" element={<BonusCeti />} />
             <Route path="/bonus-ceti-descargas" element={<BonusCetiDescargas />} />
             <Route path="/bonus-ceti-descargas/preview" element={<BonusCetiDescargasPreview />} />
