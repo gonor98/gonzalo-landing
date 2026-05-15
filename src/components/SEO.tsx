@@ -88,7 +88,7 @@ export const personJsonLd = {
     "https://doblefilomx.com/gana-impulso-la-proptech-mexicana-llamada-nasdaq-inmobiliaria/",
     "https://codelaunch.com/inside-propmatch-breakout-journey/",
     "https://agenda.talent-land.mx/speakers/1f0c7464-d4ce-40f1-8336-f35e0ed9433f",
-    "https://podscan.fm/podcasts/inteligencia-artificial-para-los-negocios/episodes/149-como-emprender-creando-tu-podio-negocio-de-ia",
+    "https://podscan.fm/podcasts/inteligencia-artificial-para-los-negocios/episodes/149-como-emprender-creando-tu-propio-negocio-de-ia",
   ],
   worksFor: [
     { "@type": "Organization", name: "PropMatch" },
