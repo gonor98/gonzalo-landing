@@ -55,6 +55,7 @@ export const SiteFooter = () => {
             <li><Link to="/bonus-ceti" className="hover:text-gold">Bonus CETI</Link></li>
             <li><Link to="/bonus-ceti-descargas" className="hover:text-gold">Descargas CETI</Link></li>
             <li><Link to="/blog" className="hover:text-gold">Blog</Link></li>
+            <li><Link to="/prensa" className="hover:text-gold">Prensa &amp; menciones</Link></li>
           </ul>
         </div>
       </div>
