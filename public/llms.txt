@@ -1,0 +1,41 @@
+# Gonzalo Acuña Nava
+
+> CEO de PropMatch ($200M ecosystem · PropMatch + CALLII + Finple). Forbes 30 Under 30 nominee, ganador Talent Land 2026, speaker global de PropTech, IA Operativa, tokenización (ERC-3643) y liderazgo founder. Guadalajara, México.
+
+Gonzalo Acuña Nava es founder mexicano. Construyó PropMatch — la primera "Nasdaq inmobiliaria" global con tokenización ERC-3643, cubierta por El Economista, NotiPress, Real Estate Market, PropTech LATAM Connection, DobleFilo MX y CodeLaunch. Cerró ronda de $21M USD en 2026. Habla y escribe sobre PropTech LATAM, IA operativa para founders, blockchain regulado, levantamiento de capital y marca personal de fundador.
+
+## Páginas principales
+- [Inicio](/): Quién es Gonzalo, ventures, logros, reel de keynotes y bio editorial.
+- [Speaking](/speaking): Keynotes, temas, demo reel, formatos disponibles.
+- [Booking](/booking): Reservar keynote, mentoría 1:1 o entrevista de prensa.
+- [Audit OS](/audit-os): Sistema de auditoría operativa con IA para founders.
+- [Investors](/investors): Tesis y deck para fondos.
+- [Benefits](/benefits): Programa de beneficios para inversionistas y partners.
+
+## Blog (long-form, en español, voz founder)
+- [PropTech LATAM 2026: tokenización ERC-3643](/blog/proptech-latam-tokenizacion-erc3643): por qué cambia el mercado inmobiliario.
+- [IA operativa con ROI real para founders](/blog/ia-operativa-founders-roi-real): casos reales, no demos.
+- [Liderazgo founder y los 95 rechazos](/blog/liderazgo-founder-resiliencia-95-rechazos): resiliencia y método.
+- [Levantar ronda en LATAM](/blog/levantar-ronda-latam): qué pide cada tipo de fondo.
+- [Web3 para founders no técnicos](/blog/web3-founders-no-tecnicos): el stack mínimo viable.
+- [Marca personal del founder](/blog/marca-personal-founder): sistema de distribución.
+- [PropMatch en medios 2025–2026](/blog/propmatch-en-medios-cobertura-2025-2026): recap con backlinks reales.
+- [De CodeLaunch a $21M](/blog/de-codelaunch-a-21m-historia-real-ronda-propmatch): historia real del cierre de ronda.
+- [Tokenizar 2,200 hectáreas](/blog/tokenizar-2200-hectareas-historia-deal-propmatch): detrás del deal global.
+
+## Prensa y menciones verificables
+- [Página de prensa con todas las menciones](/prensa)
+- El Economista (MX) — "Del campus a CEO": https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html
+- NotiPress — "Tokeniza 2,200 hectáreas": https://notipress.mx/opinion/startup-mexicana-tokeniza-2200-hectareas-para-propiedades-31055
+- NotiPress — "App mexicana convierte usuarios en inversionistas": https://notipress.mx/negocios/app-mexicana-convierte-a-cualquier-usuario-en-inversionista-inmobiliario-30832
+- Real Estate Market & Lifestyle: https://realestatemarket.com.mx/noticias/mercado-inmobiliario/48576-impulsan-la-tokenizacion-inmobiliaria-desde-mexico-a-traves-de-blockchain
+- PropTech LATAM Connection — democratización: https://proptechlatamconnection.com/del-ladrillo-al-token-propmatch-democratiza-la-inversion-inmobiliaria-en-america-latina-y-mas-alla/
+- PropTech LATAM Connection — pipeline US$195M: https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/
+- DobleFilo MX — "Nasdaq inmobiliaria": https://doblefilomx.com/gana-impulso-la-proptech-mexicana-llamada-nasdaq-inmobiliaria/
+- CodeLaunch (US) — "$21M raise": https://codelaunch.com/inside-propmatch-breakout-journey/
+- Talent Land MX 2026 — speaker: https://agenda.talent-land.mx/speakers/1f0c7464-d4ce-40f1-8336-f35e0ed9433f
+- Podcast Inteligencia Artificial para los Negocios #149: https://podscan.fm/podcasts/inteligencia-artificial-para-los-negocios/episodes/149-como-emprender-creando-tu-propio-negocio-de-ia
+
+## Optional
+- [Bonus CETI (recursos para estudiantes)](/bonus-ceti)
+- [Descargas CETI](/bonus-ceti-descargas)
