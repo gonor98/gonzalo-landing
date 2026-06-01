@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useSpring, useMotionValue, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate, MotionValue } from "framer-motion";
 import { ArrowDown, Play, Sparkles } from "lucide-react";
 import { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -66,7 +66,9 @@ export const HeroSection = () => {
   const { reduced } = usePerfMode();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
-  // Mouse-tracked spotlight (premium feel) — disabled on reduced motion / touch
+  // Mouse-tracked spotlight — composed with useMotionTemplate so the CSS
+  // string is interpolated by Framer Motion at the GPU layer (no React
+  // state churn, no `as any` casts, no FPS drops on scroll).
   const mx = useMotionValue(50);
   const my = useMotionValue(30);
   const mxs = useSpring(mx, { stiffness: 60, damping: 18, mass: 0.4 });
@@ -80,14 +82,10 @@ export const HeroSection = () => {
       mx.set(((e.clientX - r.left) / r.width) * 100);
       my.set(((e.clientY - r.top) / r.height) * 100);
     };
-    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mousemove", onMove, { passive: true });
     return () => el.removeEventListener("mousemove", onMove);
   }, [reduced, mx, my]);
-  const spotlight = useTransform(
-    [mxs, mys] as any,
-    ([x, y]: number[]) =>
-      `radial-gradient(600px circle at ${x}% ${y}%, rgba(201,168,76,0.18), transparent 60%)`
-  );
+  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${mxs}% ${mys}%, rgba(201,168,76,0.18), transparent 60%)`;
 
   // Lighter parallax distances on reduced devices, then we also "freeze" the
   // motion values via inline style overrides below.
@@ -113,7 +111,7 @@ export const HeroSection = () => {
         <motion.div
           aria-hidden
           className="pointer-events-none absolute inset-0 hidden md:block mix-blend-screen"
-          style={{ background: spotlight as any }}
+          style={{ background: spotlight }}
         />
       )}
 
@@ -139,10 +137,10 @@ export const HeroSection = () => {
         />
       </motion.div>
 
-      {/* Portrait — mobile */}
+      {/* Portrait — mobile (full opacity; the text gets its own backdrop) */}
       <motion.div
         style={{ y: yBack, scale }}
-        className="pointer-events-none absolute inset-x-0 top-[8vh] md:hidden flex justify-center will-transform"
+        className="pointer-events-none absolute inset-x-0 top-[6vh] md:hidden flex justify-center will-transform"
       >
         <img
           src={gonzaloHero}
@@ -150,11 +148,11 @@ export const HeroSection = () => {
           aria-hidden
           loading="lazy"
           decoding="async"
-          className="h-[58vh] w-auto object-cover opacity-50"
+          className="h-[64vh] w-auto object-cover"
           style={{
-            maskImage: "radial-gradient(ellipse 70% 70% at 50% 40%, black 40%, transparent 80%)",
+            maskImage: "radial-gradient(ellipse 75% 78% at 50% 38%, black 55%, transparent 92%)",
             WebkitMaskImage:
-              "radial-gradient(ellipse 70% 70% at 50% 40%, black 40%, transparent 80%)",
+              "radial-gradient(ellipse 75% 78% at 50% 38%, black 55%, transparent 92%)",
           }}
         />
       </motion.div>
@@ -199,30 +197,31 @@ export const HeroSection = () => {
           </p>
         </motion.div>
 
-        <motion.h1
-          {...fadeUp(0.15)}
-          className="font-display text-[15vw] leading-[0.95] tracking-tight text-white sm:text-7xl md:text-[112px]"
-        >
-          Gonzalo
-          <br />
-          <span className="italic text-gold">Acuña</span> Nava
-        </motion.h1>
+        <div className="md:bg-transparent md:p-0 md:border-0 md:backdrop-blur-0 rounded-2xl border border-gold/15 bg-gradient-to-br from-background/85 via-background/70 to-background/40 p-5 backdrop-blur-md md:rounded-none">
+          <motion.h1
+            {...fadeUp(0.15)}
+            className="font-display text-[12vw] leading-[0.95] tracking-tight text-white sm:text-7xl md:text-[112px]"
+          >
+            De los <span className="italic text-gold">95 rechazos</span>
+            <br />
+            a un ecosistema de <span className="text-gold">$200M USD</span>.
+          </motion.h1>
 
-        <motion.p
-          {...fadeUp(0.28)}
-          className="mt-6 max-w-2xl text-base leading-relaxed text-white/75 md:text-xl"
-        >
-          <span className="text-white">Business Transformation Voice</span> para la era de la IA · CEO de un
-          ecosistema de <span className="text-gold">$200M</span> que une emprendimiento, PropTech y
-          finanzas tokenizadas en LATAM.
-        </motion.p>
+          <motion.p
+            {...fadeUp(0.28)}
+            className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-xl"
+          >
+            Construyendo el futuro de <span className="text-white">Web3 e IA</span>. La pasión no hace
+            negocio, la <span className="text-gold">demanda validada</span> sí. Ejecución sin excusas.
+          </motion.p>
 
-        <motion.p
-          {...fadeUp(0.4)}
-          className="mt-3 max-w-2xl text-sm text-white/45 md:text-base"
-        >
-          Forbes 30U30 Nominee · Talent Land 2026 Winner · Web Summit & TNW Finalist
-        </motion.p>
+          <motion.p
+            {...fadeUp(0.4)}
+            className="mt-3 max-w-2xl text-sm text-white/55 md:text-base"
+          >
+            Gonzalo Acuña Nava · CEO PropMatch · Forbes 30U30 Nominee · Talent Land 2026 Winner · Web Summit & TNW Finalist
+          </motion.p>
+        </div>
 
         {/* Stats Bento */}
         <div className="mt-14 grid max-w-4xl grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
@@ -272,19 +271,22 @@ export const HeroSection = () => {
               {reel.length} clips
             </p>
           </div>
-          <div
+          <ul
             className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-6 md:-mx-20 md:px-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             role="list"
             aria-label="Reel de momentos destacados"
           >
             {reel.map((r, i) => (
-              <button
+              <li
                 key={`${r.videoId}-${i}`}
-                onClick={() => open(r.videoId)}
-                role="listitem"
-                aria-label={`Reproducir clip: ${r.label}`}
-                className="group relative aspect-[3/4] w-[58vw] sm:w-[280px] shrink-0 snap-start overflow-hidden rounded-[14px] border border-gold/15 bg-card/40 text-left transition-all hover:border-gold/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                className="shrink-0 snap-start"
               >
+                <button
+                  type="button"
+                  onClick={() => open(r.videoId)}
+                  aria-label={`Reproducir clip: ${r.label}`}
+                  className="group relative aspect-[3/4] w-[58vw] sm:w-[280px] block overflow-hidden rounded-[14px] border border-gold/15 bg-card/40 text-left transition-all hover:border-gold/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                >
                 <img
                   src={r.img}
                   alt=""
@@ -301,9 +303,10 @@ export const HeroSection = () => {
                   </p>
                   <p className="mt-1 line-clamp-2 text-sm text-white/90">{r.label}</p>
                 </div>
-              </button>
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         </motion.div>
       </motion.div>
 

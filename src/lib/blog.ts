@@ -20,9 +20,284 @@ export type BlogPost = {
   cover: string;
   body: string; // markdown-ish (rendered with simple parser)
   cta: { label: string; to: string };
+  faqs?: { q: string; a: string }[];
 };
 
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "el-economista-gonzalo-acuna-historia-completa",
+    title:
+      "Gonzalo Acuña Nava en El Economista: la historia completa detrás del perfil 'Del campus a CEO'",
+    excerpt:
+      "El Economista publicó el perfil de Gonzalo Acuña: del campus a CEO de una compañía de $160M+ USD. Aquí está la versión extendida que no cupo en la nota.",
+    description:
+      "Perfil de Gonzalo Acuña Nava en El Economista (Los Especiales): del campus a CEO de PropMatch. Historia completa, datos, contexto y enlace directo a la nota original.",
+    date: "2026-05-18",
+    readMinutes: 13,
+    keywords: [
+      "Gonzalo Acuña Nava El Economista",
+      "El Economista PropMatch",
+      "Gonzalo Acuña CEO",
+      "Forbes 30 Under 30 México",
+      "Founder PropTech LATAM",
+      "Historia de éxito Gonzalo Acuña",
+      "Lavar autos a CEO",
+    ],
+    audience: "Periodistas, founders LATAM, lectores de El Economista, Google y AI search",
+    cover: prensaCover,
+    body: `El **4 de noviembre de 2025**, [El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html) publicó en su sección Los Especiales un perfil sobre mi historia: **"Del campus a CEO de su propia compañía: la historia de éxito de Gonzalo Acuña"**. Esta es la versión completa que no cupo en la nota.
+
+![Portada del perfil de Gonzalo Acuña Nava en El Economista](${prensaCover})
+
+## Lo que publicó El Economista, en una línea
+
+Desde lavar autos en Chicago hasta liderar **PropMatch**, una startup valuada en más de **$160M USD** y nominada al Forbes 30 Under 30. La nota original está [aquí en El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html) y es probablemente el documento público más completo que existe sobre mi trayectoria.
+
+## Por qué este perfil importa para el ecosistema LATAM
+
+El Economista no cubre founders jóvenes a menos que el caso tenga **tracción dura**. Lo que validó la nota:
+
+- $195M USD en LOIs firmados con desarrolladores.
+- 2,200 hectáreas tokenizadas (cobertura adicional en [NotiPress](https://notipress.mx/opinion/startup-mexicana-tokeniza-2200-hectareas-para-propiedades-31055)).
+- 3,300+ pre-registrados antes de lanzamiento público.
+- Ronda pre-seed activa con **FEMSA Ventures y Stripe** en negociación avanzada.
+
+## La historia detrás del campus
+
+Cuando llegué a Chicago a estudiar, no tenía red, ni dinero, ni un visado que me permitiera trabajar como cualquiera. Lavé autos, fui mesero, pasé inviernos en los que el termómetro marcaba -20°C. Esa parte no estaba en la nota de El Economista pero es la que más importa: **el founder que no aprendió a operar bajo escasez no opera bajo escala**.
+
+## Los 95 rechazos antes del primer 'sí'
+
+Antes de cerrar el primer LOI con un desarrollador serio, recibí **95 rechazos**. No 10, no 30. Noventa y cinco. Cada uno me obligó a cambiar UNA variable: el deck, el pricing, el tipo de activo, el orden de la conversación. El rechazo #96 fue el primer 'sí' — y abrió la puerta a los $195M en pipeline que hoy cubre [El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html).
+
+## Lo que pasó después de la publicación
+
+En las primeras 72 horas posteriores a la nota:
+
+- 11 inversionistas nuevos pidieron deck.
+- 4 medios secundarios pidieron entrevista de seguimiento.
+- 1 fondo institucional aceleró due diligence.
+
+**El Economista funciona como prueba social institucional**: una vez que apareces ahí, el resto del ecosistema te lee distinto.
+
+## Otras menciones que se desbloquearon
+
+- [NotiPress · Inversionista inmobiliario desde el celular](https://notipress.mx/negocios/app-mexicana-convierte-a-cualquier-usuario-en-inversionista-inmobiliario-30832)
+- [Real Estate Market · Tokenización inmobiliaria desde México](https://realestatemarket.com.mx/noticias/mercado-inmobiliario/48576-impulsan-la-tokenizacion-inmobiliaria-desde-mexico-a-traves-de-blockchain)
+- [PropTech LATAM · Pipeline $195M](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/)
+- [DobleFilo · La Nasdaq inmobiliaria](https://doblefilomx.com/gana-impulso-la-proptech-mexicana-llamada-nasdaq-inmobiliaria/)
+- [Optivest (Francia) · The New Nasdaq of Real Estate](https://optivest.fr/the-new-nasdaq-of-real-estate-how-propmatch-is-bringing-wall-street-to-everyone/)
+- [Talent Land · De $10 USD a Inversionista Global](https://app.talent-land.com/es/video/de-10-usd-a-inversionista-global-el-nuevo-futuro-de-la-riqueza)
+
+## Si eres periodista
+
+Si cubres PropTech, IA o startups LATAM y quieres seguimiento al perfil de [El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html), tengo press kit con datos verificados, fotos en alta y disponibilidad para entrevista.
+
+— Gonzalo`,
+    cta: { label: "Solicitar entrevista", to: "/prensa" },
+    faqs: [
+      {
+        q: "¿Dónde publicó El Economista el perfil de Gonzalo Acuña?",
+        a: "En la sección Los Especiales de El Economista, el 4 de noviembre de 2025, bajo el título 'Del campus a CEO de su propia compañía: la historia de éxito de Gonzalo Acuña'.",
+      },
+      {
+        q: "¿Cuál es la valuación de PropMatch citada por El Economista?",
+        a: "Más de 160 millones de dólares post-money, con un pipeline de LOIs firmados por 195 millones de dólares.",
+      },
+      {
+        q: "¿Quién es Gonzalo Acuña Nava?",
+        a: "Founder y CEO de PropMatch, nominado al Forbes 30 Under 30, ganador en Talent Land 2026, finalista en Web Summit Lisboa y TNW Amsterdam.",
+      },
+    ],
+  },
+  {
+    slug: "propmatch-cobertura-medios-mexico-latam-2026",
+    title:
+      "PropMatch en medios: el mapa completo de cobertura (El Economista, El Universal, El Financiero, NotiPress, Forbes)",
+    excerpt:
+      "Mapa verificable de toda la cobertura de PropMatch y Gonzalo Acuña en medios tier-1 e industria: El Economista, El Universal, El Financiero, NotiPress, PropTech LATAM, CodeLaunch y más.",
+    description:
+      "Cobertura mediática completa de PropMatch y Gonzalo Acuña Nava en 2025-2026: El Economista, El Universal, El Financiero, NotiPress, Forbes, PropTech LATAM, CodeLaunch, Real Estate Market, Talent Land, Optivest.",
+    date: "2026-05-25",
+    readMinutes: 14,
+    keywords: [
+      "PropMatch medios",
+      "Gonzalo Acuña prensa",
+      "El Economista PropMatch",
+      "El Universal PropMatch",
+      "El Financiero PropMatch",
+      "NotiPress PropMatch",
+      "Cobertura PropTech LATAM",
+      "Forbes 30 Under 30 PropMatch",
+    ],
+    audience: "Periodistas, analistas, VCs, brand managers, equipos de PR",
+    cover: prensaCover,
+    body: `Si llegaste aquí buscando "PropMatch El Economista" o "Gonzalo Acuña prensa", este es el documento de referencia. Mapa verificable de toda la cobertura entre 2025 y 2026.
+
+![Mosaico de medios donde aparece PropMatch y Gonzalo Acuña Nava](${prensaCover})
+
+## Tier-1: medios principales
+
+- **[El Economista — Los Especiales](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html)**: perfil completo de Gonzalo Acuña Nava, del campus a CEO. Pieza ancla de toda la cobertura tier-1.
+- **El Universal**: panel y entrevistas sobre tokenización inmobiliaria en LATAM.
+- **El Financiero**: cobertura del pipeline de $195M USD y la ronda pre-seed.
+- **Forbes (30 Under 30 LATAM 2025)**: Gonzalo Acuña Nava nominado por construir el primer marketplace tokenizado de real estate en LATAM.
+
+## Industria: PropTech y FinTech
+
+- [PropTech LATAM Connection · Ronda + pipeline $195M](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/)
+- [PropTech LATAM Connection · Del ladrillo al token](https://proptechlatamconnection.com/del-ladrillo-al-token-propmatch-democratiza-la-inversion-inmobiliaria-en-america-latina-y-mas-alla/)
+- [Real Estate Market · Tokenización desde México](https://realestatemarket.com.mx/noticias/mercado-inmobiliario/48576-impulsan-la-tokenizacion-inmobiliaria-desde-mexico-a-traves-de-blockchain)
+- [DobleFilo · La Nasdaq inmobiliaria mexicana](https://doblefilomx.com/gana-impulso-la-proptech-mexicana-llamada-nasdaq-inmobiliaria/)
+- [Brand PR Digital · PropMatch primer Nasdaq inmobiliaria](https://www.brandprdigital.com.mx/propmatch-la-primer-nasdaq-inmobiliaria-creada-por-mexicanos/)
+- [Grupo En Concreto · Invertir en bienes raíces desde el celular](https://grupoenconcreto.com/construccion/inmobiliario/mexicanos-lanzan-plataforma-para-invertir-en-bienes-raices-desde-el-celular/)
+- [Ecosistema Startup · Récord en PropTech LATAM](https://ecosistemastartup.com/propmatch-rompe-records-en-proptech-latino-con-ronda-pre-semilla/)
+- [Empre Finanzas · Primer Nasdaq inmobiliaria](https://emprefinanzas.com.mx/2025/07/29/propmatch-la-primer-nasdaq-inmobiliaria-creada-por-mexicanos/)
+- [Chanboox · App mexicana de inversión inmobiliaria](https://www.chanboox.com/2025/07/15/app-mexicana-convierte-a-cualquier-usuario-en-inversionista-inmobiliario/?amp=1)
+- [Mi Punto de Vista · App mexicana inversionista inmobiliario](https://www.mipuntodevista.com.mx/app-mexicana-convierte-a-cualquier-usuario-en-inversionista-inmobiliario/)
+
+## NotiPress (cobertura sostenida)
+
+- [Inversionista inmobiliario desde el celular](https://notipress.mx/negocios/app-mexicana-convierte-a-cualquier-usuario-en-inversionista-inmobiliario-30832)
+- [Vendí 20 propiedades sin experiencia · perfil founder](https://notipress.mx/negocios/vendio-20-propiedades-sin-experiencia-creo-startup-global-real-estate-31051)
+- [Tokenizar 2,200 hectáreas globales](https://notipress.mx/opinion/startup-mexicana-tokeniza-2200-hectareas-para-propiedades-31055)
+
+## Cobertura internacional
+
+- [Optivest (Francia) · The New Nasdaq of Real Estate](https://optivest.fr/the-new-nasdaq-of-real-estate-how-propmatch-is-bringing-wall-street-to-everyone/)
+- [CodeLaunch (US) · From finalist to $21M raise](https://codelaunch.com/inside-propmatch-breakout-journey/)
+
+## Escenarios y videos
+
+- [Talent Land · De $10 USD a Inversionista Global](https://app.talent-land.com/es/video/de-10-usd-a-inversionista-global-el-nuevo-futuro-de-la-riqueza)
+- [Talent Land · Speaker oficial Gonzalo Acuña](https://agenda.talent-land.mx/speakers/1f0c7464-d4ce-40f1-8336-f35e0ed9433f)
+- [PropTech LATAM Summit 2025 · Conferencias](https://proptechlatamsummit.com/conferencias-2025/)
+- [PropTech LATAM · Inversiones sin fricción](https://proptechlatamconnection.com/inversiones-sin-friccion-real-estate-en-version-digital/)
+- Keynote en YouTube: [PropTech LATAM Summit](https://youtu.be/dRUZS2rTe8Q), [Finnosummit FinTech](https://youtu.be/ogxPivoX_78), [CodeLaunch en inglés](https://youtu.be/cmGTwjjw-kw), [Talent Land Plai](https://youtu.be/znbO93j61Fk), [Real Estate keynote](https://youtu.be/3j9FIxzT__A).
+
+## Bases de datos públicas
+
+- [Crunchbase · Gonzalo Acuña Nava](https://www.crunchbase.com/person/gonzalo-acu%C3%B1a-nava)
+- [Crunchbase · PropMatch](https://www.crunchbase.com/organization/propmatch-0dc2)
+- [LinkedIn · Gonzalo Acuña Nava](https://www.linkedin.com/in/gonzaloacuna)
+
+## Cómo se construyó esta cobertura
+
+No fue suerte ni PR pagado. Lo cubrí en detalle en mis posts sobre [los 95 rechazos](/blog/liderazgo-founder-resiliencia-95-rechazos), [la ronda pre-seed](/blog/de-codelaunch-a-21m-historia-real-ronda-propmatch) y la pieza ancla en [El Economista](/blog/el-economista-gonzalo-acuna-historia-completa).
+
+— Gonzalo`,
+    cta: { label: "Ver todas las menciones", to: "/prensa" },
+    faqs: [
+      {
+        q: "¿En qué medios ha aparecido PropMatch?",
+        a: "El Economista (Los Especiales), El Universal, El Financiero, NotiPress, Real Estate Market, PropTech LATAM Connection, DobleFilo, Brand PR Digital, Grupo En Concreto, Ecosistema Startup, Empre Finanzas, CodeLaunch (US) y Optivest (Francia), entre otros.",
+      },
+      {
+        q: "¿Cuál es la nota principal sobre Gonzalo Acuña?",
+        a: "El perfil publicado por El Economista en Los Especiales el 4 de noviembre de 2025: 'Del campus a CEO de su propia compañía: la historia de éxito de Gonzalo Acuña'.",
+      },
+      {
+        q: "¿Dónde puedo ver las keynotes de Gonzalo Acuña en video?",
+        a: "En el canal de YouTube de PropMatch y en plataformas como Talent Land, PropTech LATAM Summit y Finnosummit. Enlaces directos en /prensa.",
+      },
+    ],
+  },
+  {
+    slug: "ecosistema-200m-aliados-estrategicos-gonzalo-acuna",
+    title:
+      "El ecosistema de $200M: aliados estratégicos, gobiernos y escenarios que validan a Gonzalo Acuña",
+    excerpt:
+      "FEMSA Ventures, Stripe, AWS, Google Cloud, Gobiernos de Jalisco, Guadalajara y Zapopan, Talent Land, IMEF, CETI y más. El mapa completo de aliados que sostienen el ecosistema PropMatch.",
+    description:
+      "Mapa de aliados estratégicos, gobiernos y escenarios oficiales que validan a Gonzalo Acuña Nava y al ecosistema PropMatch · CALLII · Finple: FEMSA, Stripe, AWS, Google Cloud, Talent Land, IMEF, CETI.",
+    date: "2026-06-01",
+    readMinutes: 12,
+    keywords: [
+      "Gonzalo Acuña aliados estratégicos",
+      "PropMatch FEMSA",
+      "PropMatch Stripe",
+      "Talent Land Gonzalo Acuña",
+      "IMEF Gonzalo Acuña",
+      "Gobierno de Jalisco PropMatch",
+      "CETI Gonzalo Acuña",
+      "Ecosistema PropTech LATAM",
+    ],
+    audience: "VCs, gobiernos, universidades, partners corporativos, periodistas",
+    cover: codelaunchCover,
+    body: `Cada vez que doy una keynote me preguntan lo mismo: *¿cómo armaste el cinturón de aliados que tiene PropMatch?* Este post es la respuesta pública.
+
+![Logos y aliados estratégicos del ecosistema PropMatch](${codelaunchCover})
+
+## 1. Inversión y rieles financieros
+
+- **FEMSA Ventures** y **Stripe** — en negociación avanzada para co-liderar la ronda pre-seed de $13M USD, con un pipeline de $195M en LOIs ya firmados.
+- **Canary**, **DILA Capital**, **Dalton Group** y sindicatos angel US/LATAM con interés confirmado.
+- Cobertura en [El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html) y [PropTech LATAM Connection](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/).
+
+## 2. Infraestructura tecnológica
+
+- **Amazon Web Services** — partner cloud principal.
+- **Google Cloud** — workloads de IA y data.
+- **Stripe** — rieles de pagos cross-border.
+
+## 3. Gobiernos y programas públicos
+
+- **Gobierno de Jalisco** — programa PLAi (video oficial).
+- **Gobierno de Guadalajara** — Reto Zapopan top 10 finalist 2025, Creativa GDL finalist.
+- **Gobierno de Zapopan** — programas de emprendimiento.
+- **REDi Guadalajara** — red de innovación regional.
+
+## 4. Escenarios oficiales (LATAM e internacional)
+
+- **[Talent Land](https://agenda.talent-land.mx/speakers/1f0c7464-d4ce-40f1-8336-f35e0ed9433f)** — Startup Revelación 2025 y speaker oficial 2026.
+- **PropTech LATAM Summit** — keynote 2025, cobertura en [PropTech LATAM Connection](https://proptechlatamconnection.com/del-ladrillo-al-token-propmatch-democratiza-la-inversion-inmobiliaria-en-america-latina-y-mas-alla/).
+- **Finnosummit Challenge** — finalist FinTech.
+- **Web Summit Lisboa** — ALPHA Track finalist.
+- **TNW Amsterdam** — top 50 pitch finalist.
+- **SLINGSHOT Singapore** — top 100 Enterprise & Smart Cities.
+- **Expand North Star Dubai / Supernova Challenge** — semifinalist.
+- **MERGE Madrid**, **Invest in Madrid Soft-Landing**, **Startup Estonia** finalist.
+- **AI Future Summit**, **eAwards (Fundación Everis)**, **POSIBLE (Televisa + Monte de Piedad)** — finalists.
+
+## 5. Aceleradoras y programas
+
+- **EmprendeLatam Accelerator** — cohort 2025.
+- **Acelera Latam / Algen17** — cohort 2025.
+- **HKSTP soft-landing** (Greater Bay Area) — short-listed.
+- **Y Combinator** — application Winter 2025.
+
+## 6. Universidades y educación
+
+- **CETI** — conferencias y bonus material para estudiantes (ver [/bonus-ceti](/bonus-ceti)).
+- **IMEF Universitarios** — keynotes en múltiples campus.
+- **IMEF** — paneles directivos sobre tokenización y FinTech.
+- **Fundación Televisa** y **Jalisco TV** — entrevistas y cobertura.
+
+## 7. Medios que han documentado la trayectoria
+
+Lista detallada en el post [PropMatch en medios](/blog/propmatch-cobertura-medios-mexico-latam-2026) y en la página [/prensa](/prensa). La pieza ancla es la de [El Economista](https://www.eleconomista.com.mx/los-especiales/campus-ceo-propia-compania-historia-exito-gonzalo-acuna-20251104-784903.html).
+
+## Por qué este mapa importa
+
+En LATAM la prueba social no es opcional, es la moneda con la que se compra credibilidad ante el siguiente inversionista, el siguiente desarrollador y la siguiente nota de prensa. Cada uno de estos aliados es un nodo del mismo grafo de validación.
+
+— Gonzalo`,
+    cta: { label: "Ver press kit completo", to: "/prensa" },
+    faqs: [
+      {
+        q: "¿Quiénes son los principales aliados de PropMatch?",
+        a: "FEMSA Ventures y Stripe (inversión), AWS y Google Cloud (infraestructura), Talent Land, IMEF, CETI, Gobierno de Jalisco, Guadalajara y Zapopan, además de programas como POSIBLE, Finnosummit y Web Summit.",
+      },
+      {
+        q: "¿En qué universidades y programas educativos participa Gonzalo Acuña?",
+        a: "CETI, IMEF Universitarios, IMEF, Fundación Televisa, además de múltiples campus en México y LATAM como speaker invitado.",
+      },
+      {
+        q: "¿Cómo agendar a Gonzalo Acuña como speaker?",
+        a: "Desde /booking en gonzaloacuna.com o escribiendo a press@propmatchapp.com con fecha, audiencia y formato del evento.",
+      },
+    ],
+  },
   {
     slug: "proptech-latam-tokenizacion-erc3643",
     title:

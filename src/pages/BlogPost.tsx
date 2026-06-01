@@ -74,20 +74,42 @@ const BlogPost = () => {
   const post = slug ? getPostBySlug(slug) : null;
   if (!post) return <Navigate to="/blog" replace />;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    keywords: post.keywords.join(", "),
-    author: { "@type": "Person", name: "Gonzalo Acuña Nava", url: SITE },
-    publisher: { "@type": "Person", name: "Gonzalo Acuña Nava" },
-    mainEntityOfPage: `${SITE}/blog/${post.slug}`,
-    image: `${SITE}/og-gonzalo.jpg`,
-    inLanguage: "es-MX",
-    audience: { "@type": "Audience", audienceType: post.audience },
-  };
+  const jsonLd: any[] = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.description,
+      datePublished: post.date,
+      keywords: post.keywords.join(", "),
+      author: { "@type": "Person", name: "Gonzalo Acuña Nava", url: SITE },
+      publisher: { "@type": "Person", name: "Gonzalo Acuña Nava" },
+      mainEntityOfPage: `${SITE}/blog/${post.slug}`,
+      image: `${SITE}/og-gonzalo.jpg`,
+      inLanguage: "es-MX",
+      audience: { "@type": "Audience", audienceType: post.audience },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: SITE },
+        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
+        { "@type": "ListItem", position: 3, name: post.title, item: `${SITE}/blog/${post.slug}` },
+      ],
+    },
+  ];
+  if (post.faqs && post.faqs.length) {
+    jsonLd.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: post.faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    });
+  }
 
   const others = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
 
@@ -164,6 +186,21 @@ const BlogPost = () => {
               {post.cta.label} <ArrowRight size={13} />
             </Link>
           </div>
+
+          {/* FAQ — rendered for users + indexed via FAQPage JSON-LD */}
+          {post.faqs && post.faqs.length > 0 && (
+            <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+              <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Preguntas frecuentes</p>
+              <dl className="mt-4 divide-y divide-white/10">
+                {post.faqs.map((f) => (
+                  <div key={f.q} className="py-4">
+                    <dt className="font-display text-lg text-white">{f.q}</dt>
+                    <dd className="mt-2 text-sm leading-relaxed text-white/65">{f.a}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )}
 
           {/* More posts */}
           {others.length > 0 && (
