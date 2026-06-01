@@ -1,5 +1,6 @@
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Calendar, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Calendar, ExternalLink, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Nav } from "@/components/Nav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -18,7 +19,32 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 const Press = () => {
-  const sorted = [...PRESS_MENTIONS].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const sorted = useMemo(
+    () => [...PRESS_MENTIONS].sort((a, b) => (a.date < b.date ? 1 : -1)),
+    []
+  );
+  const [q, setQ] = useState("");
+  const [country, setCountry] = useState<string>("all");
+  const [category, setCategory] = useState<string>("all");
+
+  const countries = useMemo(
+    () => Array.from(new Set(sorted.map((m) => m.country))),
+    [sorted]
+  );
+  const categories = useMemo(
+    () => Array.from(new Set(sorted.map((m) => m.category))),
+    [sorted]
+  );
+
+  const filtered = sorted.filter((m) => {
+    if (country !== "all" && m.country !== country) return false;
+    if (category !== "all" && m.category !== category) return false;
+    if (q) {
+      const hay = `${m.outlet} ${m.title} ${m.excerpt}`.toLowerCase();
+      if (!hay.includes(q.toLowerCase())) return false;
+    }
+    return true;
+  });
 
   const jsonLd = [
     {
@@ -93,8 +119,48 @@ const Press = () => {
       </section>
 
       <section className="pb-24">
+        <div className="mx-auto mb-10 max-w-content px-6 md:px-20">
+          <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:flex-row md:items-center">
+            <label className="relative flex-1">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+              <input
+                type="search"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Buscar por medio, titular o texto…"
+                aria-label="Buscar menciones"
+                className="h-11 w-full rounded-full border border-white/10 bg-background pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-gold/60 focus:outline-none"
+              />
+            </label>
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              aria-label="Filtrar por país"
+              className="h-11 rounded-full border border-white/10 bg-background px-4 text-sm text-white focus:border-gold/60 focus:outline-none"
+            >
+              <option value="all">Todos los países</option>
+              {countries.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              aria-label="Filtrar por categoría"
+              className="h-11 rounded-full border border-white/10 bg-background px-4 text-sm text-white focus:border-gold/60 focus:outline-none"
+            >
+              <option value="all">Todas las categorías</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>{CATEGORY_LABEL[c] ?? c}</option>
+              ))}
+            </select>
+          </div>
+          <p className="mt-3 text-[11px] uppercase tracking-[0.22em] text-white/45">
+            {filtered.length} de {sorted.length} menciones
+          </p>
+        </div>
         <div className="mx-auto grid max-w-content gap-5 px-6 md:grid-cols-2 md:px-20">
-          {sorted.map((m, i) => (
+          {filtered.map((m, i) => (
             <motion.a
               key={m.url}
               href={m.url}
