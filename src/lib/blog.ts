@@ -20,6 +20,7 @@ export type BlogPost = {
   cover: string;
   body: string; // markdown-ish (rendered with simple parser)
   cta: { label: string; to: string };
+  faqs?: { q: string; a: string }[];
 };
 
 export const BLOG_POSTS: BlogPost[] = [
