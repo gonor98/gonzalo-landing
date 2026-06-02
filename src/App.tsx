@@ -21,6 +21,8 @@ import Press from "./pages/Press.tsx";
 import { VideoProvider } from "@/components/VideoContext";
 import { LEGACY_REDIRECTS, Redirect301 } from "@/components/LegacyRedirects";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Agenda from "./pages/Agenda.tsx";
 import AdminBookings from "./pages/AdminBookings.tsx";
 
@@ -33,6 +35,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <VideoProvider>
+          <ScrollToTop />
+          <ErrorBoundary>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/speaking" element={<Speaking />} />
@@ -59,6 +63,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <WhatsAppFloating />
+          </ErrorBoundary>
         </VideoProvider>
       </BrowserRouter>
     </TooltipProvider>
