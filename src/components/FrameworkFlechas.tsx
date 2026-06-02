@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import { Crosshair, Eye, Target } from "lucide-react";
 import { usePerfMode } from "@/hooks/usePerfMode";
 
@@ -37,10 +37,29 @@ const STEPS = [
   },
 ];
 
+/** Single dot — isolated so hooks aren't called inside a map of the parent. */
+const ArrowDot = ({ progress, index, total }: { progress: MotionValue<number>; index: number; total: number }) => {
+  const angle = (index / total) * Math.PI * 2;
+  const startR = 46;
+  const endR = 6;
+  const x = useTransform(progress, [0, 1], [Math.cos(angle) * startR, Math.cos(angle) * endR]);
+  const y = useTransform(progress, [0, 1], [Math.sin(angle) * startR, Math.sin(angle) * endR]);
+  const op = useTransform(progress, [0, 0.4, 1], [0.6, 1, 0.95]);
+  return (
+    <motion.div
+      aria-hidden
+      style={{ x, y, opacity: op, translateX: "-50%", translateY: "-50%", left: "50%", top: "50%" }}
+      className="absolute h-2 w-2 rounded-full bg-gold"
+    />
+  );
+};
+
 /** Right-side abstract visualization: 24 arrow ticks that converge as
  *  the user scrolls. Uses transforms only — pure GPU. */
-const ConvergingArrows = ({ progress }: { progress: any }) => {
-  const dots = Array.from({ length: 24 });
+const ConvergingArrows = ({ progress }: { progress: MotionValue<number> }) => {
+  const total = 24;
+  const centerOpacity = useTransform(progress, [0, 0.6, 1], [0.15, 0.6, 1]);
+  const centerScale = useTransform(progress, [0, 1], [0.6, 1.1]);
   return (
     <div className="relative h-full w-full">
       {/* Faint ring grid */}
@@ -55,43 +74,49 @@ const ConvergingArrows = ({ progress }: { progress: any }) => {
       {/* Center bull's-eye that brightens with progress */}
       <motion.div
         aria-hidden
-        style={{
-          opacity: useTransform(progress, [0, 0.6, 1], [0.15, 0.6, 1]),
-          scale: useTransform(progress, [0, 1], [0.6, 1.1]),
-        }}
+        style={{ opacity: centerOpacity, scale: centerScale }}
         className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold shadow-[0_0_60px_rgba(201,168,76,0.7)]"
       />
-      {dots.map((_, i) => {
-        const angle = (i / dots.length) * Math.PI * 2;
-        const startR = 46; // % from center
-        const endR = 6;
-        const x = useTransform(progress, [0, 1], [
-          Math.cos(angle) * startR,
-          Math.cos(angle) * endR,
-        ]);
-        const y = useTransform(progress, [0, 1], [
-          Math.sin(angle) * startR,
-          Math.sin(angle) * endR,
-        ]);
-        const op = useTransform(progress, [0, 0.4, 1], [0.6, 1, 0.95]);
-        return (
-          <motion.div
-            key={i}
-            aria-hidden
-            style={{
-              x,
-              y,
-              opacity: op,
-              translateX: "-50%",
-              translateY: "-50%",
-              left: "50%",
-              top: "50%",
-            }}
-            className="absolute h-2 w-2 rounded-full bg-gold"
-          />
-        );
-      })}
+      {Array.from({ length: total }).map((_, i) => (
+        <ArrowDot key={i} progress={progress} index={i} total={total} />
+      ))}
     </div>
+  );
+};
+
+/** Single step row — isolated so useTransform isn't called in a parent loop. */
+const StepRow = ({
+  step,
+  index,
+  total,
+  smooth,
+}: {
+  step: (typeof STEPS)[number];
+  index: number;
+  total: number;
+  smooth: MotionValue<number>;
+}) => {
+  const lo = index / total;
+  const hi = (index + 1) / total;
+  const opacity = useTransform(
+    smooth,
+    [lo - 0.08, lo + 0.05, hi - 0.05, hi + 0.08],
+    [0.18, 1, 1, 0.18]
+  );
+  const Icon = step.Icon;
+  return (
+    <motion.div style={{ opacity }} className="flex gap-5">
+      <span className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 text-gold">
+        <Icon size={16} />
+      </span>
+      <div>
+        <p className="font-display italic text-gold/85">{step.label}</p>
+        <h3 className="mt-1 font-display text-3xl leading-tight text-white md:text-4xl">
+          {step.title}
+        </h3>
+        <p className="mt-3 max-w-md text-white/65 leading-relaxed">{step.body}</p>
+      </div>
+    </motion.div>
   );
 };
 
@@ -108,7 +133,9 @@ export const FrameworkFlechas = () => {
     restDelta: 0.001,
   });
   // Progress 0..1 maps to "the visualization completing".
-  const vizProgress = reduced ? useTransform(smooth, [0, 1], [1, 1]) : smooth;
+  // Always call useTransform unconditionally; pick which value to use after.
+  const reducedProgress = useTransform(smooth, [0, 1], [1, 1]);
+  const vizProgress = reduced ? reducedProgress : smooth;
 
   return (
     <section
@@ -123,30 +150,9 @@ export const FrameworkFlechas = () => {
             <p className="text-[11px] uppercase tracking-[0.32em] text-gold">
               Framework · Las 1,000 flechas
             </p>
-            {STEPS.map((step, i) => {
-              const lo = i / STEPS.length;
-              const hi = (i + 1) / STEPS.length;
-              const opacity = useTransform(
-                smooth,
-                [lo - 0.08, lo + 0.05, hi - 0.05, hi + 0.08],
-                [0.18, 1, 1, 0.18]
-              );
-              const Icon = step.Icon;
-              return (
-                <motion.div key={step.key} style={{ opacity }} className="flex gap-5">
-                  <span className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold/40 text-gold">
-                    <Icon size={16} />
-                  </span>
-                  <div>
-                    <p className="font-display italic text-gold/85">{step.label}</p>
-                    <h3 className="mt-1 font-display text-3xl leading-tight text-white md:text-4xl">
-                      {step.title}
-                    </h3>
-                    <p className="mt-3 max-w-md text-white/65 leading-relaxed">{step.body}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
+            {STEPS.map((step, i) => (
+              <StepRow key={step.key} step={step} index={i} total={STEPS.length} smooth={smooth} />
+            ))}
           </div>
           {/* Right — converging arrows visualization */}
           <div className="relative flex h-full items-center justify-center">
