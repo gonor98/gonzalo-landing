@@ -4,6 +4,7 @@ import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { CTASection } from "@/components/CTASection";
 import { SEO, personJsonLd, eventJsonLd } from "@/components/SEO";
 import { upcomingEvents, pastEvents } from "@/lib/events";
+import { themes } from "@/lib/themes";
 import { SocialRail } from "@/components/SocialRail";
 import { SiteFooter } from "@/components/SiteFooter";
 import { motion } from "framer-motion";
@@ -11,13 +12,45 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 const Speaking = () => {
+  const SITE = "https://gonzaloacuna.com";
+  const speakingService = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Keynote Speaking",
+    name: "Keynotes de Gonzalo Acuña Nava",
+    provider: { "@type": "Person", name: "Gonzalo Acuña Nava", url: SITE },
+    areaServed: ["MX", "US", "ES", "PT", "BR", "CO", "AR", "CL", "PE", "LATAM", "Europa"],
+    url: `${SITE}/speaking`,
+    description: "Catálogo de 33 keynotes en PropTech, IA Operativa, FinTech, Liderazgo, Resiliencia, Hablar en público y Marca personal de founder.",
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "33 keynotes",
+      itemListElement: themes.map((t) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: t.title,
+          category: t.category,
+          description: t.logline,
+        },
+      })),
+    },
+  };
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: SITE },
+      { "@type": "ListItem", position: 2, name: "Speaking", item: `${SITE}/speaking` },
+    ],
+  };
   return (
     <main className="relative bg-background text-foreground">
       <SEO
         title="Speaking Hub — 33 keynotes de Gonzalo Acuña Nava"
         description="Catálogo completo de 33 keynotes en PropTech, IA Operativa, Liderazgo y Resiliencia. Filtra por categoría y reserva disponibilidad para Q2–Q4 2026."
         path="/speaking"
-        jsonLd={[personJsonLd, ...upcomingEvents.map(eventJsonLd), ...pastEvents.map(eventJsonLd)]}
+        jsonLd={[personJsonLd, speakingService, breadcrumb, ...upcomingEvents.map(eventJsonLd), ...pastEvents.map(eventJsonLd)]}
       />
       <ScrollProgressBar />
       <Nav />
