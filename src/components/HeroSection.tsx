@@ -146,7 +146,7 @@ export const HeroSection = () => {
           src={gonzaloHero}
           alt=""
           aria-hidden
-          loading="lazy"
+          fetchPriority="high"
           decoding="async"
           className="h-[64vh] w-auto object-cover"
           style={{
