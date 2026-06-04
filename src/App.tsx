@@ -18,9 +18,11 @@ import BenefitsPreview from "./pages/BenefitsPreview.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
 import Press from "./pages/Press.tsx";
+import Educacion from "./pages/Educacion.tsx";
 import { VideoProvider } from "@/components/VideoContext";
 import { LEGACY_REDIRECTS, Redirect301 } from "@/components/LegacyRedirects";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
+import { NewsletterSticky } from "@/components/NewsletterSticky";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Agenda from "./pages/Agenda.tsx";
@@ -52,6 +54,8 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/prensa" element={<Press />} />
             <Route path="/press" element={<Press />} />
+            <Route path="/educacion" element={<Educacion />} />
+            <Route path="/education" element={<Educacion />} />
             <Route path="/bonus-ceti" element={<BonusCeti />} />
             <Route path="/bonus-ceti-descargas" element={<BonusCetiDescargas />} />
             <Route path="/bonus-ceti-descargas/preview" element={<BonusCetiDescargasPreview />} />
@@ -63,6 +67,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <WhatsAppFloating />
+          <NewsletterSticky />
           </ErrorBoundary>
         </VideoProvider>
       </BrowserRouter>
