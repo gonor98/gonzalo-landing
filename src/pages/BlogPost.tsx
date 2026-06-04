@@ -74,6 +74,24 @@ const BlogPost = () => {
   const post = slug ? getPostBySlug(slug) : null;
   if (!post) return <Navigate to="/blog" replace />;
 
+  // Extract inline image URLs from the markdown-ish body for image[] enrichment
+  const inlineImages = Array.from(post.body.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g))
+    .map((m) => (m[1].startsWith("http") ? m[1] : `${SITE}${m[1]}`));
+  const allImages = Array.from(
+    new Set(
+      [post.cover ? (post.cover.startsWith("http") ? post.cover : `${SITE}${post.cover}`) : null, ...inlineImages].filter(
+        Boolean,
+      ) as string[],
+    ),
+  );
+  // Approximate word count (markdown stripped enough for SEO purposes)
+  const wordCount = post.body
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, " ")
+    .replace(/\[[^\]]*\]\([^)]+\)/g, " $1 ")
+    .replace(/[#*`>_-]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
+
   const jsonLd: any[] = [
     {
       "@context": "https://schema.org",
@@ -81,11 +99,19 @@ const BlogPost = () => {
       headline: post.title,
       description: post.description,
       datePublished: post.date,
+      dateModified: post.date,
       keywords: post.keywords.join(", "),
       author: { "@type": "Person", name: "Gonzalo Acuña Nava", url: SITE },
-      publisher: { "@type": "Person", name: "Gonzalo Acuña Nava" },
+      publisher: {
+        "@type": "Organization",
+        name: "Gonzalo Acuña Nava",
+        logo: { "@type": "ImageObject", url: `${SITE}/og-gonzalo.jpg` },
+      },
       mainEntityOfPage: `${SITE}/blog/${post.slug}`,
-      image: `${SITE}/og-gonzalo.jpg`,
+      image: allImages.length ? allImages : [`${SITE}/og-gonzalo.jpg`],
+      wordCount,
+      timeRequired: `PT${post.readMinutes}M`,
+      articleSection: post.keywords[0] ?? "Emprendimiento",
       inLanguage: "es-MX",
       audience: { "@type": "Audience", audienceType: post.audience },
     },
