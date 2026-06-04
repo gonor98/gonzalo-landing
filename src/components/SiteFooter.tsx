@@ -56,6 +56,7 @@ export const SiteFooter = () => {
             <li><Link to="/bonus-ceti-descargas" className="hover:text-gold">Descargas CETI</Link></li>
             <li><Link to="/blog" className="hover:text-gold">Blog</Link></li>
             <li><Link to="/prensa" className="hover:text-gold">Prensa &amp; menciones</Link></li>
+            <li><Link to="/educacion" className="hover:text-gold">Educación · Universidades</Link></li>
           </ul>
         </div>
       </div>
