@@ -7,6 +7,17 @@ import marcaPersonalCover from "@/assets/blog-marca-personal-cover.jpg";
 import prensaCover from "@/assets/blog-prensa-cover.jpg";
 import codelaunchCover from "@/assets/blog-codelaunch-cover.jpg";
 import tokenizarHectareasCover from "@/assets/blog-tokenizar-hectareas-cover.jpg";
+import fracasaCover from "@/assets/blog-fracasa-hasta-ganar-cover.jpg";
+import milFlechasCover from "@/assets/blog-mil-flechas-cover.jpg";
+import lodoUnicorniosCover from "@/assets/blog-lodo-unicornios-cover.jpg";
+import keynoteStageCover from "@/assets/blog-keynote-stage-cover.jpg";
+import mentorFoundersCover from "@/assets/blog-mentor-founders-cover.jpg";
+import maestroUniversidadCover from "@/assets/blog-maestro-universidad-cover.jpg";
+import edtechCover from "@/assets/blog-edtech-cover.jpg";
+import direccionCineCover from "@/assets/blog-direccion-cine-cover.jpg";
+import vcPitchCover from "@/assets/blog-vc-pitch-cover.jpg";
+import desarrolloInmobiliarioCover from "@/assets/blog-desarrollo-inmobiliario-cover.jpg";
+import fintechCover from "@/assets/blog-fintech-cover.jpg";
 
 export type BlogPost = {
   slug: string;
