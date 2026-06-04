@@ -1264,6 +1264,855 @@ Si eres founder, abogado o brokerage trabajando en un deal de tokenización en L
 — Gonzalo`,
     cta: { label: "Agendar llamada con Gonzalo", to: "/booking" },
   },
+  {
+    slug: "fracasa-hasta-ganar-libro-gonzalo-acuna",
+    title: "Fracasa hasta ganar: el libro de Gonzalo Acuña Nava y la metodología detrás",
+    excerpt:
+      "Por qué escribí 'Fracasa hasta ganar', cómo aplicarlo a tu startup y la metodología completa que uso con founders de PropMatch, CALLII y Finple.",
+    description:
+      "Fracasa hasta ganar de Gonzalo Acuña Nava: metodología completa para founders, estudiantes y emprendedores LATAM. Resumen, capítulos y cómo aplicar el libro en tu startup.",
+    date: "2026-06-02",
+    readMinutes: 12,
+    keywords: [
+      "Fracasa hasta ganar",
+      "Libro Gonzalo Acuña",
+      "Metodología fracaso emprendimiento",
+      "Libros emprendimiento LATAM",
+      "Mentalidad founder",
+      "Resiliencia startup",
+      "Autor Gonzalo Acuña Nava",
+    ],
+    audience: "Founders early-stage, estudiantes, lectores de no-ficción de emprendimiento",
+    cover: fracasaCover,
+    body: `Llevo años repitiendo la misma frase en escenarios, en clases y en mentorías 1:1: **el fracaso no es lo opuesto al éxito, es su prerequisito**. Cuando finalmente me senté a escribir el libro, supe que el título tenía que cargar esa idea sin pedir permiso: **Fracasa hasta ganar**.
+
+![Portada de Fracasa hasta ganar, libro de Gonzalo Acuña Nava](${fracasaCover})
+
+## Por qué escribí este libro
+
+Después de **95 rechazos** antes del primer cheque, de tres empresas (PropMatch, CALLII, Finple) y de cientos de horas con founders LATAM, vi un patrón: la mayoría de los emprendedores **no fracasa por falta de talento, sino por falta de un sistema para procesar el fracaso**. *Fracasa hasta ganar* es ese sistema, escrito desde la trinchera, no desde la teoría.
+
+## La metodología en una línea
+
+Cada fracaso debe producir **una variable cambiada, una hipótesis nueva y una métrica para medirla**. Si no produce las tres, no es fracaso útil — es desgaste.
+
+## Las 5 partes del libro
+
+1. **El mito del founder genio.** Por qué Silicon Valley nos vendió un personaje que no existe y cómo nos hizo daño en LATAM.
+2. **La arquitectura de los 95 rechazos.** Cómo convertí cada NO en data accionable: el Excel, el sistema de tags y la regla del "siguiente NO en 48h".
+3. **La teoría de las mil flechas.** Por qué lanzar mil flechas mediocres clava más blancos que una flecha perfecta lanzada después de seis meses de afinarla.
+4. **El círculo de cinco.** Las cinco personas que sostienen a un founder cuando todo se cae — y cómo construirlo si no lo tienes.
+5. **Ganar sin perderte.** El capítulo más difícil de escribir: cómo no morir de éxito cuando finalmente llega.
+
+## Lo que no vas a encontrar
+
+- No es un libro de "10 hacks para ser millonario".
+- No tiene plantillas de pitch deck — para eso hay 400 blogs gratis.
+- No moraliza el fracaso. Lo descompone.
+
+## Cómo usarlo si eres founder
+
+Léelo subrayando con dos colores: **rojo** todo lo que se parezca a un error que ya cometiste; **dorado** todo lo que aún no entiendes. Al terminar, vuelve sólo a los dorados. Ese es tu siguiente trimestre.
+
+## Cómo usarlo si eres estudiante o profesor
+
+Lo diseñé para cuatro sesiones de clase. En el [bonus CETI](/bonus-ceti) está el syllabus que uso con universidades. Si das clases de emprendimiento y quieres el material, escríbeme — lo libero gratis a profesores titulares.
+
+## Por qué importa hoy
+
+LATAM tiene **una crisis de narrativas honestas**. La mitad de lo que se publica de emprendimiento son humo-brigadas en LinkedIn. Este libro existe para empujar la conversación en la dirección contraria: **menos vanity, más cicatriz**.
+
+## Dónde comprarlo y eventos
+
+- Versión digital y física: enlace en [/prensa](/prensa) y en mis redes.
+- Firmas y charlas: revisa la [agenda de eventos](/agenda).
+- Para invitar al autor a tu universidad o empresa: [/booking](/booking).
+
+— Gonzalo`,
+    cta: { label: "Reservar charla del libro", to: "/booking" },
+    faqs: [
+      { q: "¿De qué trata el libro Fracasa hasta ganar?", a: "Es la metodología de Gonzalo Acuña Nava para convertir el fracaso en data accionable, basada en 95 rechazos, la teoría de las mil flechas y el círculo de cinco. Para founders, estudiantes y emprendedores LATAM." },
+      { q: "¿Quién es el autor de Fracasa hasta ganar?", a: "Gonzalo Acuña Nava, CEO de PropMatch, CALLII y Finple. Forbes 30 Under 30 nominee, ganador Talent Land 2026 y conductor del podcast Lodo & Unicornios." },
+      { q: "¿Dónde puedo comprar Fracasa hasta ganar?", a: "En versión digital y física, con enlaces en gonzaloacuna.com/prensa y en las redes oficiales del autor." },
+    ],
+  },
+  {
+    slug: "teoria-mil-flechas-gonzalo-acuna",
+    title: "La teoría de las mil flechas: el método de Gonzalo Acuña para founders LATAM",
+    excerpt:
+      "Por qué lanzar mil flechas mediocres clava más blancos que una flecha perfecta. La metodología completa para founders, vendedores y creativos.",
+    description:
+      "Teoría de las mil flechas de Gonzalo Acuña Nava: framework de velocidad sobre perfección para founders, equipos comerciales y creativos. Casos reales en PropMatch y CALLII.",
+    date: "2026-06-03",
+    readMinutes: 10,
+    keywords: [
+      "Teoría de las mil flechas",
+      "Metodología Gonzalo Acuña",
+      "Velocidad vs perfección startup",
+      "Volumen ventas founders",
+      "Iteración rápida producto",
+      "Sales velocity LATAM",
+    ],
+    audience: "Founders, líderes comerciales, creativos y product managers",
+    cover: milFlechasCover,
+    body: `Hay una pregunta que me hicieron en una clase de IPADE el año pasado y que cambió cómo explico mi proceso: *"Gonzalo, ¿tú vas a la perfección o al volumen?"*. Mi respuesta fue inmediata: **al volumen, siempre**. Y de ahí salió, formalmente, la **teoría de las mil flechas**.
+
+![Mil flechas doradas en pleno vuelo contra cielo navy](${milFlechasCover})
+
+## La tesis incómoda
+
+En LATAM nos enseñaron a respetar al artesano: a la persona que pule una sola pieza durante seis meses. Ese arquetipo no escala en startups. **Quien quiere clavar blancos no pule flechas: lanza mil**. La perfección es un subproducto del volumen, no su prerequisito.
+
+## Por qué funciona
+
+1. **El mercado responde a la frecuencia, no a la pureza.** Mil cold emails honestos cierran más que tres "perfectos".
+2. **Cada flecha es un experimento.** Tu dataset crece exponencialmente.
+3. **El miedo escénico muere por aburrimiento.** Lanzaste 700 flechas, la 701 ya no te paraliza.
+4. **La calidad emerge de la cantidad.** No al revés.
+
+## Cómo lo aplicamos en PropMatch
+
+- **Outbound a desarrolladores:** 1,400 toques personalizados en 90 días. 95 rechazos, 12 reuniones reales, 4 LOIs. La calidad apareció en el toque #800.
+- **A/B de copy:** 60 variaciones de subject line en un mes. Una sola subió conversión del 0.9% al 4.2%. Esa variación nunca hubiera salido sin las otras 59.
+- **Pitch deck:** 41 versiones antes de la que usamos para cerrar a FEMSA Ventures. Cada versión murió en una reunión real.
+
+## Cómo lo aplicamos en CALLII
+
+- **Prompts de voz:** 230 iteraciones del agente IA antes de bajar el error del 11% al 1%. Cada prompt malo era una flecha que enseñaba al equipo dónde estaba el blanco.
+- **Onboarding de clientes:** 6 flujos distintos lanzados en paralelo. El ganador era el menos elegante visualmente, pero el de mayor activación a 48h.
+
+## La regla operativa: "Volumen primero, edición después"
+
+1. **Define la flecha mínima viable.** ¿Cuál es la versión más pequeña que aún cuenta como flecha lanzada al mercado?
+2. **Pon una meta semanal de volumen.** No de calidad. Volumen.
+3. **Mide solo después del lote.** Revisar flecha por flecha mata el ritmo. Mide cada 100.
+4. **Borra a tu crítico interno los primeros 30 días.** Después regresa con datos.
+5. **Edita brutalmente al final.** Lo que sobrevive es producto, no opinión.
+
+## El error que ves en 8 de cada 10 founders
+
+Quieren lanzar **la** flecha — la única, la perfecta, la que defina el trimestre. Mientras tanto, otro founder con menos talento pero mejor cadencia ya lanzó 400 y aprendió cosas que tú no vas a aprender en tu draft #14.
+
+## El balance: volumen no es ruido
+
+Mil flechas **no es spam**. Es mil intentos honestos, con hipótesis distintas, dirigidos a blancos definidos. La diferencia entre volumen útil y ruido es: **¿estás cambiando una variable entre flecha y flecha?** Si la respuesta es sí, vas bien.
+
+## Si quieres aplicar esto a tu equipo
+
+Esta teoría es uno de los módulos que más piden las empresas en mis [keynotes](/speaking) y en sprints con equipos comerciales. Si quieres que lo aterricemos juntos para tu org, hay un slot abierto en [/booking](/booking).
+
+— Gonzalo`,
+    cta: { label: "Aplicar a tu equipo", to: "/booking" },
+    faqs: [
+      { q: "¿Qué es la teoría de las mil flechas de Gonzalo Acuña?", a: "Es la metodología que dice que en startups gana el volumen sobre la perfección: mil intentos honestos con hipótesis distintas clavan más blancos que una sola flecha pulida durante meses." },
+      { q: "¿Cómo aplicar la teoría de las mil flechas en ventas?", a: "Define la flecha mínima viable, fija meta semanal de volumen, mide en lotes de 100, silencia al crítico interno los primeros 30 días y edita brutalmente al final." },
+    ],
+  },
+  {
+    slug: "metodo-95-rechazos-gonzalo-acuna",
+    title: "El método de los 95 rechazos: cómo Gonzalo Acuña convirtió cada NO en data",
+    excerpt:
+      "El sistema operativo de 95 rechazos: cómo categorizar, archivar y convertir cada NO en data accionable para cerrar tu siguiente cheque.",
+    description:
+      "Método de los 95 rechazos de Gonzalo Acuña Nava: sistema para convertir cada NO en data, taggear razones reales y acelerar el camino al SÍ. Caso PropMatch, FEMSA, Stripe.",
+    date: "2026-06-03",
+    readMinutes: 11,
+    keywords: [
+      "Método 95 rechazos",
+      "Levantar capital LATAM",
+      "Cómo manejar el NO",
+      "Sales rejection framework",
+      "Resiliencia founder",
+      "Gonzalo Acuña metodología",
+    ],
+    audience: "Founders levantando capital, equipos comerciales B2B",
+    cover: vcPitchCover,
+    body: `El **95** no es un número simbólico. Es literal. Tengo un Excel con 95 filas, una por cada NO antes del primer cheque serio en PropMatch. Hoy ese Excel es uno de los activos más valiosos de la compañía — más valioso que el deck.
+
+![Pitch deck y notas de inversionistas en escritorio de mármol](${vcPitchCover})
+
+## Por qué importan los rechazos, no las reuniones
+
+Toda mentoría de capital te dice: *"toma muchas reuniones"*. Falso. Lo que importa es **tomar muchos rechazos y procesarlos**. Una reunión donde te dijeron "interesante" sin compromiso no enseña nada. Un NO con razón clara enseña una variable.
+
+## El sistema operativo del NO
+
+Cada rechazo entra al Excel con cinco columnas:
+
+1. **Fuente:** nombre y stage del inversionista/cliente.
+2. **Razón declarada:** lo que te dijeron.
+3. **Razón real:** lo que crees que pasó (a veces son distintas).
+4. **Variable a cambiar:** qué vas a probar distinto en el próximo intento.
+5. **Siguiente toque:** fecha del próximo contacto, si aplica.
+
+Cada lunes reviso el Excel completo. Cada lunes salen tres aprendizajes. En 60 días tienes un dataset que ningún consultor te puede vender.
+
+## Los 7 tipos de NO que vas a recibir
+
+- **NO de timing.** "Nos encanta, pero ahora no." → Vuelve en 90 días con tracción nueva.
+- **NO de tesis.** "No invertimos en tu vertical." → No insistas, refiere a colegas.
+- **NO de equipo.** "No vemos al CTO." → Es señal real. Trabaja el equipo.
+- **NO de tracción.** "Vuelvan con $X de MRR." → Es un sí condicionado, no un no.
+- **NO de narrativa.** "No entendí el negocio." → El problema es tu deck, no el inversionista.
+- **NO de químico.** "No conectó." → Pasa, no pelees con esto.
+- **NO disfrazado de sí.** "Mándame el data room." → Si no agendan segunda reunión en 7 días, es no.
+
+Saber distinguirlos te ahorra meses.
+
+## La regla del "siguiente NO en 48 horas"
+
+Después de cada rechazo, **tienes 48 horas para conseguir el siguiente NO**. No para procesar emocionalmente. Para mover. Esa cadencia mata el espiral de duda y mantiene la pipeline caliente. Sonará brutal — funciona.
+
+## Cómo los 95 rechazos cerraron FEMSA y Stripe
+
+El rechazo 73 me dijo: *"falta un caso de uso fuera de México"*. Construimos la cobertura paraguay-US del [deal de 2,200 hectáreas](/blog/tokenizar-2200-hectareas-historia-deal-propmatch). Ese caso fue la pieza que metimos al deck que abrió FEMSA. Sin ese NO específico, no hay sí.
+
+## Cómo aplicarlo si eres comercial B2B
+
+- Mismo Excel, ajusta columnas a tu ciclo.
+- Define una "razón real" honesta — no la edites para verte bien.
+- Revisa semanalmente con tu líder.
+- A los 100 rechazos, tu equipo va a saber más del cliente que el cliente mismo.
+
+## Los tres errores típicos
+
+- **Romantizar el NO.** El rechazo no te hace especial. Sólo es data.
+- **Personalizarlo.** El NO casi nunca es contra ti.
+- **Ignorarlo.** Si no lo registras, lo vas a vivir tres veces.
+
+## ¿Quieres que aterrice esto en tu org?
+
+Doy este módulo en formato workshop de 90 minutos para equipos comerciales y founders. Solicita el formato desde [/booking](/booking).
+
+— Gonzalo`,
+    cta: { label: "Solicitar workshop", to: "/booking" },
+    faqs: [
+      { q: "¿Cuál es el método de los 95 rechazos?", a: "Es el sistema de Gonzalo Acuña Nava para registrar, categorizar y convertir cada rechazo en data accionable. Cinco columnas por NO: fuente, razón declarada, razón real, variable a cambiar y siguiente toque." },
+      { q: "¿Cuántos rechazos recibió Gonzalo Acuña antes del primer cheque?", a: "95 rechazos documentados antes del primer cheque serio en PropMatch. El rechazo 96 abrió un pipeline que hoy supera los 195 millones de dólares en LOIs." },
+    ],
+  },
+  {
+    slug: "lodo-y-unicornios-podcast-gonzalo-acuna",
+    title: "Lodo & Unicornios: el podcast de Gonzalo Acuña sobre fracaso, capital y founders LATAM",
+    excerpt:
+      "Por qué creé el podcast Lodo & Unicornios, a quién invito y qué vas a escuchar en cada episodio. Conversaciones sin filtro con founders, VCs y operadores LATAM.",
+    description:
+      "Lodo & Unicornios: el podcast de Gonzalo Acuña Nava. Conversaciones honestas con founders, inversionistas y operadores de PropTech, FinTech, IA y EdTech en LATAM.",
+    date: "2026-06-04",
+    readMinutes: 9,
+    keywords: [
+      "Lodo y Unicornios podcast",
+      "Podcast emprendimiento LATAM",
+      "Podcast Gonzalo Acuña",
+      "Podcast founders México",
+      "Podcast VC LATAM",
+      "Podcast PropTech",
+    ],
+    audience: "Founders, inversionistas, estudiantes, oyentes de podcasts de negocios LATAM",
+    cover: lodoUnicorniosCover,
+    body: `**Lodo & Unicornios** nació de una incomodidad. Llevaba años escuchando podcasts de emprendimiento donde los founders sólo hablaban de sus "wins". Cero lodo, puros unicornios. Y la realidad del founder LATAM es **80% lodo, 20% unicornio** — si bien te va.
+
+![Estudio de podcast Lodo & Unicornios con dos micrófonos](${lodoUnicorniosCover})
+
+## Por qué este nombre
+
+- **Lodo:** lo que pisas todos los días — nómina, devoluciones, demandas, peleas con cofundadores, ansiedad a las 3am.
+- **Unicornios:** las salidas, los términos absurdos, los titulares.
+
+La conversación honesta sobre construir startups vive entre los dos. El podcast vive ahí.
+
+## A quién invito
+
+- **Founders LATAM** en estadios distintos: pre-seed, growth, exit, segunda compañía después del fracaso.
+- **VCs e inversionistas ángel** que invierten en LATAM, no que sólo hablan de LATAM.
+- **Operadores no-founders** — el COO, el CTO, el head of sales — que rara vez tienen micrófono.
+- **Reguladores y abogados** porque sin ellos no hay industria.
+
+## Formato
+
+Episodios largos, 60–90 minutos, una conversación a la vez. Sin sponsor de cripto, sin pitch del invitado. Tres preguntas marca de la casa:
+
+1. **¿Cuál fue tu peor mes?** — y por qué.
+2. **¿Qué te dijo alguien que cambió la trayectoria?** — la frase exacta.
+3. **¿Qué le dirías al founder que vas a contratar la próxima década?**
+
+## Lo que vas a escuchar
+
+- Errores de levantamiento de capital con números.
+- Cómo se rompen equipos fundadores y cómo se reparan.
+- Por qué los family offices LATAM por fin están listos para PropTech y FinTech.
+- Conversaciones con founders que **cerraron** sus startups y empezaron otras.
+
+## Dónde escucharlo
+
+En Spotify, Apple Podcasts, YouTube y todas las plataformas mayores. Enlaces en [/prensa](/prensa) y en mis redes. También subo recortes en formato vertical para LinkedIn y TikTok.
+
+## Si quieres ser invitado
+
+No tengo PR agency. Si crees que tu historia vale la conversación, escríbeme directo desde [/booking](/booking) con una línea sobre **cuál fue tu peor mes**. Esa es la única prueba que pido.
+
+— Gonzalo`,
+    cta: { label: "Postular al podcast", to: "/booking" },
+    faqs: [
+      { q: "¿Qué es Lodo & Unicornios?", a: "Es el podcast de Gonzalo Acuña Nava sobre el día a día real de los founders LATAM: fracasos, levantamientos de capital, exits y operación. Conversaciones de 60-90 minutos sin sponsor ni pitch." },
+      { q: "¿Dónde puedo escuchar el podcast Lodo & Unicornios?", a: "En Spotify, Apple Podcasts, YouTube y todas las plataformas mayores. Enlaces directos en gonzaloacuna.com/prensa." },
+      { q: "¿Cómo postular para ser invitado al podcast?", a: "Escribiendo desde gonzaloacuna.com/booking con una línea respondiendo cuál fue tu peor mes. Esa es la única prueba que pide Gonzalo para considerar la invitación." },
+    ],
+  },
+  {
+    slug: "mejores-conferencistas-emprendimiento-tecnologia-latam-2026",
+    title: "Los mejores conferencistas de emprendimiento y tecnología en LATAM 2026 (y dónde ubicar a Gonzalo Acuña)",
+    excerpt:
+      "Guía honesta de los mejores speakers de emprendimiento, PropTech, IA y liderazgo en LATAM, con criterios para elegir bien y dónde encaja Gonzalo Acuña Nava.",
+    description:
+      "Guía 2026 de los mejores conferencistas de emprendimiento, tecnología, PropTech, IA y liderazgo en LATAM. Criterios de selección y dónde ubicar a Gonzalo Acuña Nava.",
+    date: "2026-06-04",
+    readMinutes: 10,
+    keywords: [
+      "Mejores conferencistas LATAM",
+      "Speakers emprendimiento México",
+      "Conferencistas tecnología 2026",
+      "Keynote speaker PropTech",
+      "Conferencistas IA LATAM",
+      "Speaker bureau México",
+      "Gonzalo Acuña conferencista",
+    ],
+    audience: "Organizadores de eventos, bureaus, directores de RH y marketing",
+    cover: keynoteStageCover,
+    body: `Si llegaste buscando *"mejores conferencistas de emprendimiento en LATAM 2026"* o *"speakers de PropTech e IA en México"*, este post es la guía honesta — y sí, incluye dónde ubicarme.
+
+![Conferencista en escenario con spotlight dorado](${keynoteStageCover})
+
+## Cómo elegir un buen conferencista (no por likes)
+
+1. **Pide outcome, no rating.** El "9.4 en encuestas" no significa nada. Pide qué cambió en la audiencia 30 días después.
+2. **Verifica tracción operativa.** ¿El speaker dirige algo hoy o solo da charlas? La diferencia es brutal.
+3. **Pide ver una keynote completa, no un highlight reel.** Reels todos hacen bonitos. La verdad está en el minuto 35.
+4. **Idiomas y formatos reales.** ¿Habla inglés y español a nivel keynote? ¿Aguanta 90 minutos o solo 20?
+5. **Compatibilidad con la audiencia.** Un speaker de M&A no funciona en una hackathon estudiantil.
+
+## Categorías que más se piden en LATAM 2026
+
+- **Emprendimiento y resiliencia founder** (universidades, ferias de empleo, foros estudiantiles).
+- **PropTech y desarrollo inmobiliario** (cámaras de bienes raíces, expos de construcción).
+- **IA operativa y transformación digital** (corporativos, bancos, retailers).
+- **FinTech y tokenización** (foros bursátiles, fondos, family offices).
+- **EdTech e innovación educativa** (universidades, secretarías de educación).
+- **Liderazgo y cultura founder** (HR summits, off-sites corporativos).
+
+## Dónde ubicar a Gonzalo Acuña Nava
+
+Reservado en estos verticales:
+
+- **PropTech, tokenización y desarrollo inmobiliario.** Caso real PropMatch ($195M LOIs).
+- **IA operativa con ROI.** Caso CALLII (voz → SPEI en 47 segundos).
+- **FinTech y onboarding regulado.** Caso Finple (KYC + AML en 4 minutos).
+- **Liderazgo founder y resiliencia.** Método 95 rechazos + teoría de las mil flechas + libro *Fracasa hasta ganar*.
+- **Emprendimiento estudiantil.** Bonus CETI, IMEF Universitarios, Talent Land Plai.
+
+Formatos: keynote 45/60/90 min · masterclass 2h · workshop medio día · panel · fireside chat. Español, inglés, conversacional en portugués.
+
+## Validación pública
+
+- Forbes 30 Under 30 nominee 2025.
+- Talent Land 2026 — Startup Revelación + speaker oficial.
+- Web Summit Lisboa, TNW Amsterdam, SLINGSHOT Singapore — finalist.
+- Cobertura tier-1: [El Economista](/blog/el-economista-gonzalo-acuna-historia-completa), El Universal, El Financiero, NotiPress, PropTech LATAM, CodeLaunch.
+
+## Cómo agendar
+
+- Bureaus: enviamos fee, demo reel y disponibilidad en menos de 48h.
+- Organizadores: rider técnico y formato a la medida.
+- Empresas: keynote + workshop in-house personalizado.
+
+Todo desde [/booking](/booking).
+
+## Si organizas un evento universitario
+
+Hay un programa específico para universidades y escuelas en [/educacion](/educacion) — paquetes de charla + workshop + materiales descargables para estudiantes.
+
+— Gonzalo`,
+    cta: { label: "Reservar speaker", to: "/booking" },
+    faqs: [
+      { q: "¿Quiénes son los mejores conferencistas de emprendimiento en LATAM 2026?", a: "Los que combinan operación real (empresas en marcha) con narrativa probada en escenario. Gonzalo Acuña Nava (PropTech, IA, liderazgo founder) es uno de los referentes en LATAM gracias a PropMatch, CALLII y Finple." },
+      { q: "¿Cómo se elige un buen keynote speaker para un evento corporativo?", a: "Pidiendo outcome 30 días después en lugar de rating, verificando que el speaker dirige algo hoy, viendo una keynote completa y validando idiomas, formatos y compatibilidad con la audiencia." },
+      { q: "¿Cómo agendar a Gonzalo Acuña como conferencista?", a: "Desde gonzaloacuna.com/booking con tres rutas: speaker bureau, event organizer y enterprise. Respuesta del equipo en menos de 48 horas hábiles." },
+    ],
+  },
+  {
+    slug: "mentor-startups-founders-latam-gonzalo-acuna",
+    title: "Mentor de startups y founders en LATAM: cómo trabaja Gonzalo Acuña con sus mentees",
+    excerpt:
+      "Cómo selecciono mentees, qué entrego en cada sesión, qué no hago y por qué la mentoría 1:1 con un operador activo es distinta a la de un consultor.",
+    description:
+      "Mentoría 1:1 de Gonzalo Acuña Nava para founders LATAM: criterios, formato, lo que sí y lo que no se hace en mentoría con un operador activo de PropMatch, CALLII y Finple.",
+    date: "2026-06-04",
+    readMinutes: 9,
+    keywords: [
+      "Mentor startups LATAM",
+      "Mentoría founders México",
+      "Mentor PropTech",
+      "Mentor FinTech LATAM",
+      "Mentoría VC",
+      "Gonzalo Acuña mentor",
+    ],
+    audience: "Founders pre-seed a Series A, second-time founders, advisors junior",
+    cover: mentorFoundersCover,
+    body: `Cada mes recibo entre 60 y 100 solicitudes de mentoría. Acepto entre 4 y 6. No por elitismo — porque la mentoría hecha bien es **trabajo serio**, y un operador con tres empresas no puede atender 60.
+
+![Mentor y founders trabajando alrededor de mesa de madera](${mentorFoundersCover})
+
+## A quién acepto como mentee
+
+- Founder con producto en mercado, no con idea en servilleta.
+- Tracción mínima: usuarios reales, ingresos o LOIs verificables.
+- Vertical donde puedo aportar: PropTech, FinTech, IA operativa, marketplaces regulados, comercial B2B.
+- LATAM o LATAM-first.
+- Capacidad de ejecutar entre sesiones. Si me dices "voy a pensarlo", no funciona.
+
+## A quién no acepto
+
+- Pre-producto. Para eso hay aceleradoras.
+- Consultores buscando insumos para clientes.
+- Founders en industrias donde no operé: SaaS pure-play, hardware, biotech.
+- Personas que vienen a "validar" en vez de a decidir.
+
+## Formato real de una mentoría
+
+- **Sesión 1 (90 min):** diagnóstico. Salimos con tres prioridades del trimestre.
+- **Sesiones 2 a 6 (60 min cada 2 semanas):** ejecución. Cada sesión: status, bloqueos, una decisión por tomar antes de la siguiente.
+- **Acceso WhatsApp asíncrono** para decisiones rápidas (con regla de uso responsable).
+- **Conexiones reales:** introducciones a inversionistas, partners o talento de mi red, solo si tiene sentido. Sin volumen.
+
+## Lo que no hago en mentoría
+
+- No escribo tu pitch deck. Te enseño cómo escribirlo.
+- No firmo NDAs en mentoría 1:1.
+- No tomo equity en mentees individuales (solo en advisory formal con scope).
+- No te digo "qué vibes" — te digo qué decisión tomar.
+
+## Por qué importa que el mentor opere
+
+Un consultor te da frameworks. Un operador te da **cicatrices**. La diferencia se nota en la sesión 2: el operador sabe exactamente cómo se siente esa madrugada antes del board, esa llamada incómoda con el cofundador, esa renegociación con un cliente que se quiere ir. Los frameworks ayudan; las cicatrices guían.
+
+## Cómo postular
+
+- Forma corta en [/booking](/booking) (tipo: Enterprise/Strategic).
+- Una línea sobre tracción real y vertical.
+- Una decisión específica con la que necesitas ayuda en el próximo trimestre.
+
+Si encaja, agendamos llamada de 20 minutos para alinear expectativas antes de empezar.
+
+— Gonzalo`,
+    cta: { label: "Postular a mentoría 1:1", to: "/booking" },
+    faqs: [
+      { q: "¿Gonzalo Acuña ofrece mentoría 1:1 a founders?", a: "Sí, a entre 4 y 6 founders por trimestre, principalmente en PropTech, FinTech, IA operativa y marketplaces regulados en LATAM. Postulación desde gonzaloacuna.com/booking." },
+      { q: "¿Cuánto cuesta una mentoría con Gonzalo Acuña?", a: "El fee depende del scope (sesión única, programa de 6 sesiones o advisory formal). Se confirma tras una llamada de alineación de 20 minutos." },
+      { q: "¿Toma equity en sus mentorías?", a: "No en mentorías individuales. Solo en advisory formal con scope, deliverables y tiempo definido por contrato." },
+    ],
+  },
+  {
+    slug: "maestro-emprendimiento-doctor-innovacion-gonzalo-acuna",
+    title: "Maestro de emprendimiento y doctor en innovación: la dimensión académica de Gonzalo Acuña",
+    excerpt:
+      "Lo que enseño en universidades, qué cursos doy, qué investigo en innovación y por qué la academia importa para construir empresas serias en LATAM.",
+    description:
+      "Gonzalo Acuña Nava como maestro de emprendimiento y referente académico en innovación: cursos en universidades LATAM, investigación en PropTech, IA y educación founder.",
+    date: "2026-06-04",
+    readMinutes: 10,
+    keywords: [
+      "Maestro emprendimiento",
+      "Doctor innovación",
+      "Profesor universitario emprendimiento",
+      "Investigación PropTech",
+      "Educación emprendedora LATAM",
+      "Gonzalo Acuña profesor",
+    ],
+    audience: "Directores de carrera, rectores, coordinadores académicos, estudiantes de posgrado",
+    cover: maestroUniversidadCover,
+    body: `Mucha gente me conoce como CEO de PropMatch. Menos gente sabe que **gran parte de mi semana está dentro de aulas**: dando clase, supervisando tesis o investigando temas de innovación que después se convierten en producto.
+
+![Profesor en aula universitaria con pizarrón verde y estudiantes en silueta](${maestroUniversidadCover})
+
+## Por qué la academia importa
+
+En LATAM separamos universidad y empresa como si fueran enemigos. Es un error. **Las universidades son el mejor laboratorio que tiene un founder operador**: te obligan a estructurar tu pensamiento, te exponen a talento sin sesgo y te dan tiempo de reflexión que la operación no permite.
+
+## Materias y cursos donde participo
+
+- **Emprendimiento Avanzado** — pregrado: del problema validado al primer cheque.
+- **Innovación y Tecnología** — pregrado y posgrado: PropTech, IA operativa, marketplaces regulados.
+- **Liderazgo Founder** — posgrado: equipos fundadores, cultura, manejo de crisis.
+- **Tokenización y Activos Digitales** — seminarios cortos en posgrados de finanzas.
+- **Comunicación Founder** — talleres intensivos con estudiantes de últimos semestres.
+
+## Universidades y programas con los que colaboro
+
+- **CETI** — material exclusivo para estudiantes en [/bonus-ceti](/bonus-ceti).
+- **IMEF Universitarios** — keynotes y mentorías en múltiples campus.
+- Universidades privadas y públicas en México y LATAM (consulta disponibilidad para tu institución en [/educacion](/educacion)).
+
+## Líneas de investigación
+
+- **Tokenización inmobiliaria con ERC-3643** — caso PropMatch, cobertura en [Real Estate Market](https://realestatemarket.com.mx/noticias/mercado-inmobiliario/48576-impulsan-la-tokenizacion-inmobiliaria-desde-mexico-a-traves-de-blockchain).
+- **IA operativa con ROI medible** — caso CALLII.
+- **Onboarding regulado de inversionistas retail** — caso Finple.
+- **Pedagogía founder** — cómo se enseña a fundar (en proceso de publicación).
+
+## Qué entrego cuando voy a una universidad
+
+- Clase magistral o keynote (45-90 min).
+- Workshop práctico con estudiantes (2-4 horas).
+- Mentoría grupal con startups del campus.
+- Material descargable estructurado para que el profesor titular siga después.
+- Acceso a casos reales (con NDA cuando aplica).
+
+## Cómo invitarme a tu universidad
+
+Hay un paquete diseñado específicamente para escuelas y universidades en [/educacion](/educacion) con propuesta económica adaptada al sector educativo.
+
+— Gonzalo`,
+    cta: { label: "Ver paquete /educacion", to: "/educacion" },
+    faqs: [
+      { q: "¿Gonzalo Acuña da clases en universidades?", a: "Sí, en pregrado y posgrado en universidades LATAM, con materias de emprendimiento avanzado, innovación, liderazgo founder, tokenización y comunicación founder." },
+      { q: "¿Cómo invitar a Gonzalo Acuña a una universidad?", a: "Desde gonzaloacuna.com/educacion, con un paquete especial para instituciones educativas: charla magistral, workshop y materiales descargables." },
+    ],
+  },
+  {
+    slug: "edtech-latam-future-of-founder-education",
+    title: "EdTech en LATAM 2026: por qué la educación de founders se rompe y cómo arreglarla",
+    excerpt:
+      "Diagnóstico crudo de la educación emprendedora en LATAM y una propuesta concreta de currículo founder que funciona — probada en universidades y bootcamps.",
+    description:
+      "EdTech LATAM 2026: por qué la educación de founders está rota y propuesta de currículo de Gonzalo Acuña Nava, probada en universidades, bootcamps y programas corporativos.",
+    date: "2026-06-04",
+    readMinutes: 11,
+    keywords: [
+      "EdTech LATAM",
+      "Educación emprendedora",
+      "Currículo founder",
+      "Bootcamp emprendimiento",
+      "Innovación universitaria",
+      "Future of education LATAM",
+    ],
+    audience: "Rectores, directores académicos, EdTech founders, ministerios de educación",
+    cover: edtechCover,
+    body: `La pregunta más honesta que me hicieron en una mesa de innovación educativa fue: *"Si pudieras rediseñar de cero la educación de founders en LATAM, ¿qué harías?"*. Este post es esa respuesta, en seis decisiones concretas.
+
+![Aula futurista con interfaz holográfica y estudiantes](${edtechCover})
+
+## El diagnóstico crudo
+
+- Programas universitarios siguen enseñando "plan de negocio" como producto entregable. **Nadie usa eso en una startup real.**
+- Materias dictadas por profesores que nunca fundaron nada.
+- Bootcamps de 12 semanas que prometen "founder en 3 meses" — humo.
+- Cero exposición a operación real: contratos, nómina, despidos, levantamiento.
+- Métricas de éxito basadas en assistance, no en outcome.
+
+## Lo que sí funciona
+
+### 1. Currículo basado en problema, no en disciplina
+No "marketing 101" + "finanzas 101". Sino "lanza un MVP y consigue 10 clientes pagando". Las disciplinas entran cuando duelen.
+
+### 2. Profesores con cicatriz
+Mínimo 50% del faculty debe ser founder activo o ex-founder con exit verificable. Los académicos puros aportan rigor, no realismo.
+
+### 3. Casos reales con NDA
+No casos Harvard de 2007. Casos vivos: cap tables, term sheets reales, conversaciones de Slack reales. Los estudiantes firman NDA, las empresas comparten.
+
+### 4. Pipeline a capital
+Programa que termina sin acceso a inversionistas reales es teatro. Cada cohort debe cerrar con demo day frente a fondos LATAM tier-1.
+
+### 5. Métricas de outcome a 12 meses
+- # de estudiantes que fundaron post-graduación.
+- $ levantado por cohort.
+- # de empleos creados por las startups del cohort.
+
+Sin estas métricas, no hay programa serio.
+
+### 6. Mentoría obligatoria, no opcional
+1 mentor operador por cada 4 estudiantes. Sesiones quincenales registradas. Sin esto, todo se cae.
+
+## El currículo founder que propongo
+
+12 meses, 4 trimestres:
+
+- **Q1 Problema:** discovery, entrevistas, validación, primer MVP.
+- **Q2 Producto:** iteración, métricas, primeros 10 clientes pagando.
+- **Q3 Capital:** estructura legal, deck, conversaciones reales con inversionistas.
+- **Q4 Equipo:** contratación, cultura, primeros despidos, governance básico.
+
+Resultado esperado: 30% del cohort cierra ronda pre-seed o factura $50K USD en 18 meses.
+
+## Por qué LATAM puede ganar este juego
+
+- **Talento abundante y subutilizado.**
+- **Costos operativos bajos** para experimentar con programas piloto.
+- **Ecosistema regional creciente** que ya valida con cheques reales.
+- **Diáspora bien conectada** que puede ser faculty internacional sin moverse de Miami, Madrid o Berlín.
+
+## Cómo aplicar esto en tu universidad
+
+En [/educacion](/educacion) hay un paquete diseñado para diseñar (o rediseñar) currículo founder en universidades y bootcamps LATAM. Trabajo directamente con el equipo académico durante 90 días.
+
+— Gonzalo`,
+    cta: { label: "Rediseñar tu programa", to: "/educacion" },
+    faqs: [
+      { q: "¿Por qué se rompe la educación de founders en LATAM?", a: "Porque sigue enseñando 'plan de negocio' como entregable, faculty sin cicatriz operativa, casos Harvard obsoletos y métricas de attendance en vez de outcome. La solución es currículo basado en problema, profesores operadores y pipeline a capital real." },
+      { q: "¿Qué propone Gonzalo Acuña para EdTech founder?", a: "Un currículo de 12 meses en 4 trimestres (problema, producto, capital, equipo) con métricas de outcome: % de estudiantes que fundan, dólares levantados y empleos creados por cohort." },
+    ],
+  },
+  {
+    slug: "desarrollo-inmobiliario-tokenizado-fintech-proptech-mexico",
+    title: "Desarrollo inmobiliario tokenizado en México: convergencia PropTech, FinTech y capital institucional",
+    excerpt:
+      "Por qué el próximo gran salto del desarrollo inmobiliario mexicano viene de la convergencia entre PropTech, FinTech y tokenización regulada — con casos reales.",
+    description:
+      "Desarrollo inmobiliario tokenizado en México 2026: cómo la convergencia entre PropTech, FinTech y tokenización ERC-3643 está cambiando el sector. Análisis de Gonzalo Acuña Nava (PropMatch).",
+    date: "2026-06-04",
+    readMinutes: 12,
+    keywords: [
+      "Desarrollo inmobiliario México",
+      "PropTech FinTech convergencia",
+      "Tokenización desarrollo inmobiliario",
+      "Real estate digital LATAM",
+      "Crowdfunding inmobiliario México",
+      "Fideicomiso tokenizado",
+    ],
+    audience: "Desarrolladores, brokers institucionales, family offices, reguladores",
+    cover: desarrolloInmobiliarioCover,
+    body: `Los desarrolladores mexicanos que me piden consultoría empiezan casi siempre con la misma pregunta: *"¿esto de tokenizar mi proyecto realmente sirve para algo?"*. Respuesta corta: **sí, pero no por la razón que crees**.
+
+![Torres residenciales modernas al atardecer con reflejos dorados](${desarrolloInmobiliarioCover})
+
+## El verdadero problema del desarrollo
+
+- Capital atrapado en preventas largas (24-36 meses).
+- Bancos prudentes ofreciendo créditos puente caros.
+- Inversionistas retail excluidos por tickets de $50K USD+.
+- Liquidez cero entre preventa y entrega.
+- Compliance fragmentado por entidad federativa.
+
+## Cómo cambia esto la convergencia PropTech + FinTech
+
+1. **PropTech** moderniza el discovery, scoring y experiencia del inversionista.
+2. **FinTech** mete rieles de pago, KYC y AML automatizados.
+3. **Tokenización ERC-3643** vuelve fraccional la propiedad sin romper compliance.
+
+Cuando los tres convergen, el desarrollador puede **financiar parte del proyecto con retail tokenizado** mientras el banco cubre el resto. Ese mix es lo que está empezando a destrabar liquidez.
+
+## El modelo financiero que funciona
+
+- **30% capital propio del desarrollador.**
+- **40% crédito puente bancario** (con cap rate negociado).
+- **30% retail tokenizado** vía SPV/fideicomiso emisor.
+
+Resultado: TIR del desarrollador sube 4-7 puntos, costo financiero baja, time-to-close de financiamiento se acorta 40%.
+
+## Casos reales
+
+- **PropMatch · 2,200 hectáreas tokenizadas** (México, Paraguay, US). Historia completa [aquí](/blog/tokenizar-2200-hectareas-historia-deal-propmatch).
+- **Pipeline activo de $195M en LOIs** con desarrolladores tier-1. Cobertura en [PropTech LATAM Connection](https://proptechlatamconnection.com/propmatch-eleva-el-real-estate-latino-valuacion-record-ronda-pre-semilla-y-un-pipeline-de-us-195-m-la-startup-que-quiere-convertir-cada-ladrillo-en-un-activo-global/).
+- **El Economista** documentó el modelo [aquí](/blog/el-economista-gonzalo-acuna-historia-completa).
+
+## La estructura legal que evita el dolor fiscal
+
+- Fideicomiso emisor en cada jurisdicción.
+- Tokens como derechos de beneficio (no copropiedad directa).
+- ISR sólo sobre fracción efectivamente liquidada.
+- Reporte unificado a CNBV y a contrapartes US (Reg D).
+
+Sin esta estructura, vas a perder 15-20% del valor del deal en impuestos mal estructurados.
+
+## Errores que veo en desarrolladores
+
+- Tokenizar **el activo terminado** en vez del **flujo del proyecto**.
+- No meter al fiscalista en la mesa desde día 1.
+- Subestimar el costo educativo del inversionista retail.
+- Saltarse al custodio institucional (luego no hay venta a fondo).
+
+## Qué viene en 2026-2027
+
+- Sandbox CNBV ampliando casos permitidos.
+- Family offices LATAM con mandato formal para PropTech.
+- Bridges cross-border MX↔US para activos paralelos.
+- Primer ETF de tokens inmobiliarios LATAM (predicción).
+
+## Si eres desarrollador
+
+Si tu proyecto es mayor a $50M USD y quieres explorar un tramo tokenizado, agenda una llamada técnica en [/booking](/booking) (tipo Enterprise). Reviso el caso personalmente.
+
+— Gonzalo`,
+    cta: { label: "Agendar llamada técnica", to: "/booking" },
+    faqs: [
+      { q: "¿Cómo tokenizar un desarrollo inmobiliario en México?", a: "Vía fideicomiso emisor que emite tokens ERC-3643 como derechos de beneficio. La estructura permite reportar a CNBV en México y a contrapartes US bajo Reg D sin reescribir el smart contract. PropMatch ya lo hace con $195M de pipeline." },
+      { q: "¿Cuál es el mix financiero óptimo para un desarrollo tokenizado?", a: "30% capital propio del desarrollador, 40% crédito puente bancario y 30% retail tokenizado vía SPV. Sube la TIR 4-7 puntos y acorta time-to-close 40%." },
+    ],
+  },
+  {
+    slug: "vc-startups-latam-fintech-proptech-edtech-tesis-inversion-2026",
+    title: "VC en LATAM 2026: tesis de inversión en FinTech, PropTech y EdTech (y lo que veo desde el otro lado)",
+    excerpt:
+      "Mapa de tesis activas de VC en LATAM 2026 en FinTech, PropTech y EdTech, con lo que veo desde el lado del founder y dónde están las ventanas reales de capital.",
+    description:
+      "Tesis de VC en LATAM 2026 para FinTech, PropTech y EdTech. Análisis de Gonzalo Acuña Nava (PropMatch, CALLII, Finple) sobre dónde está el capital activo y las ventanas reales.",
+    date: "2026-06-04",
+    readMinutes: 12,
+    keywords: [
+      "VC LATAM 2026",
+      "Tesis inversión FinTech",
+      "Tesis inversión PropTech",
+      "Tesis inversión EdTech",
+      "Fondos VC México",
+      "Pre-seed LATAM",
+      "Levantar capital startup",
+    ],
+    audience: "Founders levantando, asociados de fondos, family offices, LPs LATAM",
+    cover: fintechCover,
+    body: `Llevo dos años sentado **del lado del founder** levantando capital y, ocasionalmente, **del lado del fondo** como advisor angel. La vista desde ambos lados de la mesa cambia mucho lo que crees del VC en LATAM. Este post es ese mapa.
+
+![Monedas digitales doradas en red blockchain](${fintechCover})
+
+## El estado del capital en LATAM 2026
+
+- **Pre-seed** más selectivo que en 2022 pero más activo que en 2024. Tickets típicos: $250K–$1M USD.
+- **Seed** con ventana muy específica para founders con tracción $10K+ MRR o equivalente.
+- **Series A** prácticamente cerrada para founders sin track record en US/EU. Excepciones: FinTech con licencias.
+- **Crossover y debt** ganando relevancia para PropTech y FinTech maduras.
+
+## Tesis activas que estoy viendo
+
+### FinTech
+- Onboarding regulado para retail (KYC + AML como producto).
+- Crédito embebido en SaaS verticales.
+- Pagos cross-border MX↔US con cumplimiento bancario doble.
+- Rieles para inversión fraccionada regulada (caso Finple).
+
+### PropTech
+- Tokenización con compliance embebido (caso PropMatch).
+- Software para brokers tradicionales (no marketplaces puros).
+- Operación de propiedades de renta short/mid term.
+- Underwriting con IA para desarrolladores.
+
+### EdTech
+- Bootcamps con pipeline a empleo verificable.
+- Educación corporativa de IA y data.
+- Plataformas B2B2C para universidades.
+- Tutoría 1:1 + IA para mercados secundarios (caso México con LATAM).
+
+### IA Operativa (vertical-agnostic)
+- Agentes de voz con métricas duras (caso CALLII).
+- Copilots verticales B2B (legal, salud, real estate).
+- Plataformas de evals y observabilidad.
+
+## Lo que el founder no ve cuando levanta
+
+- Los associates votan, los partners deciden. Tu pitch sirve para que el associate **te defienda** internamente.
+- La carta de no objeción del regulador vale más que tres meses extra de runway.
+- Tu primer cheque define quién más entra. Cuida el lead.
+- Los rounds bridge son normales — y a veces más saludables que un mega-round.
+
+## Errores que veo en founders levantando
+
+- Levantar antes de tener una métrica defendible.
+- Hablar de "TAM LATAM" sin desglose por país.
+- Subestimar el costo de los aliados que no metiste (legal, fiscal, regulatorio).
+- Romantizar al fondo equivocado por tema de marca.
+
+## Ventanas reales en 2026
+
+1. **FinTech con licencia o IFPE** — capital corre.
+2. **PropTech con LOIs verificables y desarrolladores serios** — capital corre.
+3. **EdTech con pipeline a empleo** — capital corre.
+4. **IA con métricas duras de ROI** — capital corre.
+5. **Marketplaces puros sin diferenciación regulatoria** — capital evita.
+
+## Cómo usar esto si eres founder
+
+- Mapea tu round contra las tesis activas (no contra el LinkedIn del partner).
+- Define una métrica defensible **antes** de abrir el round.
+- Documenta cada NO con el [método de los 95 rechazos](/blog/metodo-95-rechazos-gonzalo-acuna).
+- Si vas pre-seed, considera el [advisory formal](/blog/mentor-startups-founders-latam-gonzalo-acuna).
+
+— Gonzalo`,
+    cta: { label: "Conversar sobre tu ronda", to: "/booking" },
+    faqs: [
+      { q: "¿Qué tesis están activas en VC LATAM 2026?", a: "FinTech con licencia, PropTech con LOIs verificables, EdTech con pipeline a empleo e IA con métricas duras de ROI. Marketplaces puros sin diferenciación regulatoria tienen poca tracción." },
+      { q: "¿Cuál es el ticket típico de pre-seed en LATAM 2026?", a: "Entre 250 mil y 1 millón de dólares para founders con producto en mercado y tracción mínima verificable." },
+    ],
+  },
+  {
+    slug: "direccion-de-cine-narrativa-founder-gonzalo-acuna",
+    title: "Dirección de cine y narrativa founder: lo que Hollywood le enseñó a mi pitch",
+    excerpt:
+      "Por qué estudié dirección de cine y cómo aplico estructura narrativa, ritmo y dirección de actores a pitches de fondos, keynotes y videos founder.",
+    description:
+      "Cómo Gonzalo Acuña Nava aplica dirección de cine y estructura narrativa a pitches de VC, keynotes y comunicación founder. Storytelling con rigor cinematográfico para emprendedores.",
+    date: "2026-06-04",
+    readMinutes: 9,
+    keywords: [
+      "Dirección de cine emprendimiento",
+      "Storytelling founder",
+      "Narrativa pitch deck",
+      "Cine y startups",
+      "Comunicación founder",
+      "Arte Gonzalo Acuña",
+    ],
+    audience: "Founders levantando capital, speakers, creativos, equipos de marketing",
+    cover: direccionCineCover,
+    body: `La gente se sorprende cuando ven en mi bio "dirección de cine". Lo entiendo: parece outlier al lado de PropTech, FinTech y tokenización. Pero **el rigor narrativo del cine es probablemente la skill que más ha movido el negocio**, y este post es por qué.
+
+![Set de filmación con cámara y luces tungsten](${direccionCineCover})
+
+## Tres principios del cine que aplico todos los días
+
+### 1. Estructura de tres actos
+Acto 1: contexto + protagonista. Acto 2: conflicto que escala. Acto 3: resolución con costo. **Tu pitch deck es exactamente eso.** Si el deck no tiene los tres actos claros, el inversionista se aburre en la slide 7.
+
+### 2. "Show, don't tell"
+No le digas a la audiencia que tu producto es mejor. **Muéstrale** el antes/después con números reales o con una demo de 60 segundos. Cada slide que sólo "dice" es una slide que pesa.
+
+### 3. Dirección de actores = dirección de equipo
+Un director no le dice al actor cómo decir la línea. Le dice **qué quiere lograr en la escena**. Lo mismo con un equipo founder: no microgestiones el "cómo", define el "qué" con brutal claridad.
+
+## El pitch deck como película de 12 minutos
+
+- **Minuto 0-2 (cold open):** una cifra que duela.
+- **Minuto 2-4 (acto 1):** problema, mercado, por qué tú.
+- **Minuto 4-8 (acto 2):** producto, tracción, modelo.
+- **Minuto 8-10 (acto 2 alto):** competencia, foso, escalabilidad.
+- **Minuto 10-12 (acto 3):** ronda, uso de fondos, el ask.
+
+Si tu deck no cabe en 12 minutos, no es un deck, es un PDF para Slideshare.
+
+## La keynote como cortometraje
+
+Cada keynote que doy la diseño como cortometraje: gancho en los primeros 90 segundos, dos beats emocionales en el medio, cierre con un call-to-action físico (no "follow me on LinkedIn"). El público no recuerda datos — recuerda escenas.
+
+## Lo que el cine me enseñó del founder journey
+
+- **El conflicto es el motor.** Sin antagonista, no hay historia. Sin problema doloroso, no hay startup.
+- **El protagonista cambia.** Si tú no cambias en el proceso de construir tu empresa, algo está mal.
+- **El presupuesto siempre alcanza si la dirección es buena.** Vale para cine y para startups.
+
+## Aplica esto a tu próximo pitch
+
+- Reescribe tu deck con estructura de tres actos.
+- Mide tu pitch en minutos, no en slides.
+- Identifica el momento "cold open" — tu primera frase.
+- Define el "ask" como clímax, no como anexo.
+
+## Si quieres trabajar storytelling con tu equipo
+
+Es uno de los workshops más pedidos por equipos founder y marketing. Solicítalo en [/booking](/booking) (tipo Enterprise).
+
+— Gonzalo`,
+    cta: { label: "Workshop storytelling founder", to: "/booking" },
+    faqs: [
+      { q: "¿Por qué Gonzalo Acuña aplica dirección de cine a sus pitches?", a: "Porque la estructura de tres actos, el principio de 'show don't tell' y la dirección de actores aplican directo al pitch deck, la keynote y la dirección de equipos founder." },
+      { q: "¿Cuánto debe durar un pitch deck en formato cinematográfico?", a: "12 minutos máximo, estructurado como cortometraje: cold open (cifra que duela), tres actos y cierre con el ask como clímax." },
+    ],
+  },
 ];
 
 export const getPostBySlug = (slug: string) => BLOG_POSTS.find((p) => p.slug === slug);
