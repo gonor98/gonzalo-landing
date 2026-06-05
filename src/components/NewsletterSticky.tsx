@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { trackCTAClick } from "@/lib/track";
+import { trackCTAClick, trackNewsletter } from "@/lib/track";
 
 const STORAGE_KEY = "ga_newsletter_dismissed_v1";
 const EMAIL_SCHEMA = z
@@ -34,12 +34,16 @@ export const NewsletterSticky = () => {
     if (typeof window === "undefined") return;
     if (window.sessionStorage.getItem(STORAGE_KEY) === "1") return;
     // small delay so it doesn't fight LCP
-    const t = window.setTimeout(() => setOpen(true), 2200);
+    const t = window.setTimeout(() => {
+      setOpen(true);
+      trackNewsletter("view", pathname);
+    }, 2200);
     return () => window.clearTimeout(t);
   }, [pathname]);
 
   const dismiss = () => {
     setOpen(false);
+    trackNewsletter("dismiss", pathname);
     try {
       window.sessionStorage.setItem(STORAGE_KEY, "1");
     } catch {}
@@ -58,6 +62,7 @@ export const NewsletterSticky = () => {
       return;
     }
     setSubmitting(true);
+    trackNewsletter("submit", pathname);
     try {
       // Reuse the booking pipeline as a lightweight lead capture (newsletter type)
       const { error } = await supabase.functions.invoke("submit-booking", {
@@ -73,11 +78,13 @@ export const NewsletterSticky = () => {
       });
       if (error) throw new Error(error.message ?? "No se pudo registrar");
       trackCTAClick("newsletter_signup", pathname);
+      trackNewsletter("success", pathname);
       setDone(true);
       try {
         window.sessionStorage.setItem(STORAGE_KEY, "1");
       } catch {}
     } catch (err: any) {
+      trackNewsletter("error", pathname, { message: err?.message ?? "unknown" });
       // Silent fail to UX — toast is enough
       toast({
         title: "No pudimos suscribirte",

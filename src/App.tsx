@@ -27,6 +27,8 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Agenda from "./pages/Agenda.tsx";
 import AdminBookings from "./pages/AdminBookings.tsx";
+import { useEffect } from "react";
+import { initScrollDepth } from "@/lib/track";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,7 @@ const App = () => (
       <BrowserRouter>
         <VideoProvider>
           <ScrollToTop />
+          <AnalyticsBoot />
           <ErrorBoundary>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -76,3 +79,8 @@ const App = () => (
 );
 
 export default App;
+
+const AnalyticsBoot = () => {
+  useEffect(() => initScrollDepth(), []);
+  return null;
+};
