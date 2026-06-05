@@ -137,7 +137,19 @@ const BlogPost = () => {
     });
   }
 
-  const others = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
+  // "Lecturas relacionadas" — rank by shared keyword/topic overlap, fallback to recent.
+  const others = (() => {
+    const target = new Set(post.keywords.map((k) => k.toLowerCase()));
+    const scored = BLOG_POSTS.filter((p) => p.slug !== post.slug).map((p) => {
+      const overlap = p.keywords.reduce(
+        (n, k) => (target.has(k.toLowerCase()) ? n + 1 : n),
+        0,
+      );
+      return { p, overlap, ts: new Date(p.date).getTime() };
+    });
+    scored.sort((a, b) => (b.overlap - a.overlap) || (b.ts - a.ts));
+    return scored.slice(0, 3).map((s) => s.p);
+  })();
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
@@ -228,15 +240,16 @@ const BlogPost = () => {
             </div>
           )}
 
-          {/* More posts */}
+          {/* Lecturas relacionadas */}
           {others.length > 0 && (
             <div className="mt-14">
-              <p className="text-[10px] uppercase tracking-[0.28em] text-gold/80">Sigue leyendo</p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <p className="text-[10px] uppercase tracking-[0.28em] text-gold/80">Lecturas relacionadas</p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {others.map((p) => (
                   <Link
                     key={p.slug}
                     to={`/blog/${p.slug}`}
+                    onClick={() => trackCTAClick(`related_${p.slug}`, `blog_post:${post.slug}`)}
                     className="group rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition-colors hover:border-gold/40"
                   >
                     <p className="text-[10px] uppercase tracking-[0.22em] text-white/45">{p.readMinutes} min</p>

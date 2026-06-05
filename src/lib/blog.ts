@@ -2115,4 +2115,344 @@ Es uno de los workshops más pedidos por equipos founder y marketing. Solicítal
   },
 ];
 
+// ── Capítulos del libro "Fracasa hasta ganar" en formato blog (voz Gonzalo) ──
+BLOG_POSTS.push(
+  {
+    slug: "activos-ocultos-carwash-chicago-capital-invisible",
+    title: "Activos ocultos: lo que el carwash de Chicago me enseñó del capital que nadie ve",
+    excerpt:
+      "A los 16 lavaba autos en Chicago a -20°C. No tenía red, no tenía papeles, no tenía dinero. Tenía algo más valioso y tardé años en entenderlo.",
+    description:
+      "Capítulo 1 de 'Fracasa hasta ganar' por Gonzalo Acuña Nava. Cómo identificar el capital invisible (constancia, hambre, red de contacto humano) que la mayoría de founders ignora.",
+    date: "2026-06-02",
+    readMinutes: 9,
+    keywords: ["Fracasa hasta ganar", "Gonzalo Acuña libro", "carwash Chicago", "capital invisible", "mentalidad founder", "Eat the elephant"],
+    audience: "Founders early-stage, estudiantes, lectores del libro",
+    cover: fracasaCover,
+    body: `Nadie te firma un cheque por contarle que fuiste mesero a los 17. Pero la primera vez que cerré una ronda, lo único que el inversor recordó del pitch fue el carwash. No los KPIs. No el cap table. El carwash.
+
+Ahí está la jugada. Lo que tú crees que es tu desventaja, el mercado lo lee como tu activo más caro.
+
+## Lo que pasó realmente
+
+Llegué a Chicago a los 16 a estudiar. Sin red, sin papeles para trabajar como cualquiera, sin la lana de los compañeros de salón. Invierno de -20°C, manguera congelada, manos rojas. Lavé autos. Fui mesero. Pasé temporadas comiendo arroz con frijoles cinco días seguidos porque eso era lo que había.
+
+Y mientras lavaba, no estaba "construyendo carácter" como diría un libro de Robert Kiyosaki. Estaba aprendiendo a vender. A leer al cliente en 8 segundos. A pedir propina sin pedirla. A entregar antes de que el cliente acabara su café. Eso es operación. Eso es producto. Eso es customer success — sólo que en lugar de un dashboard tenía una franela.
+
+Cinco años después, cuando levanté el primer cheque para [PropMatch](https://www.propmatchapp.com), descubrí que ese training me daba ventaja contra MBAs de Harvard que jamás habían cobrado un dólar mirando al cliente a los ojos.
+
+## Por qué casi nadie ve su capital invisible
+
+Porque el sistema educativo te entrena para listar diplomas, no cicatrices. Pero el mercado **no compra diplomas**. Compra evidencia. Y la evidencia más cara que existe es haber operado bajo escasez sin tronarte.
+
+El founder que aprende a vender lavando rines opera diferente al founder que aprende a vender leyendo *The Lean Startup*. El segundo necesita una sala de juntas. El primero vende en un Uber.
+
+## El sistema: Eat the Elephant aplicado a tu CV invisible
+
+Esto lo robé de los Navy SEALs y lo adapté para founders. Cuando la tarea es enorme (levantar capital, lanzar un producto, salir de cero), se hace incomible. Eat the Elephant es brutalmente simple: parte el elefante en bocados de 90 minutos y cómete uno.
+
+Aplicado a tu capital invisible:
+
+- **Bocado 1:** Lista los 10 trabajos peor pagados que hayas hecho. No los premios — los trabajos sucios.
+- **Bocado 2:** Al lado de cada uno escribe la habilidad operativa que aprendiste. Vender. Leer al cliente. Aguantar. Negociar. Entregar.
+- **Bocado 3:** Reescribe tu próximo pitch incorporando uno de esos. No como "humilde origen". Como **ventaja injusta**.
+
+No es marketing. Es matemática. El inversor evalúa probabilidad de supervivencia bajo estrés. Tu carwash es señal.
+
+## La frase que se queda
+
+El mercado no te pide el título, te pide el ticket. Muéstrame el comprobante de pago, no el diploma.
+
+## Accionable 48 horas
+
+1. Escribe en un Notion tu lista de 10 trabajos invisibles y la habilidad operativa de cada uno. Sin maquillar.
+2. Mete uno de ellos en tu próxima conversación de venta — sin pedir permiso, sin "perdón por el origen". Como dato.
+3. Mide la reacción. Si el cliente se acercó (no se alejó), encontraste tu activo oculto.
+
+— Gonzalo`,
+    cta: { label: "Reserva una keynote del libro", to: "/booking" },
+    faqs: [
+      { q: "¿Dónde puedo comprar 'Fracasa hasta ganar'?", a: "El libro está en proceso de publicación. Suscríbete al newsletter en gonzaloacuna.com para que te avise el día del lanzamiento." },
+      { q: "¿Qué es el carwash de Chicago?", a: "Es la metáfora con la que arranca el libro: el trabajo físico de lavar autos a los 16 años en invierno de Chicago fue el primer entrenamiento operativo de Gonzalo Acuña como founder." },
+    ],
+  },
+  {
+    slug: "validar-con-billetes-no-aplausos-startups",
+    title: "Validar con billetes, no con aplausos: la única métrica que paga el gas",
+    excerpt:
+      "Si tu MVP recibe muchos likes pero cero depósitos, no validaste. Estás escribiendo fanfic de tu propia startup.",
+    description:
+      "Capítulo 4 de 'Fracasa hasta ganar'. Sistema de validación con billetes: cómo pedir dinero antes que opinión, qué métricas importan y por qué los aplausos te pueden quebrar.",
+    date: "2026-06-03",
+    readMinutes: 7,
+    keywords: ["validación startup", "MVP", "Fracasa hasta ganar", "Gonzalo Acuña metodología", "métricas startup", "early traction"],
+    audience: "Founders pre-product-market-fit, estudiantes de emprendimiento, inversionistas early",
+    cover: vcPitchCover,
+    body: `Hay una trampa cara que casi todos pisamos al menos una vez: confundir interés con tracción. Las dos cosas se sienten igual de bonito y sólo una paga el gas.
+
+## La cagada que casi me cuesta CALLII
+
+En la primera ronda de demos de CALLII tenía 47 reuniones agendadas con tesoreros y CFOs. La mitad terminaban con "esto es brillante", "¿cuándo lanzan?", "yo quiero estar el día uno". Salía de cada call sintiéndome MVP.
+
+Cero depósitos. Cero LOIs firmados. Cero. Pero mi calendario decía que iba ganando.
+
+Lo que me destrabó fue brutal. Dejé de pedir opinión. Empecé a pedir **un compromiso financiero pequeño** — $500 USD de pre-pago aplicable contra la primera factura. De los 47, 9 firmaron. De los 9, 6 sobrevivieron a la primera factura real. De los 6, salió la base de clientes con la que liquidamos ETH→SPEI en 47 segundos.
+
+Los 38 que dijeron "qué padre" no estaban mintiendo. Estaban siendo educados. Es diferente.
+
+## El sistema de validación con billetes
+
+Tres pasos. Sin atajos.
+
+1. **Identifica el dolor real, no el imaginado.** Pregunta dos cosas: ¿cuánto te cuesta hoy ese problema? ¿qué estás haciendo hoy en lugar de comprarme? Si la respuesta es "nada serio", no es dolor — es curiosidad.
+2. **Construye el MVP más feo que sirva, y véndelo.** Pide pre-pago, depósito, intención de compra por escrito. La conversación cambia de "qué padre" a "déjame ver con finanzas". Esa fricción es la métrica.
+3. **Mide ratio de outputs sobre inputs.** Conversaciones → ofertas → compromisos monetarios. Si el ratio "conversación → compromiso" no llega a 10%, tu oferta no resuelve un problema lo suficientemente caro.
+
+Eso es. No hay framework de 12 pasos. Si lo simplificas más, te estás engañando.
+
+## Por qué los aplausos son peligrosos
+
+Te hacen sentir que vas avanzando cuando estás en el mismo punto. Te dan endorfinas sin tracción. Te llenan el calendario sin llenar la cuenta. Y peor: te hacen invertir más tiempo en una hipótesis que el mercado ya descartó silenciosamente.
+
+La pregunta de oro: ¿alguien me transfirió dinero esta semana por algo que todavía no entrego completamente? Si no, no hay validación, hay esperanza.
+
+## Frase que se queda
+
+Los aplausos no pagan el gas. El dinero es un aplauso con tracción real.
+
+## Accionable 48 horas
+
+1. Identifica la hipótesis más cara de tu producto. La que si está mal, todo está mal.
+2. Diseña una oferta tan simple que entre en un WhatsApp con tres bullets y un monto.
+3. Mándala a 10 personas que ya te dijeron "qué padre". Cuenta cuántas pagan. Ese número es tu PMF de hoy.
+
+Si quieres aplicar este framework con tu equipo, [agendamos un workshop founder](/booking).
+
+— Gonzalo`,
+    cta: { label: "Workshop de validación con tu equipo", to: "/booking" },
+    faqs: [
+      { q: "¿Cuánto dinero hay que pedir para validar?", a: "El suficiente para que el cliente lo pase por finanzas. No tan poco que diga sí por cortesía, no tan mucho que necesite comité. En LATAM B2B suele ser entre $500 y $5,000 USD de pre-pago." },
+      { q: "¿Y si vendo B2C, cómo valido con billetes?", a: "Pre-órdenes con cargo real (no 'reservas'), suscripciones de $5–$15 USD al mes, o productos físicos en pequeño lote con landing y Stripe. La regla es la misma: la tarjeta debe pasar." },
+    ],
+  },
+  {
+    slug: "protocolo-cine-empresa-procesos-startup",
+    title: "El protocolo Cine-Empresa: por qué tu startup se parece más a un rodaje que a una hoja de cálculo",
+    excerpt:
+      "Dirigí cine antes de levantar capital. Un rodaje no se cae por mala idea. Se cae por mala logística. Igual que tu startup.",
+    description:
+      "Capítulo 5 de 'Fracasa hasta ganar'. Protocolo Cine-Empresa: storyboarding operativo, geometría de procesos y cómo escalar sin que se caiga la calidad.",
+    date: "2026-06-03",
+    readMinutes: 8,
+    keywords: ["procesos startup", "operaciones founder", "Fracasa hasta ganar", "escalabilidad", "Gonzalo Acuña dirección de cine", "storyboarding operativo"],
+    audience: "COOs, founders technical y no-technical, equipos en transición de 0 a 1",
+    cover: direccionCineCover,
+    body: `Antes de levantar la primera ronda dirigí cine. Lo que aprendí en set me ahorró años en la trinchera de la startup.
+
+Un rodaje no se cae por mala idea. Se cae porque la cámara llegó tarde, la actriz no comió o el sonidista olvidó las baterías. La logística mata más películas que el guion.
+
+Tu startup funciona igual. La idea casi nunca es el problema. La geometría del proceso, sí.
+
+## Lo que vi en el lanzamiento de CALLII
+
+La promesa de [CALLII](https://gonzaloacuna.com/#ventures) era una: liquidación ETH→SPEI en menos de 60 segundos. Vendimos el primer cliente con esa promesa. Salimos a producción y el primer pago tardó 4 minutos. No por la red. Por nosotros — pasos manuales que nadie había mapeado, validaciones de KYC que esperaban a un humano, una alerta que pasaba a un Slack sin nadie de guardia.
+
+No teníamos protocolo. Teníamos buena fe. La buena fe no escala.
+
+Lo que hicimos en 72 horas fue dibujar el rodaje. Cada paso, cada responsable, cada timeout. Cuarto día: bajamos a 47 segundos. Sin nuevo código, sin nuevo equipo. Sólo geometría.
+
+## El protocolo Cine-Empresa
+
+Tres principios, en este orden:
+
+1. **Desglose de escenas.** Toma un proceso crítico (onboarding, cobranza, soporte, deploy). Pártelo en micro-procesos de menos de 5 minutos cada uno. Si no lo puedes cortar en piezas de 5 minutos, no lo entiendes — sólo lo ejecutas.
+2. **Storyboarding operativo.** Dibuja la secuencia visualmente. No en Notion, en pizarrón o Miro. Cada cuadro: quién hace qué, con qué herramienta, en cuánto tiempo, con qué señal de éxito.
+3. **Ensayo antes del estreno.** Corre el proceso completo con un cliente real (o uno fingido si es interno). Cronómetro en mano. Optimiza el cuello de botella, no la perfección estética.
+
+## Por qué casi nadie lo hace
+
+Porque dibujar el proceso se siente como burocracia y los founders odian la burocracia. Pero hay una diferencia entre burocracia (proceso por proceso) y geometría (proceso que multiplica). El segundo es el que paga el sueldo.
+
+Si quieres ver cómo aplicamos esto en [PropMatch](https://www.propmatchapp.com) para escalar de 0 a $195M en LOIs, lee también [De CodeLaunch a $21M](/blog/de-codelaunch-a-21m-historia-real-ronda-propmatch).
+
+## Frase que se queda
+
+Los procesos tienen geometría. La geometría correcta multiplica el resultado sin multiplicar el esfuerzo.
+
+## Accionable 48 horas
+
+1. Elige el proceso que más te frustra esta semana. Ese.
+2. Pártelo en cuadros de máximo 5 minutos. Pizarrón físico si puedes.
+3. Encuentra el primer cuello de botella visible. Atácalo. Mide el delta.
+
+— Gonzalo`,
+    cta: { label: "Reserva un workshop de operaciones", to: "/booking" },
+    faqs: [
+      { q: "¿Qué tiene que ver dirección de cine con startups?", a: "Ambas son producciones logísticas con cronograma implacable y un equipo grande coordinándose. Las herramientas de set (storyboard, call sheet, ensayos) traducen directamente a operaciones de startup." },
+      { q: "¿En cuánto tiempo se ven resultados aplicando el protocolo?", a: "En CALLII pasamos de 4 minutos a 47 segundos en 4 días. Para procesos de onboarding más complejos, espera de 2 a 4 semanas de iteración antes de ver el primer salto grande." },
+    ],
+  },
+  {
+    slug: "ejecucion-salvaje-lanzar-imperfecto-startup",
+    title: "Ejecución salvaje: si tu primera versión no te da vergüenza, lanzaste demasiado tarde",
+    excerpt:
+      "La perfección es la excusa más elegante para no lanzar. Yo lavé rines antes de lavar el cap table. Lanza feo. Aprende rápido. Cobra.",
+    description:
+      "Capítulo 6 de 'Fracasa hasta ganar'. Ciclo de ejecución salvaje, MVP vergonzoso y Box Breathing para founders. Cómo lanzar sin perfeccionar hasta morir.",
+    date: "2026-06-04",
+    readMinutes: 7,
+    keywords: ["MVP", "Fracasa hasta ganar", "ejecución founder", "lanzamiento startup", "Box Breathing", "parálisis por análisis"],
+    audience: "Founders atrapados en pre-lanzamiento, makers indie",
+    cover: keynoteStageCover,
+    body: `La primera versión de [PropMatch](https://www.propmatchapp.com) era fea. Tan fea que me daba pena mandarla. Tenía bugs. El onboarding pedía datos en orden raro. El logo era una versión apurada que armé en Figma de madrugada.
+
+La lanzamos igual. Y esa versión fea cerró las primeras tres conversaciones con family offices que terminaron firmando LOIs. La versión bonita no existía. La fea sí cobraba.
+
+## La trampa del perfeccionismo founder
+
+No es estética. Es miedo a juicio. La perfección se siente como excelencia y opera como parálisis. Y cuesta carísimo: cada semana que no lanzas, alguien con la mitad de tu producto y el doble de tu apetito te está quitando los clientes que ni sabes que existen.
+
+Yo perdí un cliente en 2024 porque esperé 11 días extra a "pulir" un dashboard que el cliente ni iba a abrir. Se lo llevó un competidor que mandó un Figma estático y dijo "ya lo tenemos". Tardé meses en superarlo.
+
+## Ciclo de ejecución salvaje
+
+Tres fases que se repiten cada semana, no cada quarter.
+
+1. **MVP vergonzoso.** La versión más básica que resuelve el problema central. Si no te da un poco de pena enseñarla, esperaste demasiado.
+2. **Lanzamiento y data dura.** Ponlo frente a clientes reales esta semana. No "pronto". No "después del rebrand". Esta semana. Mide conversión, fricción real, objeciones literales.
+3. **Micro-pivot semanal.** No esperes el quarter review. Ajusta en pequeño cada 7 días con los datos de la calle, no con los de tu cabeza.
+
+Esa cadencia te mantiene vivo. Las cadencias mensuales matan startups jóvenes.
+
+## Box Breathing antes de presionar publish
+
+Cuando vayas a mandar el correo, lanzar el landing o cobrarle al primer cliente y se te trabe el dedo: para. Inhala 4 segundos, sostén 4, exhala 4, sostén 4. Tres ciclos. Lo aprendí de operadores de élite y funciona porque baja el cortisol antes de que tu corteza prefrontal tome decisiones malas por miedo.
+
+Es físico. No es mindset. Es un hack del sistema nervioso, y cuesta cero.
+
+## Frase que se queda
+
+Si no te avergüenza tu primera versión, lanzaste demasiado tarde. Yo lavé rines antes de lavar el cap table.
+
+## Accionable 48 horas
+
+1. Identifica el proyecto que llevas "puliendo" más de 3 semanas. Ese es el que tienes que lanzar.
+2. Define la versión mínima vergonzosa y dale fecha de salida en menos de 48 horas.
+3. Ponlo frente a 5 personas reales. Cobra (aunque sea simbólico). Mide.
+
+Si tu equipo necesita romper la parálisis, [traemos el workshop completo](/booking).
+
+— Gonzalo`,
+    cta: { label: "Workshop ejecución salvaje", to: "/booking" },
+    faqs: [
+      { q: "¿Cuándo deja de ser 'vergonzoso' y se convierte en 'descuidado'?", a: "Cuando la fricción se nota antes de que el cliente reciba el valor. Si el MVP entrega el valor y luego se ve feo, sigue siendo vergonzoso útil. Si no entrega valor, es descuidado." },
+      { q: "¿Box Breathing realmente funciona para founders?", a: "Sí, fisiológicamente baja la frecuencia cardíaca y reduce cortisol en 60-90 segundos. Lo usan Navy SEALs en combate, traders en cierre y cirujanos antes de quirófano. Para mandar un correo difícil sobra." },
+    ],
+  },
+  {
+    slug: "tres-canastas-finanzas-guerra-founder",
+    title: "Las tres canastas: cómo manejo mis finanzas como founder en operación de guerra",
+    excerpt:
+      "Si tu cuenta personal y la de la empresa son la misma, vas a perder las dos. El framework que uso para sobrevivir el invierno sin tronar la operación.",
+    description:
+      "Capítulo 9 de 'Fracasa hasta ganar'. Sistema de las 3 canastas: supervivencia, operación y apuesta. Gestión financiera de guerra para founders LATAM.",
+    date: "2026-06-04",
+    readMinutes: 8,
+    keywords: ["finanzas founder", "runway startup", "tres canastas", "Fracasa hasta ganar", "Gonzalo Acuña finanzas", "gestión liquidez"],
+    audience: "Founders early y mid-stage, solopreneurs, operadores con cash flow inestable",
+    cover: fintechCover,
+    body: `Los meses peores de mi vida financiera no fueron cuando tenía poco. Fueron cuando tenía algo y no sabía dónde estaba.
+
+Empresa pagando renta de hosting de la cuenta personal. Personal pagando comida con la tarjeta de la empresa. Cero claridad. Tres meses sin cerrar mes correctamente. Si me hubieran auditado en ese momento, no habría podido explicar dónde estaba mi dinero. Y lo peor: tampoco yo.
+
+Lo que me destrabó fue separar todo en tres canastas. No por contabilidad — por **psicología de operación**.
+
+## Las tres canastas
+
+1. **Supervivencia.** Es la canasta dura. Comida, renta personal, salud, transporte, mínimos vitales. Idealmente 6 meses guardados, en cuenta separada, sin tarjeta de débito vinculada al teléfono. Tocarla es señal de emergencia, no de oportunidad. En México la pongo en CETES a corto plazo. En USD, T-bills si tienes acceso.
+2. **Operación.** Es la canasta de la empresa. Gastos de equipo, herramientas, sueldos, AWS. Esta canasta vive en la cuenta de la empresa y se reabastece sólo con ingresos de la empresa. **Nunca** se mete capital personal sin documentar como préstamo o aporte de socio.
+3. **Apuesta.** Es la canasta del riesgo. Inversión en activos que pueden multiplicar (acciones, cripto bien analizada, tokenización vía [Finple](https://www.finple.online)). Sólo se alimenta cuando 1 y 2 están sanas. Y se asume que puede ir a cero sin afectar 1 ni 2.
+
+## La regla brutal
+
+La canasta 3 nunca se alimenta a costa de la canasta 1. Punto. Cuando lo haces (y casi todos los founders lo hacemos al menos una vez), no estás invirtiendo, estás apostando con tu supervivencia. Ahí no se gana — sólo se posterga la pérdida.
+
+Si tu canasta 1 no aguanta 3 meses sin ingreso, esa es tu única prioridad financiera hasta nuevo aviso. No el deck. No la ronda. La canasta 1.
+
+## Por qué esto importa hoy y no en 5 años
+
+Porque la mayoría de founders en LATAM viven en estrés financiero permanente, y el estrés financiero permanente toma decisiones de negocio peores que las de un founder con runway claro. Tu canasta 1 sana es ventaja competitiva — te permite decir "no" al cliente equivocado, al inversor abusivo, al cofounder tóxico.
+
+Si quieres entender mejor el ecosistema fintech LATAM, lee también [La tesis VC LATAM 2026](/blog/vc-startups-latam-fintech-proptech-edtech-tesis-inversion-2026).
+
+## Frase que se queda
+
+Administra tu escasez para financiar tu abundancia. La disciplina es el sistema operativo; la pasión es solo una app que a veces se traba.
+
+## Accionable 48 horas
+
+1. Abre 3 cuentas separadas si todavía no las tienes. Etiquétalas con los nombres reales (supervivencia, operación, apuesta).
+2. Calcula tu costo mensual de canasta 1 honesto. Multiplícalo por 6. Ese es tu colchón objetivo.
+3. Define la regla de "no tocar" por escrito y mándatela por correo a ti mismo. Vas a necesitar releerla en 3 meses cuando se te aparezca la oportunidad "que no se puede dejar pasar".
+
+— Gonzalo`,
+    cta: { label: "Aplica el framework con un mentor", to: "/booking" },
+    faqs: [
+      { q: "¿Cuánto debo tener en cada canasta?", a: "Canasta 1: 6 meses de gastos personales mínimos. Canasta 2: lo que dicte tu runway operativo, idealmente 12-18 meses. Canasta 3: sólo el excedente real, nunca prestado." },
+      { q: "¿Sirve este sistema si todavía no tengo ingresos?", a: "Más todavía. La canasta 1 se construye primero con cualquier ingreso (full-time, freelance, ventas). Sin canasta 1, no hay startup que aguante un mal trimestre." },
+    ],
+  },
+  {
+    slug: "codigo-acuna-principios-operativos-founder",
+    title: "El Código Acuña: los 7 principios operativos con los que decido todo",
+    excerpt:
+      "Cuando todo está en llamas y hay que decidir en 30 segundos, no tienes tiempo de pensar. Tienes que tener un código. Aquí está el mío.",
+    description:
+      "Capítulo 10 de 'Fracasa hasta ganar'. Los 7 principios operativos de Gonzalo Acuña Nava para tomar decisiones de alto impacto bajo presión.",
+    date: "2026-06-05",
+    readMinutes: 9,
+    keywords: ["Código Acuña", "Fracasa hasta ganar", "principios founder", "toma de decisiones", "liderazgo founder", "Gonzalo Acuña Nava"],
+    audience: "Founders, líderes de equipo, lectores que quieren construir su propio código personal",
+    cover: milFlechasCover,
+    body: `Cuando se cae el servidor a las 3am, cuando el inversor te exige cambiar términos a las 11pm de un viernes, cuando un cofounder se quiere ir el día antes del demo day — no tienes tiempo de pensar. Tienes que tener un código que ya pensó por ti.
+
+El mío se llama Código Acuña. Lo escribí después de tres decisiones malas seguidas en 2023 que casi me cuestan PropMatch. No es filosofía. Es una checklist mental que se ejecuta en menos de 30 segundos.
+
+## Los 7 principios
+
+1. **El cliente paga, el ego no.** Cuando una decisión entra en conflicto entre lo que quiere el cliente y lo que quiere mi orgullo, gana el cliente. Siempre. Mi orgullo lo guardo para los hijos algún día.
+2. **Velocidad > perfección, pero calidad > velocidad.** Suena contradictorio. No lo es. Lanzo feo, pero nunca lanzo algo que rompa la confianza del cliente. La feeling de "no funciona bien" se perdona; la de "me engañaron" no.
+3. **Decisión reversible: 60 segundos. Decisión irreversible: 60 horas.** Si la puedo deshacer mañana, decido ya. Si no se puede deshacer, me obligo a dormir dos noches con la decisión antes de firmar.
+4. **El que no está en la trinchera no opina.** Si no operaste el problema, tu opinión no pesa igual que la de quien sí. Esto incluye a inversores, advisors y a mi yo de hace tres meses.
+5. **No se contrata talento con red flags grandes para arreglarlo después.** Los founders sobreestimamos nuestra capacidad de "cambiar a alguien". Si la entrevista ya muestra señal, despídelo en el día 1, no en el mes 6.
+6. **El dinero entra antes de que se vea, sale antes de que se sienta.** Por eso la canasta 1 (ver [las 3 canastas](/blog/tres-canastas-finanzas-guerra-founder)) y por eso no se compromete cash que aún no está en la cuenta. Nunca.
+7. **El legado se mide en gente, no en valuación.** Si en 10 años los founders que pasaron por mi equipo construyeron empresas mejores que la mía, gané. La valuación es un número intermedio.
+
+## Cómo lo uso en la práctica
+
+Lo tengo impreso en una tarjeta del tamaño de una credencial. La cargo en la cartera. Cuando una decisión se siente pesada, la saco. Suena cursi. Funciona.
+
+Y cada 6 meses lo reviso. Borro lo que ya no me sirve, agrego lo que aprendí. La versión actual lleva 4 iteraciones. La primera tenía 12 principios (demasiados, ninguno se queda). La segunda tenía 4 (insuficiente, perdía matices).
+
+Si quieres ver la metodología que conecta con esto, lee también [El método de los 95 rechazos](/blog/metodo-95-rechazos-gonzalo-acuna).
+
+## Frase que se queda
+
+Sin código, el imperio es una máquina sin alma. Tu propósito es tu ancla en la tormenta.
+
+## Accionable 48 horas
+
+1. Escribe 10 principios con los que ya operas (aunque no los hayas nombrado). Sólo lístalos.
+2. Tacha los que se contradigan o se repitan. Quédate con 5 a 7.
+3. Imprímelo. Cárgalo. La próxima decisión difícil, aplícalo antes de pedir consejo a nadie.
+
+— Gonzalo`,
+    cta: { label: "Trae el Código Acuña a tu equipo", to: "/booking" },
+    faqs: [
+      { q: "¿Puedo copiar tu Código Acuña?", a: "Puedes inspirarte, pero el chiste es construir el tuyo. El mío fue forjado en decisiones malas mías; el tuyo se forja en las tuyas. Cópiame el método, no la lista." },
+      { q: "¿Cómo sé si mi código está bien?", a: "Si en los próximos 90 días tomas al menos 3 decisiones difíciles más rápido y duermes mejor con ellas, el código está funcionando. Si no, hay que reescribirlo." },
+    ],
+  },
+);
+
 export const getPostBySlug = (slug: string) => BLOG_POSTS.find((p) => p.slug === slug);

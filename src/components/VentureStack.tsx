@@ -4,8 +4,28 @@ import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import { clampRange } from "@/lib/clamp";
 import { usePerfMode } from "@/hooks/usePerfMode";
+import { VENTURE_URLS } from "@/lib/ventures";
+import { trackCTAClick } from "@/lib/track";
 
-const ventures = [
+type VentureLink = { label: string; href: string };
+type Venture = {
+  name: string;
+  tagline: string;
+  description: string;
+  metric: string;
+  metricLabel: string;
+  color: string;
+  borderRgba: string;
+  innerBorderRgba: string;
+  glow: string;
+  icon: string;
+  safe: string;
+  stage: string;
+  site: VentureLink | null;
+  app: VentureLink | null;
+};
+
+const ventures: Venture[] = [
   {
     name: "PropMatch",
     tagline: "El Nasdaq de los bienes raíces tokenizados",
@@ -20,6 +40,8 @@ const ventures = [
     icon: "🏗️",
     safe: "SAFE $1.5M / Cap $10M",
     stage: "Pre-seed",
+    site: { label: "propmatchapp.com", href: VENTURE_URLS.propmatch.landing },
+    app: null,
   },
   {
     name: "CALLII",
@@ -35,6 +57,8 @@ const ventures = [
     icon: "⚡",
     safe: "SAFE $500K / Cap $4.5M",
     stage: "Live",
+    site: null,
+    app: null,
   },
   {
     name: "Finple",
@@ -50,6 +74,8 @@ const ventures = [
     icon: "🎮",
     safe: "SAFE $500K / Cap $5M",
     stage: "Pre-seed",
+    site: { label: "finple.online", href: VENTURE_URLS.finple.landing },
+    app: { label: "finple.com.mx", href: VENTURE_URLS.finple.app },
   },
 ];
 
@@ -105,6 +131,36 @@ const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
           >
             Data Room <ArrowUpRight size={12} />
           </a>
+          {v.site && (
+            <>
+              <span style={{ color: v.color }}>·</span>
+              <a
+                href={v.site.href}
+                target="_blank"
+                rel="noopener"
+                onClick={() => trackCTAClick(`venture_site_${v.name.toLowerCase()}`, "venture_stack")}
+                className="inline-flex items-center gap-2 transition-colors hover:text-white"
+                style={{ color: v.color }}
+              >
+                {v.site.label} <ArrowUpRight size={12} />
+              </a>
+            </>
+          )}
+          {v.app && (
+            <>
+              <span style={{ color: v.color }}>·</span>
+              <a
+                href={v.app.href}
+                target="_blank"
+                rel="noopener"
+                onClick={() => trackCTAClick(`venture_app_${v.name.toLowerCase()}`, "venture_stack")}
+                className="inline-flex items-center gap-2 transition-colors hover:text-white"
+                style={{ color: v.color }}
+              >
+                {v.app.label} <ArrowUpRight size={12} />
+              </a>
+            </>
+          )}
         </div>
       </div>
       <div
@@ -192,6 +248,36 @@ export const VentureStack = () => {
                       >
                         Data Room <ArrowUpRight size={12} />
                       </a>
+                      {v.site && (
+                        <>
+                          <span style={{ color: v.color }}>·</span>
+                          <a
+                            href={v.site.href}
+                            target="_blank"
+                            rel="noopener"
+                            onClick={() => trackCTAClick(`venture_site_${v.name.toLowerCase()}`, "venture_stack")}
+                            className="inline-flex items-center gap-2"
+                            style={{ color: v.color }}
+                          >
+                            {v.site.label} <ArrowUpRight size={12} />
+                          </a>
+                        </>
+                      )}
+                      {v.app && (
+                        <>
+                          <span style={{ color: v.color }}>·</span>
+                          <a
+                            href={v.app.href}
+                            target="_blank"
+                            rel="noopener"
+                            onClick={() => trackCTAClick(`venture_app_${v.name.toLowerCase()}`, "venture_stack")}
+                            className="inline-flex items-center gap-2"
+                            style={{ color: v.color }}
+                          >
+                            {v.app.label} <ArrowUpRight size={12} />
+                          </a>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div

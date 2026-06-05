@@ -48,3 +48,48 @@ export const trackVideo = (
   location: string,
   extra: EventParams = {},
 ) => track("video_event", { action, video, location, ...extra });
+
+export const trackNewsletter = (
+  action: "view" | "submit" | "success" | "dismiss" | "error",
+  location: string,
+  extra: EventParams = {},
+) => track("newsletter_event", { action, location, ...extra });
+
+export const trackScrollDepth = (percent: 25 | 50 | 75 | 100, path: string) =>
+  track("scroll_depth", { percent, path });
+
+/**
+ * Attach a global scroll-depth tracker.
+ * Fires once per threshold per pathname.
+ */
+export const initScrollDepth = () => {
+  if (typeof window === "undefined") return () => {};
+  const fired = new Set<string>();
+  const thresholds: Array<25 | 50 | 75 | 100> = [25, 50, 75, 100];
+
+  const onScroll = () => {
+    const doc = document.documentElement;
+    const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const pct = Math.min(100, Math.round((window.scrollY / max) * 100));
+    const path = window.location.pathname;
+    for (const t of thresholds) {
+      const key = `${path}:${t}`;
+      if (pct >= t && !fired.has(key)) {
+        fired.add(key);
+        trackScrollDepth(t, path);
+      }
+    }
+  };
+
+  let raf = 0;
+  const onScrollRaf = () => {
+    if (raf) return;
+    raf = window.requestAnimationFrame(() => {
+      raf = 0;
+      onScroll();
+    });
+  };
+
+  window.addEventListener("scroll", onScrollRaf, { passive: true });
+  return () => window.removeEventListener("scroll", onScrollRaf);
+};
