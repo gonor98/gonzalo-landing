@@ -53,7 +53,8 @@ export const CONFERENCE_VIDEO: {
   title: "Conferencia CETI — 95 Rechazos · Gonzalo Acuña Nava",
 };
 
-export const FINPLE_URL = "https://gonzaloacuna.com/ceti";
+// Finple landing page (public). Used as the Finple Pro reclaim CTA.
+export const FINPLE_URL = "https://www.finple.online";
 
 // SEO/OG defaults for the /bonus-ceti-descargas page (editable via admin)
 export const DESCARGAS_SEO = {
