@@ -7,7 +7,25 @@ import { usePerfMode } from "@/hooks/usePerfMode";
 import { VENTURE_URLS } from "@/lib/ventures";
 import { trackCTAClick } from "@/lib/track";
 
-const ventures = [
+type VentureLink = { label: string; href: string };
+type Venture = {
+  name: string;
+  tagline: string;
+  description: string;
+  metric: string;
+  metricLabel: string;
+  color: string;
+  borderRgba: string;
+  innerBorderRgba: string;
+  glow: string;
+  icon: string;
+  safe: string;
+  stage: string;
+  site: VentureLink | null;
+  app: VentureLink | null;
+};
+
+const ventures: Venture[] = [
   {
     name: "PropMatch",
     tagline: "El Nasdaq de los bienes raíces tokenizados",
@@ -23,6 +41,7 @@ const ventures = [
     safe: "SAFE $1.5M / Cap $10M",
     stage: "Pre-seed",
     site: { label: "propmatchapp.com", href: VENTURE_URLS.propmatch.landing },
+    app: null,
   },
   {
     name: "CALLII",
@@ -38,7 +57,8 @@ const ventures = [
     icon: "⚡",
     safe: "SAFE $500K / Cap $4.5M",
     stage: "Live",
-    site: null as null | { label: string; href: string },
+    site: null,
+    app: null,
   },
   {
     name: "Finple",
@@ -126,7 +146,7 @@ const VentureCard = ({ v, i, total, scrollYProgress }: VentureCardProps) => {
               </a>
             </>
           )}
-          {"app" in v && v.app && (
+          {v.app && (
             <>
               <span style={{ color: v.color }}>·</span>
               <a
@@ -243,7 +263,7 @@ export const VentureStack = () => {
                           </a>
                         </>
                       )}
-                      {"app" in v && v.app && (
+                      {v.app && (
                         <>
                           <span style={{ color: v.color }}>·</span>
                           <a
