@@ -10,6 +10,40 @@ declare global {
   }
 }
 
+import { supabase } from "@/integrations/supabase/client";
+
+const SESSION_KEY = "ga_session_id_v1";
+const getSessionId = () => {
+  if (typeof window === "undefined") return undefined;
+  try {
+    let s = window.sessionStorage.getItem(SESSION_KEY);
+    if (!s) {
+      s = (crypto?.randomUUID?.() ?? `s-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`);
+      window.sessionStorage.setItem(SESSION_KEY, s);
+    }
+    return s;
+  } catch { return undefined; }
+};
+
+// Persist events to DB (best-effort, no await blocking)
+const persist = (event: string, params: EventParams) => {
+  if (typeof window === "undefined") return;
+  try {
+    // Coerce undefined → null so JSONB stays clean
+    const properties: Record<string, string | number | boolean | null> = {};
+    for (const [k, v] of Object.entries(params)) properties[k] = v === undefined ? null : v;
+    supabase.functions.invoke("track-event", {
+      body: {
+        event,
+        path: window.location.pathname,
+        session_id: getSessionId(),
+        referrer: document.referrer || undefined,
+        properties,
+      },
+    }).catch(() => {});
+  } catch {}
+};
+
 export const track = (event: string, params: EventParams = {}) => {
   try {
     const payload = { event, ts: Date.now(), ...params };
@@ -17,6 +51,7 @@ export const track = (event: string, params: EventParams = {}) => {
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push(payload);
     }
+    persist(event, params);
     if (import.meta.env.DEV) {
       // Safe log: no PII, just event name + non-sensitive params
       // eslint-disable-next-line no-console
