@@ -138,18 +138,16 @@ const BlogPost = () => {
   }
 
   // "Lecturas relacionadas" — rank by shared keyword/topic overlap, fallback to recent.
-  const others = (() => {
-    const target = new Set(post.keywords.map((k) => k.toLowerCase()));
-    const scored = BLOG_POSTS.filter((p) => p.slug !== post.slug).map((p) => {
-      const overlap = p.keywords.reduce(
-        (n, k) => (target.has(k.toLowerCase()) ? n + 1 : n),
-        0,
-      );
-      return { p, overlap, ts: new Date(p.date).getTime() };
-    });
-    scored.sort((a, b) => (b.overlap - a.overlap) || (b.ts - a.ts));
-    return scored.slice(0, 3).map((s) => s.p);
-  })();
+  const target = new Set(post.keywords.map((k) => k.toLowerCase()));
+  const scoredAll = BLOG_POSTS.filter((p) => p.slug !== post.slug).map((p) => {
+    const overlap = p.keywords.reduce((n, k) => (target.has(k.toLowerCase()) ? n + 1 : n), 0);
+    return { p, overlap, ts: new Date(p.date).getTime() };
+  });
+  scoredAll.sort((a, b) => (b.overlap - a.overlap) || (b.ts - a.ts));
+  const others = scoredAll.slice(0, 4).map((s) => s.p);
+  const nextRead = scoredAll[0]?.p;
+  // Tag links → drives internal navigation back to /blog?category=
+  const tagLinks = Array.from(new Set(post.keywords)).slice(0, 6);
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
@@ -240,11 +238,27 @@ const BlogPost = () => {
             </div>
           )}
 
+          {/* Continúa leyendo (next best) — drives session depth */}
+          {nextRead && (
+            <Link
+              to={`/blog/${nextRead.slug}`}
+              onClick={() => trackCTAClick(`related_${nextRead.slug}`, `blog_post:${post.slug}:next`)}
+              className="group mt-10 flex items-center justify-between gap-4 rounded-3xl border border-gold/30 bg-gold/[0.04] p-6 transition-colors hover:border-gold/60"
+            >
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.28em] text-gold">Continúa leyendo</p>
+                <h4 className="mt-2 font-display text-xl text-white group-hover:text-gold sm:text-2xl">{nextRead.title}</h4>
+                <p className="mt-1.5 line-clamp-2 text-sm text-white/60">{nextRead.excerpt}</p>
+              </div>
+              <ArrowRight className="shrink-0 text-gold transition-transform group-hover:translate-x-1" />
+            </Link>
+          )}
+
           {/* Lecturas relacionadas */}
           {others.length > 0 && (
             <div className="mt-14">
               <p className="text-[10px] uppercase tracking-[0.28em] text-gold/80">Lecturas relacionadas</p>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 {others.map((p) => (
                   <Link
                     key={p.slug}
@@ -258,6 +272,21 @@ const BlogPost = () => {
                   </Link>
                 ))}
               </div>
+              {tagLinks.length > 0 && (
+                <div className="mt-8">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-white/45">Más sobre</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {tagLinks.map((t) => (
+                      <Link
+                        key={t}
+                        to={`/blog?q=${encodeURIComponent(t)}`}
+                        onClick={() => trackCTAClick(`related_tag_${t}`, `blog_post:${post.slug}`)}
+                        className="rounded-full border border-white/15 bg-white/[0.03] px-3 py-1.5 text-[11px] text-white/70 hover:border-gold/50 hover:text-gold"
+                      >#{t}</Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
