@@ -64,21 +64,13 @@ export const NewsletterSticky = () => {
     setSubmitting(true);
     trackNewsletter("submit", pathname);
     try {
-      // Reuse the booking pipeline as a lightweight lead capture (newsletter type)
-      const { error } = await supabase.functions.invoke("submit-booking", {
-        body: {
-          booking_type: "enterprise",
-          full_name: "Newsletter Lead",
-          email: parsed.data,
-          organization: "Newsletter",
-          role: "Subscriber",
-          message: `Newsletter signup desde ${pathname}`,
-          website: "",
-        },
+      const { data, error } = await supabase.functions.invoke("newsletter-subscribe", {
+        body: { email: parsed.data, source_path: pathname, language: "es-MX" },
       });
       if (error) throw new Error(error.message ?? "No se pudo registrar");
+      const status = (data as any)?.status ?? "pending_confirmation";
       trackCTAClick("newsletter_signup", pathname);
-      trackNewsletter("success", pathname);
+      trackNewsletter("success", pathname, { status });
       setDone(true);
       try {
         window.sessionStorage.setItem(STORAGE_KEY, "1");
@@ -121,7 +113,7 @@ export const NewsletterSticky = () => {
             <div>
               <p className="font-display text-base text-white">¡Listo! Te metimos a la lista.</p>
               <p className="mt-1 text-xs text-white/65">
-                Revisa tu correo en los próximos minutos. Mando un email cuando hay algo que realmente vale tu tiempo — nunca spam.
+                Revisa tu correo y haz clic en el link de confirmación. Sin ese clic no te llega nada (regla de doble opt-in). Si no lo ves en 3 min, revisa spam.
               </p>
             </div>
           </div>
