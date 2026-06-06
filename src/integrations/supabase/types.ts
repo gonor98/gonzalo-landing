@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          created_at: string
+          event: string
+          id: string
+          path: string | null
+          properties: Json
+          referrer: string | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id?: string
+          path?: string | null
+          properties?: Json
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: string
+          path?: string | null
+          properties?: Json
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       booking_audit_log: {
         Row: {
           action: string
@@ -164,6 +197,54 @@ export type Database = {
           start_time?: string
           status?: string
           topic?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_leads: {
+        Row: {
+          confirmation_sent_at: string | null
+          confirmation_token: string
+          confirmed_at: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          ip_hash: string | null
+          language: string | null
+          source_path: string | null
+          unsubscribed_at: string | null
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          confirmation_sent_at?: string | null
+          confirmation_token: string
+          confirmed_at?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          ip_hash?: string | null
+          language?: string | null
+          source_path?: string | null
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          confirmation_sent_at?: string | null
+          confirmation_token?: string
+          confirmed_at?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          ip_hash?: string | null
+          language?: string | null
+          source_path?: string | null
+          unsubscribed_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
         }
         Relationships: []
       }
