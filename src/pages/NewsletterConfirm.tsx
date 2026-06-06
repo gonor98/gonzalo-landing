@@ -35,7 +35,7 @@ const NewsletterConfirm = () => {
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
-      <SEO title="Confirma tu suscripción · Gonzalo Acuña Nava" description="Confirma tu suscripción al newsletter de Gonzalo Acuña Nava." path="/newsletter/confirm" noIndex />
+      <SEO title="Confirma tu suscripción · Gonzalo Acuña Nava" description="Confirma tu suscripción al newsletter de Gonzalo Acuña Nava." path="/newsletter/confirm" />
       <Nav />
       <section className="mx-auto flex max-w-xl flex-col items-center px-6 pt-40 text-center">
         {state === "loading" && (<><Loader2 className="h-8 w-8 animate-spin text-gold" /><p className="mt-4 text-white/70">Confirmando...</p></>)}
