@@ -27,6 +27,8 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Agenda from "./pages/Agenda.tsx";
 import AdminBookings from "./pages/AdminBookings.tsx";
+import AdminAnalytics from "./pages/AdminAnalytics.tsx";
+import NewsletterConfirm from "./pages/NewsletterConfirm.tsx";
 import { useEffect } from "react";
 import { initScrollDepth } from "@/lib/track";
 
@@ -50,6 +52,8 @@ const App = () => (
             <Route path="/booking" element={<Booking />} />
             <Route path="/agenda" element={<Agenda />} />
             <Route path="/admin/bookings" element={<AdminBookings />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
+            <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
             <Route path="/benefits" element={<Benefits />} />
             <Route path="/benefits/preview" element={<BenefitsPreview />} />
             <Route path="/benefits/:id/preview" element={<BenefitsPreview />} />
